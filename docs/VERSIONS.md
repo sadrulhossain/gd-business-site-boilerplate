@@ -33,4 +33,5 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 - Node 24.22.3 image: `.env` keeps the correct pin. Phase 1 was verified locally with `NODE_VERSION=24.22.2` (not published yet, see above). Remove the override once `node:24.22.3-alpine` exists.
 - Phase 2: laravel/framework resolved to v13.42.0 (floor >=13.29.0); `composer audit` clean on 2026-11-12. Pest is pinned to 4.x as requested (5.3.5 exists). Predis not installed (phpredis builds).
 - Phase 2: the Laravel 13 skeleton's own default dev dependencies (tinker, pail, pao, collision, mockery, faker, phpunit via Pest) are kept unpinned; everything else was added deliberately above.
+- Phase 4: no new packages. PHP ext `gd` (bundled, with libwebp/libjpeg-turbo/libpng from the Alpine base) was added to the php image for WebP variants.
 - Phase 3: Passport 13.11.0 and spatie/laravel-permission 8.5.0 resolve with Laravel 13.42.0; `composer audit` clean 2026-11-12.

@@ -16,6 +16,8 @@ each service lists its own `environment:` (no `env_file`). Commit only `*.exampl
 | MAILPIT_SMTP_PORT / MAILPIT_UI_PORT | mailpit | 28025 / 28026 | bound to 127.0.0.1 |
 | PORTAL_DEV_PORT / ADMIN_DEV_PORT | node, nginx | 28300 / 28301 | not published; nginx proxies to them |
 | POSTGRES_DB / POSTGRES_USER / POSTGRES_PASSWORD | postgres, php* | gdsite / gdsite / change-me | |
+| UPLOADS_CONTAINER_PATH | php*, nginx, Dockerfile | /var/www/uploads | disk root and volume mount point; nginx serves `/uploads/` |
+| UPLOADS_MAX_MB | php*, nginx | 5 | validation, php.ini upload limits and nginx `client_max_body_size` |
 | REDIS_USER / REDIS_PASSWORD | redis, php* | gdsite / change-me | default Redis user is disabled; ACL user only |
 
 | APP_DEBUG | php* | true | |

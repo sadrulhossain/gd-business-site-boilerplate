@@ -29,3 +29,11 @@ Log of architecture decisions. Format: `## NNN — Title` / Date / Decision / Wh
 2026-11-12. Spatie roles/permissions live on guard `api` (`User::$guard_name`, default guard `api`). Routes use
 `->middleware('can:<permission>')`; `Gate::before` lets role `superadmin` through. Menus: `menus` table with an added
 `title` column; a group row (no permission) shows only with a visible child. Tests refresh `<POSTGRES_DB>_testing`, never the dev DB.
+
+## 007 — Content modules: edit-only, files on a volume
+2026-11-12. Settings (one row, DB check `id = 1`) and Sections (seeded, immutable `key`) have no create/delete;
+the portal renders by section key. Bilingual text uses `x` + `x_2nd` (`locales.second` = first supported locale
+that is not the default). Uploads: disk root `UPLOADS_CONTAINER_PATH` (named volume `uploads-data`, shared by
+php, php-queue, nginx), path `<dir>/<random>/original.<ext>`, extension from detected mime, WebP variants by a
+queued job (GD). php-queue and php-scheduler run as `www-data` so files stay writable. nginx serves `/uploads/` static-only.
+Tests: phpunit.xml `<env>` does not beat compose env, so `tests/bootstrap.php` forces the test environment.

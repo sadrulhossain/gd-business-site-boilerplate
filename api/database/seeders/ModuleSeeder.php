@@ -44,6 +44,9 @@ abstract class ModuleSeeder extends Seeder
 
         $this->seedMenus($this->menus(), null);
 
+        // Permissions were just created: drop the cached list so givePermissionTo() can find them.
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+
         foreach ($this->grants() as $role => $permissions) {
             Role::findOrCreate($role, self::GUARD)->givePermissionTo($permissions);
         }
