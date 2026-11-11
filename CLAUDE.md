@@ -9,7 +9,9 @@
 - `docs/` — PHASES.md, VERSIONS.md, ENV.md, DECISIONS.md, PATTERNS.md
 
 ## Make commands
-(Defined in a later phase; keep this list in sync with the Makefile.)
+- `make up` / `make down` — start (builds, waits for healthy) / stop the stack
+- `make ports` — check host ports from .env are free or ours
+- `make versions` — check .env *_VERSION pins against docs/VERSIONS.md
 - `make t FILTER=...` — targeted tests only
 - `make check` — full lint + tests (run once, at the end of a phase)
 
