@@ -7,10 +7,12 @@ x-php: &php
       PHP_VERSION: ${PHP_VERSION}
       COMPOSER_VERSION: ${COMPOSER_VERSION}
       PHPREDIS_VERSION: ${PHPREDIS_VERSION}
+      UPLOADS_CONTAINER_PATH: ${UPLOADS_CONTAINER_PATH}
   restart: unless-stopped
   working_dir: /var/www/api
   volumes:
     - ./api:/var/www/api
+    - uploads-data:${UPLOADS_CONTAINER_PATH}
   environment: &php-env
     - APP_ENV=${APP_ENV}
     - APP_DEBUG=${APP_DEBUG}
@@ -37,6 +39,8 @@ x-php: &php
     - REDIS_PASSWORD=${REDIS_PASSWORD}
     - MAIL_HOST=mailpit
     - MAIL_PORT=1025
+    - UPLOADS_CONTAINER_PATH=${UPLOADS_CONTAINER_PATH}
+    - UPLOADS_MAX_MB=${UPLOADS_MAX_MB}
 
 services:
   php:
@@ -55,6 +59,7 @@ services:
   php-queue:
     <<: *php
     container_name: ${COMPOSE_PROJECT_NAME}-php-queue
+    user: www-data
     command: ["artisan-or-idle.sh", "queue:work", "--sleep=3", "--tries=3"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -63,6 +68,7 @@ services:
   php-scheduler:
     <<: *php
     container_name: ${COMPOSE_PROJECT_NAME}-php-scheduler
+    user: www-data
     command: ["artisan-or-idle.sh", "schedule:work"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -102,11 +108,14 @@ services:
       - APP_DOMAIN=${APP_DOMAIN}
       - PORTAL_DEV_PORT=${PORTAL_DEV_PORT}
       - ADMIN_DEV_PORT=${ADMIN_DEV_PORT}
+      - UPLOADS_CONTAINER_PATH=${UPLOADS_CONTAINER_PATH}
+      - UPLOADS_MAX_MB=${UPLOADS_MAX_MB}
     ports:
       - "${NGINX_HTTP_PORT}:80"
     volumes:
       - ./docker/nginx/templates:/etc/nginx/templates:ro
       - ./api:/var/www/api:ro
+      - uploads-data:${UPLOADS_CONTAINER_PATH}:ro
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/healthz"]
       interval: 10s
@@ -172,3 +181,4 @@ volumes:
   redis-data:
   admin-node-modules:
   portal-node-modules:
+  uploads-data:

@@ -16,6 +16,7 @@ up: env
 	@$(call quiet,sh scripts/check-ports.sh)
 	@$(call quiet,$(COMPOSE) build -q php)
 	@$(call quiet,$(COMPOSE) up -d --build --wait --quiet-pull)
+	@sh scripts/ensure-test-db.sh
 	@$(COMPOSE) ps --format '{{.Name}} {{.Status}}'
 
 down:
