@@ -1,0 +1,33 @@
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Dependencies / build
+node_modules/
+vendor/
+.next/
+dist/
+coverage/
+
+# Env (keep examples)
+.env
+.env.*
+!.env.example
+!*.example
+
+# Runtime data
+uploads/
+storage/app/uploads/
+*.log
+logs/
+.cache/
+.phpunit.cache/
+.phpunit.result.cache
+.eslintcache
+*.tsbuildinfo
+
+# Claude Code local
+.claude/settings.local.json
