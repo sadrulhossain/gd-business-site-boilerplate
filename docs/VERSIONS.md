@@ -22,6 +22,8 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 | laravel/pint | 1.32.3 | 1.32.3 | https://packagist.org/packages/laravel/pint#v1.32.3 | 2026-11-12 | n/a (composer) |
 | larastan/larastan | 3.15.0 | 3.15.0 | https://packagist.org/packages/larastan/larastan#v3.15.0 | 2026-11-12 | n/a (composer) |
 | dedoc/scramble | 0.13.53 | 0.13.53 | https://packagist.org/packages/dedoc/scramble#v0.13.53 | 2026-11-12 | n/a (composer) |
+| laravel/passport | 13.11.0 | 13.11.0 | https://packagist.org/packages/laravel/passport#v13.11.0 | 2026-11-12 | n/a (composer) |
+| spatie/laravel-permission | 8.5.0 | 8.5.0 | https://packagist.org/packages/spatie/laravel-permission#8.5.0 | 2026-11-12 | n/a (composer) |
 
 ## Notes
 - Node: the 11 Nov 2026 official security release patches 24.x at **v24.22.3** (fixes 16 CVEs, highest severity High; 26.x -> v26.13.1, 22.x -> v22.23.5). v24.22.3 is on nodejs.org/dist (dated 2026-11-10), but the official Docker image has only 24.22.2 so far. Until `node:24.22.3-*` appears, do not build images from `node:24.22.2` as the pin; recheck the tag.
@@ -31,3 +33,4 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 - Node 24.22.3 image: `.env` keeps the correct pin. Phase 1 was verified locally with `NODE_VERSION=24.22.2` (not published yet, see above). Remove the override once `node:24.22.3-alpine` exists.
 - Phase 2: laravel/framework resolved to v13.42.0 (floor >=13.29.0); `composer audit` clean on 2026-11-12. Pest is pinned to 4.x as requested (5.3.5 exists). Predis not installed (phpredis builds).
 - Phase 2: the Laravel 13 skeleton's own default dev dependencies (tinker, pail, pao, collision, mockery, faker, phpunit via Pest) are kept unpinned; everything else was added deliberately above.
+- Phase 3: Passport 13.11.0 and spatie/laravel-permission 8.5.0 resolve with Laravel 13.42.0; `composer audit` clean 2026-11-12.
