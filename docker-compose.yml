@@ -5,13 +5,26 @@ x-php: &php
     context: ./docker/php
     args:
       PHP_VERSION: ${PHP_VERSION}
+      COMPOSER_VERSION: ${COMPOSER_VERSION}
+      PHPREDIS_VERSION: ${PHPREDIS_VERSION}
   restart: unless-stopped
   working_dir: /var/www/api
   volumes:
     - ./api:/var/www/api
   environment: &php-env
     - APP_ENV=${APP_ENV}
+    - APP_DEBUG=${APP_DEBUG}
+    - APP_KEY=${APP_KEY}
+    - APP_URL=http://api.${APP_DOMAIN}:${NGINX_HTTP_PORT}
     - APP_DOMAIN=${APP_DOMAIN}
+    - LOCALE_DEFAULT=${LOCALE_DEFAULT}
+    - LOCALE_FALLBACK=${LOCALE_FALLBACK}
+    - LOCALE_SUPPORTED=${LOCALE_SUPPORTED}
+    - LOG_CHANNEL=stderr
+    - CACHE_STORE=redis
+    - SESSION_DRIVER=redis
+    - QUEUE_CONNECTION=redis
+    - REDIS_CLIENT=phpredis
     - DB_CONNECTION=pgsql
     - DB_HOST=postgres
     - DB_PORT=5432
@@ -29,6 +42,7 @@ services:
   php:
     <<: *php
     container_name: ${COMPOSE_PROJECT_NAME}-php
+    command: ["fpm-start.sh"]
     healthcheck:
       test: ["CMD-SHELL", "pidof php-fpm >/dev/null"]
       interval: 10s

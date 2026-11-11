@@ -10,7 +10,7 @@ endef
 .PHONY: up down ports versions t check env
 
 env:
-	@[ -f .env ] || { cp .env.example .env; echo "created .env from .env.example (change the passwords)"; }
+	@[ -f .env ] || { cp .env.example .env; sed -i.bak "s|^APP_KEY=.*|APP_KEY=base64:$$(openssl rand -base64 32)|" .env; rm -f .env.bak; echo "created .env from .env.example (APP_KEY generated; change the passwords)"; }
 
 up: env
 	@$(call quiet,sh scripts/check-ports.sh)
@@ -34,15 +34,18 @@ versions:
 # targeted tests: make t FILTER=SomeTest
 t:
 	@[ -n "$(FILTER)" ] || { echo "usage: make t FILTER=<name>"; exit 2; }
-	@if [ -f api/artisan ]; then $(call quiet,$(COMPOSE) exec -T php php artisan test --filter='$(FILTER)'); echo "t: ok"; else echo "t: no test runner yet (Laravel not installed)"; fi
+	@$(call quiet,$(COMPOSE) exec -T php vendor/bin/pest --compact --filter='$(FILTER)')
+	@tail -n 3 $(LOG)
 
-# run once at the end of a phase
+# run once at the end of a phase (needs the stack up)
 check:
 	@$(call quiet,$(COMPOSE) config -q)
 	@for f in scripts/*.sh docker/*/*.sh; do sh -n $$f || exit 1; done
-	@if [ -n "$$($(COMPOSE) ps --status running -q nginx)" ]; then \
-	  $(call quiet,$(COMPOSE) exec -T nginx nginx -t); \
-	  $(call quiet,$(COMPOSE) exec -T php php -l public/index.php); \
-	else echo "check: stack down, skipped runtime checks"; fi
-	@$(MAKE) --no-print-directory t FILTER=all
+	@[ -n "$$($(COMPOSE) ps --status running -q php)" ] || { echo "check: stack is down, run make up"; exit 1; }
+	@$(call quiet,$(COMPOSE) exec -T nginx nginx -t)
+	@$(call quiet,$(COMPOSE) exec -T php vendor/bin/pint --test)
+	@$(call quiet,$(COMPOSE) exec -T php vendor/bin/phpstan analyse --memory-limit=1G --no-progress)
+	@$(call quiet,$(COMPOSE) exec -T php vendor/bin/pest --compact)
+	@$(call quiet,$(COMPOSE) exec -T php composer audit)
+	@$(MAKE) --no-print-directory versions
 	@echo "check: ok"
