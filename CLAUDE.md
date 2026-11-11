@@ -12,8 +12,8 @@
 - `make up` / `make down` — start (builds, waits for healthy) / stop the stack
 - `make ports` — check host ports from .env are free or ours
 - `make versions` — check .env *_VERSION pins against docs/VERSIONS.md
-- `make t FILTER=...` — targeted tests only
-- `make check` — full lint + tests (run once, at the end of a phase)
+- `make t FILTER=...` — targeted Pest tests inside the php container
+- `make check` — compose config, script syntax, nginx -t, Pint, Larastan, Pest, composer audit, version pins (run once, at the end of a phase; needs the stack up)
 
 ## Rules
 1) One phase at a time; read only CLAUDE.md, the phase row and files it names.
