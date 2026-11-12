@@ -1,7 +1,7 @@
 # gd-business-site-boilerplate
 
 ## Repo map
-- `api/` — Laravel API (PHP 8.5, PostgreSQL, Redis)
+- `api/` — Laravel API (PHP 8.5, MariaDB; cache, sessions and queue use the database)
 - `web/admin` — Next.js admin app
 - `web/portal` — Next.js public portal
 - `packages/` — shared packages

@@ -10,7 +10,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->id();
+            // Not auto-increment: MariaDB cannot put a CHECK on an auto-increment column, and this table only ever holds id 1.
+            $table->unsignedTinyInteger('id')->primary();
             $table->string('site_name');
             $table->string('site_name_2nd')->nullable();
             $table->string('tagline')->nullable();

@@ -25,7 +25,7 @@ const semantic = [
 ] as const
 
 const api = createClient({
-  baseUrl: `${location.protocol}//api.${location.host.replace(/^admin\./, '')}/api`,
+  baseUrl: `${location.origin}/api`,
 })
 
 /** Admin theme showcase: tokens from @gd/tokens/admin.css and one typed call through @gd/api-client. */

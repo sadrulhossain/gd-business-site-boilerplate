@@ -10,13 +10,11 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 | Node.js 24 LTS "Krypton" | 24.22.3 | 24.22.3 | https://nodejs.org/en/blog/vulnerability/november-2026-security-releases | 2026-11-11 | `node:24.22.3-alpine` exists (pulled 2026-11-12) |
 | Next.js | 16.4.6 | 16.4.6 | https://github.com/vercel/next.js/releases/tag/v16.4.6 | 2026-11-12 | n/a |
 | nginx | 1.30.6 | 1.30.6 | https://nginx.org/en/CHANGES-1.30 | 2026-11-11 | `nginx:1.30.6-alpine` exists |
-| PostgreSQL | 18.6 | 18.6 | https://www.postgresql.org/docs/release/18.6/ | 2026-11-11 | `postgres:18.6-alpine` exists |
-| Redis | 8.10.3 | 8.10.3 | https://github.com/redis/redis/releases/tag/8.10.3 | 2026-11-11 | `redis:8.10.3-alpine` exists |
+| MariaDB (LTS) | 11.8.9 | 11.8.9 | https://hub.docker.com/_/mariadb/tags?name=11.8.9 | 2026-11-12 | `mariadb:11.8.9` exists |
 | Mailpit | v1.33.1 | v1.33.1 | https://github.com/axllent/mailpit/releases/tag/v1.33.1 | 2026-11-12 | `axllent/mailpit:v1.33.1` exists |
 | Vite | 8.3.8 | 8.3.8 | https://www.npmjs.com/package/vite/v/8.3.8 | 2026-11-12 | n/a (npm) |
 | React / React DOM | 19.3.1 | 19.3.1 | https://www.npmjs.com/package/react/v/19.3.1 | 2026-11-12 | n/a (npm) |
 | Composer | 2.11.2 | 2.11.2 | https://hub.docker.com/_/composer (tag 2.11.2) | 2026-11-12 | `composer:2.11.2` exists |
-| phpredis (PECL redis) | 6.3.0 | 6.3.0 | https://pecl.php.net/package/redis/6.3.0 | 2026-11-12 | builds on PHP 8.5.12 (see DECISIONS.md) |
 | pestphp/pest | 4.7.8 | 4.7.8 | https://packagist.org/packages/pestphp/pest#v4.7.8 | 2026-11-12 | n/a (composer) |
 | pestphp/pest-plugin-laravel | 4.1.0 | 4.1.0 | https://packagist.org/packages/pestphp/pest-plugin-laravel#v4.1.0 | 2026-11-12 | n/a (composer) |
 | laravel/pint | 1.32.3 | 1.32.3 | https://packagist.org/packages/laravel/pint#v1.32.3 | 2026-11-12 | n/a (composer) |
@@ -43,10 +41,12 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 - Laravel: 13.29.0 is the floor; Composer constraint `^13.29` resolves to latest 13.x.
 - Phase 1 additions (Mailpit, Vite, React/React DOM) are new pins added to support the dev profile and hello apps; floors equal pins and advisories were not checked. Pending approval.
 - Node 24.22.3 image: `.env` keeps the correct pin. Phase 1 was verified locally with `NODE_VERSION=24.22.2` (not published yet, see above). Remove the override once `node:24.22.3-alpine` exists.
-- Phase 2: laravel/framework resolved to v13.42.0 (floor >=13.29.0); `composer audit` clean on 2026-11-12. Pest is pinned to 4.x as requested (5.3.5 exists). Predis not installed (phpredis builds).
+- Phase 2: laravel/framework resolved to v13.42.0 (floor >=13.29.0); `composer audit` clean on 2026-11-12. Pest is pinned to 4.x as requested (5.3.5 exists). No Redis client is installed (Redis was dropped in phase 8, see DECISIONS.md 010).
 - Phase 2: the Laravel 13 skeleton's own default dev dependencies (tinker, pail, pao, collision, mockery, faker, phpunit via Pest) are kept unpinned; everything else was added deliberately above.
 - Phase 4: no new packages. PHP ext `gd` (bundled, with libwebp/libjpeg-turbo/libpng from the Alpine base) was added to the php image for WebP variants.
 - Phase 3: Passport 13.11.0 and spatie/laravel-permission 8.5.0 resolve with Laravel 13.42.0; `composer audit` clean 2026-11-12.
 - Phase 6: ezyang/htmlpurifier 4.19.1 (HTML Purifier, allowlist sanitiser for blog rich text; used directly, no Laravel wrapper). Resolves on PHP 8.5 / Laravel 13; `composer audit` clean 2026-11-12.
 - Phase 6: phpseclib/phpseclib 4.0.3 (transitive via Passport, forced with an inline alias; see DECISIONS.md 008). Fixes PKSA-h7cz-q7zq-mdkt; `composer audit` clean 2026-11-12.
 - Phase 7: JS dependencies are pinned exactly in each package.json or in the catalog: of pnpm-workspace.yaml (react, react-dom, tailwindcss, typescript, @types/*) so every workspace package resolves one version. TypeScript stays on 5.9.3 on purpose: openapi-typescript 7.13.0 peers 	ypescript ^5.x, and TypeScript 7 (native) has no JS compiler API for Next's type check. pnpm audit: no known vulnerabilities, 2026-11-12.
+- Phase 8 (pre-work): PostgreSQL 18.6 replaced by MariaDB 11.8.9 (LTS, Laravel `mariadb` driver, PHP `pdo_mysql` bundled with PHP); Redis 8.10.3 and phpredis 6.3.0 removed.
+- Phase 8: new exact JS pins in web/admin: react-router 7.18.5, @tanstack/react-query 5.107.1, zustand 5.1.0, vitest 5.1.0, jsdom 31.0.0, @testing-library/react 16.3.3, @testing-library/dom 10.4.2, @playwright/test 1.65.0; `pnpm audit` clean 2026-11-13. Floors equal pins. Browser tests use the image `mcr.microsoft.com/playwright:v1.65.0-noble` (compose service `e2e`, profile `e2e`), matching @playwright/test.

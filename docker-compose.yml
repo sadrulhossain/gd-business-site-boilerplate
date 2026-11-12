@@ -6,7 +6,6 @@ x-php: &php
     args:
       PHP_VERSION: ${PHP_VERSION}
       COMPOSER_VERSION: ${COMPOSER_VERSION}
-      PHPREDIS_VERSION: ${PHPREDIS_VERSION}
       UPLOADS_CONTAINER_PATH: ${UPLOADS_CONTAINER_PATH}
   restart: unless-stopped
   working_dir: /var/www/api
@@ -23,20 +22,15 @@ x-php: &php
     - LOCALE_FALLBACK=${LOCALE_FALLBACK}
     - LOCALE_SUPPORTED=${LOCALE_SUPPORTED}
     - LOG_CHANNEL=stderr
-    - CACHE_STORE=redis
-    - SESSION_DRIVER=redis
-    - QUEUE_CONNECTION=redis
-    - REDIS_CLIENT=phpredis
-    - DB_CONNECTION=pgsql
-    - DB_HOST=postgres
-    - DB_PORT=5432
-    - DB_DATABASE=${POSTGRES_DB}
-    - DB_USERNAME=${POSTGRES_USER}
-    - DB_PASSWORD=${POSTGRES_PASSWORD}
-    - REDIS_HOST=redis
-    - REDIS_PORT=6379
-    - REDIS_USERNAME=${REDIS_USER}
-    - REDIS_PASSWORD=${REDIS_PASSWORD}
+    - CACHE_STORE=database
+    - SESSION_DRIVER=database
+    - QUEUE_CONNECTION=database
+    - DB_CONNECTION=mariadb
+    - DB_HOST=mariadb
+    - DB_PORT=3306
+    - DB_DATABASE=${MARIADB_DATABASE}
+    - DB_USERNAME=${MARIADB_USER}
+    - DB_PASSWORD=${MARIADB_PASSWORD}
     - MAIL_HOST=mailpit
     - MAIL_PORT=1025
     - UPLOADS_CONTAINER_PATH=${UPLOADS_CONTAINER_PATH}
@@ -56,8 +50,7 @@ services:
       timeout: 3s
       retries: 5
     depends_on:
-      postgres: { condition: service_healthy }
-      redis: { condition: service_healthy }
+      mariadb: { condition: service_healthy }
 
   php-queue:
     <<: *php
@@ -65,8 +58,7 @@ services:
     user: www-data
     command: ["artisan-or-idle.sh", "queue:work", "--sleep=3", "--tries=3"]
     depends_on:
-      postgres: { condition: service_healthy }
-      redis: { condition: service_healthy }
+      mariadb: { condition: service_healthy }
 
   php-scheduler:
     <<: *php
@@ -74,8 +66,7 @@ services:
     user: www-data
     command: ["artisan-or-idle.sh", "schedule:work"]
     depends_on:
-      postgres: { condition: service_healthy }
-      redis: { condition: service_healthy }
+      mariadb: { condition: service_healthy }
 
   node:
     image: node:${NODE_VERSION}-alpine
@@ -93,6 +84,8 @@ services:
       - NGINX_HTTP_PORT=${NGINX_HTTP_PORT}
       - PORTAL_DEV_PORT=${PORTAL_DEV_PORT}
       - ADMIN_DEV_PORT=${ADMIN_DEV_PORT}
+      - OAUTH_ADMIN_CLIENT_ID=${OAUTH_ADMIN_CLIENT_ID}
+      - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
     volumes:
       - .:/app
       - root-node-modules:/app/node_modules
@@ -106,6 +99,23 @@ services:
       timeout: 5s
       retries: 60
       start_period: 120s
+
+  # Browser tests (make e2e). Not started by `make up`; same code and node_modules as the node service.
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.65.0-noble
+    profiles: ["e2e"]
+    working_dir: /app/web/admin
+    environment:
+      - E2E_ADMIN_ORIGIN=http://admin.${APP_DOMAIN}:${NGINX_HTTP_PORT}
+      - E2E_EMAIL=${E2E_EMAIL:-}
+      - E2E_PASSWORD=${E2E_PASSWORD:-}
+    volumes:
+      - .:/app
+      - root-node-modules:/app/node_modules
+      - admin-node-modules:/app/web/admin/node_modules
+      - portal-node-modules:/app/web/portal/node_modules
+      - api-types-node-modules:/app/packages/api-types/node_modules
+      - api-client-node-modules:/app/packages/api-client/node_modules
 
   nginx:
     image: nginx:${NGINX_VERSION}-alpine
@@ -132,42 +142,24 @@ services:
       - php
       - node
 
-  postgres:
-    image: postgres:${POSTGRES_VERSION}-alpine
-    container_name: ${COMPOSE_PROJECT_NAME}-postgres
+  mariadb:
+    image: mariadb:${MARIADB_VERSION}
+    container_name: ${COMPOSE_PROJECT_NAME}-mariadb
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
     ports:
-      - "127.0.0.1:${POSTGRES_PORT}:5432"
+      - "127.0.0.1:${MARIADB_PORT}:3306"
     volumes:
-      - postgres-data:/var/lib/postgresql
+      - mariadb-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
       timeout: 3s
-      retries: 10
-
-  redis:
-    image: redis:${REDIS_VERSION}-alpine
-    container_name: ${COMPOSE_PROJECT_NAME}-redis
-    restart: unless-stopped
-    entrypoint: ["sh", "/docker/redis-entrypoint.sh"]
-    environment:
-      - REDIS_USER=${REDIS_USER}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-    ports:
-      - "127.0.0.1:${REDIS_PORT}:6379"
-    volumes:
-      - redis-data:/data
-      - ./docker/redis/entrypoint.sh:/docker/redis-entrypoint.sh:ro
-    healthcheck:
-      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$$REDIS_PASSWORD\" redis-cli --user \"$$REDIS_USER\" ping | grep -q PONG"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
+      retries: 20
 
   mailpit:
     image: axllent/mailpit:${MAILPIT_VERSION}
@@ -184,8 +176,7 @@ services:
       retries: 5
 
 volumes:
-  postgres-data:
-  redis-data:
+  mariadb-data:
   root-node-modules:
   admin-node-modules:
   portal-node-modules:

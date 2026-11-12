@@ -45,9 +45,14 @@ export interface ClientOptions {
   baseUrl: string
   /** Bearer token for authenticated routes; called per request. */
   getToken?: () => string | null | undefined | Promise<string | null | undefined>
+  fetch?: typeof fetch
   /** Default `?lang=` for public reads (`/v1/public/*`). */
   lang?: string
-  fetch?: typeof fetch
+  /**
+   * Called once when a request answers 401. Return true after renewing the token (the request is retried once with the
+   * new `getToken()` value); false to surface the 401 as an ApiError.
+   */
+  onUnauthorized?: () => Promise<boolean>
 }
 
 /** Non-2xx answer. `code`, `message` and `details` come from the API's `{"error": {...}}` body. */
@@ -72,6 +77,7 @@ export function createClient(options: ClientOptions) {
     path: string,
     // Loosely typed on purpose: the public methods below carry the precise per-operation types.
     init: { path?: unknown; query?: unknown; body?: unknown } = {},
+    retried = false,
   ): Promise<unknown> {
     const pathParams = (init.path ?? {}) as Record<string, unknown>
     const query = { ...(init.query as Record<string, unknown> | undefined) }
@@ -100,6 +106,10 @@ export function createClient(options: ClientOptions) {
 
     const response = await doFetch(url, { method, headers, body })
 
+    if (response.status === 401 && !retried && options.onUnauthorized && (await options.onUnauthorized())) {
+      return request(method, path, init, true)
+    }
+
     if (response.status === 204) return undefined
     const payload: unknown = await response.json().catch(() => undefined)
 
@@ -112,6 +122,9 @@ export function createClient(options: ClientOptions) {
   }
 
   return {
+    /** Untyped escape hatch for config-driven pages (CrudPage) whose endpoints are data, not literals. */
+    request: (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', path: string, init?: { path?: Record<string, unknown>; query?: Record<string, unknown>; body?: unknown }) =>
+      request(method, path, init),
     get: <P extends PathsFor<'get'>>(path: P, ...args: Args<Op<P, 'get'>>) =>
       request('GET', path, args[0]) as Promise<ResponseOf<Op<P, 'get'>>>,
     post: <P extends PathsFor<'post'>>(path: P, ...args: Args<Op<P, 'post'>>) =>

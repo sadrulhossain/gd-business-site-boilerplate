@@ -3,11 +3,13 @@
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ContactController;
 use App\Http\Controllers\Api\V1\ContactMessageController;
+use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\FaqController;
 use App\Http\Controllers\Api\V1\GalleryItemController;
 use App\Http\Controllers\Api\V1\GalleryItemImageController;
 use App\Http\Controllers\Api\V1\HealthController;
 use App\Http\Controllers\Api\V1\LocalesController;
+use App\Http\Controllers\Api\V1\LogoutController;
 use App\Http\Controllers\Api\V1\MeController;
 use App\Http\Controllers\Api\V1\MeMenusController;
 use App\Http\Controllers\Api\V1\PostController;
@@ -48,6 +50,8 @@ Route::prefix('v1')->group(function (): void {
     Route::middleware('auth:api')->group(function (): void {
         Route::get('me', MeController::class);
         Route::get('me/menus', MeMenusController::class);
+        Route::post('logout', LogoutController::class);
+        Route::get('dashboard', DashboardController::class)->middleware('can:dashboard.view');
 
         // Content (edit-only: seeded rows, no create/delete)
         Route::apiSingleton('settings', SettingController::class);

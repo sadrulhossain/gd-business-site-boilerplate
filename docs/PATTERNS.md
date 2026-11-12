@@ -49,3 +49,11 @@ singleton reference: Settings. Paths below are relative to `api/app` unless note
 - Data: type API data with `components['schemas'][...]` from `@gd/api-types`; call the API with `@gd/api-client` (`createClient`), never raw fetch.
 - Regenerate after API changes: `make openapi` (migrated DB), then `pnpm generate:types`; commit both outputs.
 - Tailwind only sees literal class names: map values to full class strings, do not build them with template pieces.
+
+## Admin module (phase 8)
+- A CRUD screen is one entry in `web/admin/src/modules.ts`: `key` (permission prefix: `<key>.view|create|update|delete`), `path` (matches the
+  `/me/menus` row), `endpoint`, `columns`, `fields` (`bilingual: true` renders "Title (EN)" / "Title (FR)" from `/v1/meta/locales`). The router,
+  permission gate and buttons follow from it; add a page component only when the screen is not plain CRUD.
+- Calls go through `src/api.ts` (token + refresh handled); never read tokens from the store in components. Use `can('x.y')` for UI gating,
+  the API remains the authority.
+- Shared pieces: `DataTable`, `FormField`, `BilingualField`, `ConfirmDialog`, `Toast`; do not add a second of any.

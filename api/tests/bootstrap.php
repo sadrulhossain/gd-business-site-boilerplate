@@ -3,7 +3,7 @@
 // Container env (compose) beats phpunit.xml <env>, because Laravel reads $_SERVER first.
 // So force the test environment here, before the app boots:
 // - the database is "<dev database>_testing" (tests refresh it, never the dev one)
-// - cache/session/queue/log must not touch the real Redis or logs.
+// - cache/session/queue/log must not touch the real cache tables or logs.
 require __DIR__.'/../vendor/autoload.php';
 
 $database = getenv('DB_DATABASE') ?: 'app';
