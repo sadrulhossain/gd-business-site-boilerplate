@@ -9,6 +9,7 @@ Tick a phase only when it is finished and committed.
 | [x] | 2 | Laravel API | api/*, Dockerfile (composer, phpredis), /api/v1/health, /api/v1/meta/locales, JSON errors, Pest/Pint/Larastan/Scramble, make t/check |
 | [x] | 3 | Auth and RBAC | Passport 13, spatie/laravel-permission, menus table, /me, /me/menus, seeders, access tests |
 | [x] | 4 | Settings, sections, media | settings (singleton), sections, MediaService + WebP queue, HasSecondLanguage, PATTERNS.md |
+| [x] | 5 | FAQs, services, testimonials, team, gallery | migration + model + FormRequests + Resource + Policy + public/admin routes + seeder + feature test per module; image endpoints |
 
 <!-- TODO: the phase table was not included in the Phase 0 brief ("[paste the table below]").
      Paste phases 1..N here, one row each, with a [ ] checkbox. -->
