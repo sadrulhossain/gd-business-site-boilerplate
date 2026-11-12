@@ -1,15 +1,12 @@
 #!/bin/sh
-# One container, two dev servers: web/admin (Vite) and web/portal (Next).
+# One container, two dev servers: web/admin (Vite) and web/portal (Next), in one pnpm workspace.
 set -eu
-for app in admin portal; do
-  cd "/app/web/$app"
-  if [ ! -f node_modules/.package-lock.json ]; then
-    echo "installing $app deps"
-    if [ -f package-lock.json ]; then npm ci --no-audit --no-fund --loglevel=error
-    else npm install --no-audit --no-fund --loglevel=error; fi
-  fi
-done
+cd /app
+corepack enable
+echo "installing workspace deps"
+if [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile --reporter=silent
+else pnpm install --reporter=silent; fi
 trap 'kill 0' TERM INT
-(cd /app/web/admin && exec npm run dev) &
-(cd /app/web/portal && exec npm run dev) &
+(cd /app/web/admin && exec pnpm run dev) &
+(cd /app/web/portal && exec pnpm run dev) &
 wait

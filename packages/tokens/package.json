@@ -1,0 +1,11 @@
+{
+  "name": "@gd/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Design tokens as Tailwind 4 @theme CSS: one file per app theme, both built on base.css.",
+  "exports": {
+    "./base.css": "./base.css",
+    "./admin.css": "./admin.css",
+    "./portal.css": "./portal.css"
+  }
+}

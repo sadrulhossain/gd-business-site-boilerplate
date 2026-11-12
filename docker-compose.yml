@@ -87,15 +87,19 @@ services:
       - NODE_ENV=development
       - WATCHPACK_POLLING=true
       - NEXT_TELEMETRY_DISABLED=1
+      - COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+      - PNPM_STORE_DIR=/app/node_modules/.pnpm-store
       - APP_DOMAIN=${APP_DOMAIN}
       - NGINX_HTTP_PORT=${NGINX_HTTP_PORT}
       - PORTAL_DEV_PORT=${PORTAL_DEV_PORT}
       - ADMIN_DEV_PORT=${ADMIN_DEV_PORT}
     volumes:
-      - ./web:/app/web
-      - ./docker/node:/app/docker/node:ro
+      - .:/app
+      - root-node-modules:/app/node_modules
       - admin-node-modules:/app/web/admin/node_modules
       - portal-node-modules:/app/web/portal/node_modules
+      - api-types-node-modules:/app/packages/api-types/node_modules
+      - api-client-node-modules:/app/packages/api-client/node_modules
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:$$ADMIN_DEV_PORT/ && wget -q -O /dev/null http://127.0.0.1:$$PORTAL_DEV_PORT/"]
       interval: 5s
@@ -182,6 +186,9 @@ services:
 volumes:
   postgres-data:
   redis-data:
+  root-node-modules:
   admin-node-modules:
   portal-node-modules:
+  api-types-node-modules:
+  api-client-node-modules:
   uploads-data:

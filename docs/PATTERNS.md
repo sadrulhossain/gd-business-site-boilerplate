@@ -42,3 +42,10 @@ singleton reference: Settings. Paths below are relative to `api/app` unless note
 - Content-change webhook: add the model to the list in `AppServiceProvider::boot()` (it gets `ContentObserver`); tag = table name.
   Not for private data (contact messages). Tests use `Http::fake()` per test.
 - OpenAPI: `make openapi` exports Scramble's spec to `packages/api-types/openapi.json`; commit it when routes change.
+
+## Frontend (phase 7)
+- Theme: import `tailwindcss` then `@gd/tokens/<app>.css` in the app's one CSS file. Use token utilities (`bg-primary-600`, `text-ink`,
+  `border-line`, `font-display`), never raw hex. New tokens go in packages/tokens, not in an app.
+- Data: type API data with `components['schemas'][...]` from `@gd/api-types`; call the API with `@gd/api-client` (`createClient`), never raw fetch.
+- Regenerate after API changes: `make openapi` (migrated DB), then `pnpm generate:types`; commit both outputs.
+- Tailwind only sees literal class names: map values to full class strings, do not build them with template pieces.
