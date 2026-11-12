@@ -43,3 +43,14 @@ Tests: phpunit.xml `<env>` does not beat compose env, so `tests/bootstrap.php` f
 PKSA-h7cz-q7zq-mdkt (CPU-exhaustion DoS when parsing encrypted keys/PFX/CMS; fixed in 4.0.3). `api/composer.json` requires
 `"phpseclib/phpseclib": "4.0.3 as 4.0.1"` (inline alias) so Passport's constraint is satisfied. Full test suite passes, `composer audit` clean.
 Revisit when Passport releases a version that allows phpseclib >=4.0.3; then drop the alias and require plain `4.0.3`.
+
+## 009 - Frontend: one pnpm workspace, source-only packages
+2026-11-12. Root package.json + pnpm-workspace.yaml (`web/*`, `packages/*`) with a single `pnpm-lock.yaml`; shared versions live in the
+workspace `catalog:` so react/react-dom/tailwindcss/typescript resolve once. pnpm runs via corepack (`packageManager`). Packages export
+TypeScript/CSS source (no build step): Next and Vite compile them. `@gd/tokens` is Tailwind 4 `@theme` CSS, one file per app
+(`admin.css`, `portal.css`, both on `base.css`); each theme resets `--color-*` so only its own palette exists. `@gd/api-types` is
+generated from `packages/api-types/openapi.json` (`pnpm generate:types`, committed output). `@gd/api-client` is a dependency-free typed
+fetch: Scramble documents updates as PUT while the API takes PATCH, so `patch` reuses the `put` types. Re-export the spec with `make
+openapi` after migrating the dev DB (Scramble reads column types from it; without migrations every field degrades to `string`).
+The node container mounts the repo at /app with named volumes over every node_modules; `make web` installs, regenerates types,
+typechecks and builds both apps with NODE_ENV=production (Next prerender breaks under NODE_ENV=development).

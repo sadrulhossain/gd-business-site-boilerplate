@@ -1,0 +1,19 @@
+{
+  "name": "@gd/api-client",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Typed fetch client over the generated API types. No runtime dependencies.",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@gd/api-types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}

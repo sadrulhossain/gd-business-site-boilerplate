@@ -7,7 +7,7 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 |-----------|-----|-------|--------|------|------------|
 | PHP | 8.5.12 | 8.5.12 | https://www.php.net/releases/8.5/en.php | 2026-11-11 | `php:8.5.12-{cli,fpm}-alpine` exists |
 | Laravel | 13.29.0 (`^13.29`) | >=13.29.0 | https://github.com/laravel/framework/releases/tag/v13.29.0 | 2026-11-11 | n/a (v13.39.0 is current) |
-| Node.js 24 LTS "Krypton" | 24.22.3 | 24.22.3 | https://nodejs.org/en/blog/vulnerability/november-2026-security-releases | 2026-11-11 | `node:24.22.3-alpine` **not published yet** (latest 24.22.2) |
+| Node.js 24 LTS "Krypton" | 24.22.3 | 24.22.3 | https://nodejs.org/en/blog/vulnerability/november-2026-security-releases | 2026-11-11 | `node:24.22.3-alpine` exists (pulled 2026-11-12) |
 | Next.js | 16.4.6 | 16.4.6 | https://github.com/vercel/next.js/releases/tag/v16.4.6 | 2026-11-12 | n/a |
 | nginx | 1.30.6 | 1.30.6 | https://nginx.org/en/CHANGES-1.30 | 2026-11-11 | `nginx:1.30.6-alpine` exists |
 | PostgreSQL | 18.6 | 18.6 | https://www.postgresql.org/docs/release/18.6/ | 2026-11-11 | `postgres:18.6-alpine` exists |
@@ -26,6 +26,16 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 | spatie/laravel-permission | 8.5.0 | 8.5.0 | https://packagist.org/packages/spatie/laravel-permission#8.5.0 | 2026-11-12 | n/a (composer) |
 | ezyang/htmlpurifier | 4.19.1 | 4.19.1 | https://packagist.org/packages/ezyang/htmlpurifier#v4.19.1 | 2026-11-12 | n/a (composer) |
 | phpseclib/phpseclib | 4.0.3 | 4.0.3 | https://packagist.org/packages/phpseclib/phpseclib#4.0.3 | 2026-11-12 | n/a (composer, via Passport) |
+| pnpm | 12.18.0 | 12.18.0 | https://www.npmjs.com/package/pnpm/v/12.18.0 | 2026-11-12 | n/a (corepack, `packageManager` in root package.json) |
+| tailwindcss | 4.3.5 | 4.3.5 | https://www.npmjs.com/package/tailwindcss/v/4.3.5 | 2026-11-12 | n/a (npm) |
+| @tailwindcss/vite | 4.3.5 | 4.3.5 | https://www.npmjs.com/package/@tailwindcss/vite/v/4.3.5 | 2026-11-12 | n/a (npm) |
+| @tailwindcss/postcss | 4.3.5 | 4.3.5 | https://www.npmjs.com/package/@tailwindcss/postcss/v/4.3.5 | 2026-11-12 | n/a (npm) |
+| postcss | 8.5.32 | 8.5.32 | https://www.npmjs.com/package/postcss/v/8.5.32 | 2026-11-12 | n/a (npm) |
+| typescript | 5.9.3 | 5.9.3 | https://www.npmjs.com/package/typescript/v/5.9.3 | 2026-11-12 | n/a (npm; see notes) |
+| openapi-typescript | 7.13.0 | 7.13.0 | https://www.npmjs.com/package/openapi-typescript/v/7.13.0 | 2026-11-12 | n/a (npm) |
+| @vitejs/plugin-react | 6.3.0 | 6.3.0 | https://www.npmjs.com/package/@vitejs/plugin-react/v/6.3.0 | 2026-11-12 | n/a (npm) |
+| @types/react / @types/react-dom | 19.3.0 | 19.3.0 | https://www.npmjs.com/package/@types/react/v/19.3.0 | 2026-11-12 | n/a (npm) |
+| @types/node | 24.19.2 | 24.19.2 | https://www.npmjs.com/package/@types/node/v/24.19.2 | 2026-11-12 | n/a (npm; 24.x line to match Node 24) |
 
 ## Notes
 - Node: the 11 Nov 2026 official security release patches 24.x at **v24.22.3** (fixes 16 CVEs, highest severity High; 26.x -> v26.13.1, 22.x -> v22.23.5). v24.22.3 is on nodejs.org/dist (dated 2026-11-10), but the official Docker image has only 24.22.2 so far. Until `node:24.22.3-*` appears, do not build images from `node:24.22.2` as the pin; recheck the tag.
@@ -39,3 +49,4 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 - Phase 3: Passport 13.11.0 and spatie/laravel-permission 8.5.0 resolve with Laravel 13.42.0; `composer audit` clean 2026-11-12.
 - Phase 6: ezyang/htmlpurifier 4.19.1 (HTML Purifier, allowlist sanitiser for blog rich text; used directly, no Laravel wrapper). Resolves on PHP 8.5 / Laravel 13; `composer audit` clean 2026-11-12.
 - Phase 6: phpseclib/phpseclib 4.0.3 (transitive via Passport, forced with an inline alias; see DECISIONS.md 008). Fixes PKSA-h7cz-q7zq-mdkt; `composer audit` clean 2026-11-12.
+- Phase 7: JS dependencies are pinned exactly in each package.json or in the catalog: of pnpm-workspace.yaml (react, react-dom, tailwindcss, typescript, @types/*) so every workspace package resolves one version. TypeScript stays on 5.9.3 on purpose: openapi-typescript 7.13.0 peers 	ypescript ^5.x, and TypeScript 7 (native) has no JS compiler API for Next's type check. pnpm audit: no known vulnerabilities, 2026-11-12.

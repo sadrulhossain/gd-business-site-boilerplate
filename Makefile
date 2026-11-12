@@ -7,7 +7,7 @@ define quiet
 mkdir -p .cache; $(1) >$(LOG) 2>&1 || { tail -n 20 $(LOG); exit 1; }
 endef
 
-.PHONY: up down ports versions t check env openapi
+.PHONY: up down ports versions t check env openapi web
 
 env:
 	@[ -f .env ] || { cp .env.example .env; sed -i.bak "s|^APP_KEY=.*|APP_KEY=base64:$$(openssl rand -base64 32)|" .env; rm -f .env.bak; echo "created .env from .env.example (APP_KEY generated; change the passwords)"; }
@@ -56,3 +56,8 @@ openapi:
 	@$(COMPOSE) exec -T php php artisan scramble:export --path=storage/openapi.json >/dev/null
 	@mv api/storage/openapi.json packages/api-types/openapi.json
 	@echo "wrote packages/api-types/openapi.json"
+
+# JS workspace: install, regenerate API types, typecheck, build both apps (one-off node container)
+web:
+	@$(call quiet,$(COMPOSE) run --rm --no-deps -T -e NODE_ENV=production node sh -c 'cd /app && corepack enable && pnpm install --frozen-lockfile && pnpm generate:types && pnpm -r --if-present typecheck && pnpm -r --if-present build')
+	@tail -n 3 $(LOG)

@@ -1,0 +1,39 @@
+/*
+ * Portal theme: airy, warm, serif headings, rounder corners. Colours are reset first so
+ * only the tokens below exist as utilities (bg-brand-600, text-ink, font-display ...).
+ */
+@import './base.css';
+
+@theme {
+  --color-*: initial;
+
+  --color-white: #fff;
+  --color-canvas: #fbf8f3;
+  --color-surface: #fff;
+  --color-line: #e7dfd2;
+  --color-ink: #2a2118;
+  --color-ink-muted: #6f6454;
+
+  --color-brand-50: #fff4ec;
+  --color-brand-100: #ffe5d2;
+  --color-brand-200: #fecaa3;
+  --color-brand-300: #fdab70;
+  --color-brand-400: #fb8a3c;
+  --color-brand-500: #f06a12;
+  --color-brand-600: #d9500a;
+  --color-brand-700: #b43c0b;
+  --color-brand-800: #92310f;
+  --color-brand-900: #782b10;
+
+  --color-success: #2f7d4f;
+  --color-warning: #b7791f;
+  --color-danger: #c53030;
+
+  --font-display: ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.5rem;
+
+  --text-base: 1.0625rem;
+}
