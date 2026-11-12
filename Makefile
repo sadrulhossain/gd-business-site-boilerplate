@@ -7,7 +7,7 @@ define quiet
 mkdir -p .cache; $(1) >$(LOG) 2>&1 || { tail -n 20 $(LOG); exit 1; }
 endef
 
-.PHONY: up down ports versions t check env
+.PHONY: up down ports versions t check env openapi
 
 env:
 	@[ -f .env ] || { cp .env.example .env; sed -i.bak "s|^APP_KEY=.*|APP_KEY=base64:$$(openssl rand -base64 32)|" .env; rm -f .env.bak; echo "created .env from .env.example (APP_KEY generated; change the passwords)"; }
@@ -50,3 +50,9 @@ check:
 	@$(call quiet,$(COMPOSE) exec -T php composer audit)
 	@$(MAKE) --no-print-directory versions
 	@echo "check: ok"
+
+openapi:
+	@mkdir -p packages/api-types
+	@$(COMPOSE) exec -T php php artisan scramble:export --path=storage/openapi.json >/dev/null
+	@mv api/storage/openapi.json packages/api-types/openapi.json
+	@echo "wrote packages/api-types/openapi.json"
