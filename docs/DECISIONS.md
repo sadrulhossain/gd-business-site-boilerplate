@@ -37,3 +37,9 @@ that is not the default). Uploads: disk root `UPLOADS_CONTAINER_PATH` (named vol
 php, php-queue, nginx), path `<dir>/<random>/original.<ext>`, extension from detected mime, WebP variants by a
 queued job (GD). php-queue and php-scheduler run as `www-data` so files stay writable. nginx serves `/uploads/` static-only.
 Tests: phpunit.xml `<env>` does not beat compose env, so `tests/bootstrap.php` forces the test environment.
+
+## 008 - phpseclib 4.0.3 overrides Passport's 4.0.1 pin
+2026-11-12. `laravel/passport` 13.11.0 (latest 13.x) requires `phpseclib/phpseclib` exactly 4.0.1, which has advisory
+PKSA-h7cz-q7zq-mdkt (CPU-exhaustion DoS when parsing encrypted keys/PFX/CMS; fixed in 4.0.3). `api/composer.json` requires
+`"phpseclib/phpseclib": "4.0.3 as 4.0.1"` (inline alias) so Passport's constraint is satisfied. Full test suite passes, `composer audit` clean.
+Revisit when Passport releases a version that allows phpseclib >=4.0.3; then drop the alias and require plain `4.0.3`.
