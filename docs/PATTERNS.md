@@ -32,3 +32,13 @@ singleton reference: Settings. Paths below are relative to `api/app` unless note
 - `env()` is read only in `config/*.php` (e.g. `config/locales.php`, `config/uploads.php`).
 - Tests force their environment in `tests/bootstrap.php` (testing DB, array cache, sync queue); compose env
   beats phpunit.xml. Each compose service lists its own `environment:` (see `x-php` in `docker-compose.yml`).
+
+## Public reads, contact, webhook (phase 6)
+- Public reads live in the `LocalizePublicResponse` route group (`public/*`): the controller's `publicIndex`/`publicShow` skips
+  `Gate::authorize` and returns visible rows only. `?lang=` collapses `x`/`x_2nd` pairs; no per-resource code is needed.
+- Rich text: assign it to a model attribute whose setter calls `Services/HtmlSanitizer` (see `Post::body`); never sanitise in controllers.
+- Public forms: honeypot field (`prohibited` rule), `Services/Captcha` checked in the FormRequest's `after()`, named limiter in
+  `AppServiceProvider`, queued Notification to `Notification::route('mail', ...)`. Answer with `{"data":{"received":true}}`.
+- Content-change webhook: add the model to the list in `AppServiceProvider::boot()` (it gets `ContentObserver`); tag = table name.
+  Not for private data (contact messages). Tests use `Http::fake()` per test.
+- OpenAPI: `make openapi` exports Scramble's spec to `packages/api-types/openapi.json`; commit it when routes change.

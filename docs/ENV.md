@@ -18,6 +18,8 @@ each service lists its own `environment:` (no `env_file`). Commit only `*.exampl
 | POSTGRES_DB / POSTGRES_USER / POSTGRES_PASSWORD | postgres, php* | gdsite / gdsite / change-me | |
 | UPLOADS_CONTAINER_PATH | php*, nginx, Dockerfile | /var/www/uploads | disk root and volume mount point; nginx serves `/uploads/` |
 | UPLOADS_MAX_MB | php*, nginx | 5 | validation, php.ini upload limits and nginx `client_max_body_size` |
+| PORTAL_REVALIDATE_URL / PORTAL_REVALIDATE_SECRET | php* | empty / change-me | content changes queue a signed POST of `{"tags":[...]}` to the URL; headers `X-Webhook-Timestamp`, `X-Webhook-Signature: sha256=hmac(secret, "<timestamp>.<body>")`. Empty URL disables it |
+| CONTACT_NOTIFY_TO | php* | empty | contact form notification recipient when Settings has no email |
 | REDIS_USER / REDIS_PASSWORD | redis, php* | gdsite / change-me | default Redis user is disabled; ACL user only |
 
 | APP_DEBUG | php* | true | |

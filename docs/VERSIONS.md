@@ -24,6 +24,7 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 | dedoc/scramble | 0.13.53 | 0.13.53 | https://packagist.org/packages/dedoc/scramble#v0.13.53 | 2026-11-12 | n/a (composer) |
 | laravel/passport | 13.11.0 | 13.11.0 | https://packagist.org/packages/laravel/passport#v13.11.0 | 2026-11-12 | n/a (composer) |
 | spatie/laravel-permission | 8.5.0 | 8.5.0 | https://packagist.org/packages/spatie/laravel-permission#8.5.0 | 2026-11-12 | n/a (composer) |
+| ezyang/htmlpurifier | 4.19.1 | 4.19.1 | https://packagist.org/packages/ezyang/htmlpurifier#v4.19.1 | 2026-11-12 | n/a (composer) |
 
 ## Notes
 - Node: the 11 Nov 2026 official security release patches 24.x at **v24.22.3** (fixes 16 CVEs, highest severity High; 26.x -> v26.13.1, 22.x -> v22.23.5). v24.22.3 is on nodejs.org/dist (dated 2026-11-10), but the official Docker image has only 24.22.2 so far. Until `node:24.22.3-*` appears, do not build images from `node:24.22.2` as the pin; recheck the tag.
@@ -35,3 +36,4 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 - Phase 2: the Laravel 13 skeleton's own default dev dependencies (tinker, pail, pao, collision, mockery, faker, phpunit via Pest) are kept unpinned; everything else was added deliberately above.
 - Phase 4: no new packages. PHP ext `gd` (bundled, with libwebp/libjpeg-turbo/libpng from the Alpine base) was added to the php image for WebP variants.
 - Phase 3: Passport 13.11.0 and spatie/laravel-permission 8.5.0 resolve with Laravel 13.42.0; `composer audit` clean 2026-11-12.
+- Phase 6: ezyang/htmlpurifier 4.19.1 (HTML Purifier, allowlist sanitiser for blog rich text; used directly, no Laravel wrapper). Resolves on PHP 8.5 / Laravel 13; `composer audit` clean 2026-11-12.

@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             TeamModuleSeeder::class,
             GalleryModuleSeeder::class,
             FaqsModuleSeeder::class,
+            BlogModuleSeeder::class,
+            ContactModuleSeeder::class,
             SettingsModuleSeeder::class,
             SuperadminSeeder::class,
             OauthClientSeeder::class,
