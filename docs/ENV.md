@@ -19,6 +19,7 @@ each service lists its own `environment:` (no `env_file`). Commit only `*.exampl
 | UPLOADS_CONTAINER_PATH | php*, nginx, Dockerfile | /var/www/uploads | disk root and volume mount point; nginx serves `/uploads/` |
 | UPLOADS_MAX_MB | php*, nginx | 5 | validation, php.ini upload limits and nginx `client_max_body_size` |
 | PORTAL_REVALIDATE_URL / PORTAL_REVALIDATE_SECRET | php* | empty / change-me | content changes queue a signed POST of `{"tags":[...]}` to the URL; headers `X-Webhook-Timestamp`, `X-Webhook-Signature: sha256=hmac(secret, "<timestamp>.<body>")`. Empty URL disables it |
+| OAUTH_ADMIN_CLIENT_ID | node (admin SPA) | fixed UUID | public PKCE client id; must equal `OAUTH_ADMIN_CLIENT_ID` in `api/.env` (the redirect URI is `<admin origin>/auth/callback`) |
 | CONTACT_NOTIFY_TO | php* | empty | contact form notification recipient when Settings has no email |
 
 | APP_DEBUG | php* | true | |

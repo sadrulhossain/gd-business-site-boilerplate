@@ -12,6 +12,7 @@ Tick a phase only when it is finished and committed.
 | [x] | 5 | FAQs, services, testimonials, team, gallery | migration + model + FormRequests + Resource + Policy + public/admin routes + seeder + feature test per module; image endpoints |
 | [x] | 6 | Blog, contact, webhook, OpenAPI | posts + categories (HTMLPurifier sanitising), public POST /contact (Redis captcha, honeypot, throttle, queued mail), admin inbox, ContentObserver -> signed revalidate webhook, `?lang=` on public reads, packages/api-types/openapi.json |
 | [x] | 7 | Frontend workspace | pnpm workspace (root package.json, pnpm-workspace.yaml, one pnpm-lock.yaml); packages/tokens (Tailwind 4 @theme, admin + portal themes), packages/api-types (openapi-typescript), packages/api-client (typed fetch); Tailwind 4 in web/admin (Vite) and web/portal (Next); one showcase route each (/showcase); docker/node/dev.sh on pnpm |
+| [x] | 8 | Admin shell | API login page + PKCE login, memory-only tokens with single-flight refresh, route guards, sidebar from /me/menus, permission-gated routes, 403/404, dashboard counts; shared DataTable/FormField/BilingualField/ConfirmDialog/Toast; config-driven CrudPage; TanStack Query + Zustand; Vitest (store, guards); Playwright login + dashboard screenshots |
 
 <!-- TODO: the phase table was not included in the Phase 0 brief ("[paste the table below]").
      Paste phases 1..N here, one row each, with a [ ] checkbox. -->

@@ -37,6 +37,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Passport::useClientModel(OAuthClient::class);
+        // Only the first-party admin client exists and it skips consent, so there is no consent screen to show.
+        Passport::authorizationView(fn () => abort(403, 'Only first-party clients are supported.'));
         Passport::tokensExpireIn(now()->addHour());
         Passport::refreshTokensExpireIn(now()->addDays(30));
 
@@ -48,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
             $model::observe(ContentObserver::class);
         }
 
+        RateLimiter::for('login', fn (Request $request) => Limit::perMinute(10)->by($request->ip().'|'.strtolower((string) $request->input('email'))));
         RateLimiter::for('contact', fn (Request $request) => Limit::perMinute(config('contact.per_minute'))->by($request->ip()));
 
         // Superadmin passes every gate check (permissions, policies, can: middleware).

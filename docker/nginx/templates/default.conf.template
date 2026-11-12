@@ -27,11 +27,20 @@ server {
     }
 }
 
-# admin.* (Vite dev server)
+# admin.* (Vite dev server). /api and /oauth/token go to php so the SPA is same-origin with the API (no CORS).
 server {
     listen 80;
     server_name admin.${APP_DOMAIN};
+    root /var/www/api/public;
+    client_max_body_size ${UPLOADS_MAX_MB}m;
     resolver 127.0.0.11 valid=10s;
+    location ~ ^/(api/|oauth/token$) {
+        set $fpm php:9000;
+        fastcgi_pass $fpm;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+        fastcgi_param SCRIPT_NAME /index.php;
+    }
     location / {
         set $upstream http://node:${ADMIN_DEV_PORT};
         proxy_pass $upstream;

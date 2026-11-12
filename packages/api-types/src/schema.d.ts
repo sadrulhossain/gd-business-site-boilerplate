@@ -162,6 +162,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Dashboard counts
+         * @description Row counts for every module the user may view, plus unread contact messages.
+         *     Modules the user cannot view are left out.
+         */
+        get: operations["v1.dashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/public/faqs": {
         parameters: {
             query?: never;
@@ -319,7 +340,7 @@ export interface paths {
         };
         /**
          * Health check
-         * @description Reports `ok` (200) when PostgreSQL and Redis answer, otherwise `degraded` (503).
+         * @description Reports `ok` (200) when the database and the cache answer, otherwise `degraded` (503).
          */
         get: operations["v1.health"];
         put?: never;
@@ -344,6 +365,27 @@ export interface paths {
         get: operations["v1.locales"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sign out
+         * @description Revokes the current access token and its refresh tokens. The browser session on the
+         *     login page is ended separately by visiting `/logout`.
+         */
+        post: operations["v1.logout"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1598,6 +1640,29 @@ export interface operations {
             404: components["responses"]["ModelNotFoundException"];
         };
     };
+    "v1.dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: string;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
     "faq.publicIndex": {
         parameters: {
             query?: never;
@@ -2021,6 +2086,25 @@ export interface operations {
                     };
                 };
             };
+        };
+    };
+    "v1.logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["AuthenticationException"];
         };
     };
     "v1.me": {

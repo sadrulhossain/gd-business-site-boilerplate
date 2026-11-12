@@ -627,6 +627,42 @@
                 }
             }
         },
+        "/v1/dashboard": {
+            "get": {
+                "operationId": "v1.dashboard",
+                "description": "Row counts for every module the user may view, plus unread contact messages.\nModules the user cannot view are left out.",
+                "summary": "Dashboard counts",
+                "tags": [
+                    "Dashboard"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
         "/v1/public/faqs": {
             "get": {
                 "operationId": "faq.publicIndex",
@@ -1257,7 +1293,7 @@
         "/v1/health": {
             "get": {
                 "operationId": "v1.health",
-                "description": "Reports `ok` (200) when PostgreSQL and Redis answer, otherwise `degraded` (503).",
+                "description": "Reports `ok` (200) when the database and the cache answer, otherwise `degraded` (503).",
                 "summary": "Health check",
                 "tags": [
                     "Health"
@@ -1318,6 +1354,24 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/v1/logout": {
+            "post": {
+                "operationId": "v1.logout",
+                "description": "Revokes the current access token and its refresh tokens. The browser session on the\nlogin page is ended separately by visiting `/logout`.",
+                "summary": "Sign out",
+                "tags": [
+                    "Logout"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
                     }
                 }
             }

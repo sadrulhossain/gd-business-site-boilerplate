@@ -84,6 +84,8 @@ services:
       - NGINX_HTTP_PORT=${NGINX_HTTP_PORT}
       - PORTAL_DEV_PORT=${PORTAL_DEV_PORT}
       - ADMIN_DEV_PORT=${ADMIN_DEV_PORT}
+      - OAUTH_ADMIN_CLIENT_ID=${OAUTH_ADMIN_CLIENT_ID}
+      - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
     volumes:
       - .:/app
       - root-node-modules:/app/node_modules
@@ -97,6 +99,23 @@ services:
       timeout: 5s
       retries: 60
       start_period: 120s
+
+  # Browser tests (make e2e). Not started by `make up`; same code and node_modules as the node service.
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.65.0-noble
+    profiles: ["e2e"]
+    working_dir: /app/web/admin
+    environment:
+      - E2E_ADMIN_ORIGIN=http://admin.${APP_DOMAIN}:${NGINX_HTTP_PORT}
+      - E2E_EMAIL=${E2E_EMAIL:-}
+      - E2E_PASSWORD=${E2E_PASSWORD:-}
+    volumes:
+      - .:/app
+      - root-node-modules:/app/node_modules
+      - admin-node-modules:/app/web/admin/node_modules
+      - portal-node-modules:/app/web/portal/node_modules
+      - api-types-node-modules:/app/packages/api-types/node_modules
+      - api-client-node-modules:/app/packages/api-client/node_modules
 
   nginx:
     image: nginx:${NGINX_VERSION}-alpine
