@@ -5,7 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
-/** One-time arithmetic captcha. The answer lives only in the cache (Redis in production). */
+/** One-time arithmetic captcha. The answer lives only in the cache (database store). */
 class Captcha
 {
     /** @return array{id: string, question: string} */
@@ -25,7 +25,7 @@ class Captcha
     {
         $expected = Cache::pull($this->key($id));
 
-        // (int): the Redis store hands numbers back as strings.
+        // (int): some cache stores hand numbers back as strings.
         return $expected !== null && (int) $expected === $answer;
     }
 

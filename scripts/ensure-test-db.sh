@@ -1,6 +1,6 @@
 #!/bin/sh
-# Pest refreshes "<POSTGRES_DB>_testing"; never the dev database. Idempotent.
+# Pest refreshes "<MARIADB_DATABASE>_testing"; never the dev database. Idempotent.
 set -u
 cd "$(dirname "$0")/.."
-docker compose exec -T postgres sh -c 'createdb -U "$POSTGRES_USER" "${POSTGRES_DB}_testing"' 2>&1 | grep -v "already exists"
+docker compose exec -T mariadb sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS \`${MARIADB_DATABASE}_testing\`; GRANT ALL ON \`${MARIADB_DATABASE}_testing\`.* TO \"$MARIADB_USER\"@\"%\";"' 2>&1 | grep -v "Using a password"
 exit 0

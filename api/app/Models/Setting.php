@@ -15,6 +15,9 @@ class Setting extends Model
 {
     use HasSecondLanguage;
 
+    /** The id is the fixed 1, not auto-increment (see the settings migration). */
+    public $incrementing = false;
+
     public const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
     public const SOCIAL = ['facebook', 'instagram', 'x', 'linkedin', 'youtube', 'tiktok', 'whatsapp'];

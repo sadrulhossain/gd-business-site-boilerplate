@@ -2,7 +2,7 @@
 
 Log of architecture decisions. Format: `## NNN — Title` / Date / Decision / Why.
 
-## 001 — phpredis, not Predis
+## 001 — phpredis, not Predis (superseded by 010)
 2026-11-12. Use the phpredis extension (PECL redis 6.3.0). It compiles on PHP 8.5.12-fpm-alpine and loads; ACL user auth works through Laravel's `REDIS_USERNAME`/`REDIS_PASSWORD`. Predis is not installed.
 
 ## 002 — JSON error format
@@ -54,3 +54,9 @@ fetch: Scramble documents updates as PUT while the API takes PATCH, so `patch` r
 openapi` after migrating the dev DB (Scramble reads column types from it; without migrations every field degrades to `string`).
 The node container mounts the repo at /app with named volumes over every node_modules; `make web` installs, regenerates types,
 typechecks and builds both apps with NODE_ENV=production (Next prerender breaks under NODE_ENV=development).
+## 010 - MariaDB, no Redis
+2026-11-12. PostgreSQL is replaced by MariaDB 11.8.9 (LTS) using Laravel's `mariadb` driver and the `pdo_mysql` extension. Redis and phpredis are
+removed: cache, sessions and queue use the `database` drivers (tables from the stock cache/jobs/sessions migrations). Consequences: queue
+latency is polling-based (`queue:work --sleep=3`), cache locks and the rate limiter live in the `cache`/`cache_locks` tables, and the health
+check reports `database` and `cache` (the `redis` key is gone). The test database is `<MARIADB_DATABASE>_testing`, created by
+`scripts/ensure-test-db.sh`. Revisit if queue throughput or cache load outgrows the database; Valkey/Redis can come back behind the same Laravel drivers.

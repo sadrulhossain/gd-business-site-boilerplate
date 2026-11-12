@@ -9,7 +9,7 @@ proj="${COMPOSE_PROJECT_NAME:-}"
 published="$(docker ps --format '{{.Names}}|{{.Ports}}' 2>/dev/null || true)"
 listeners="$(netstat -an 2>/dev/null || true)"
 bad=0
-for var in NGINX_HTTP_PORT POSTGRES_PORT REDIS_PORT MAILPIT_SMTP_PORT MAILPIT_UI_PORT; do
+for var in NGINX_HTTP_PORT MARIADB_PORT MAILPIT_SMTP_PORT MAILPIT_UI_PORT; do
   eval "port=\${$var:-}"
   if [ -z "$port" ]; then echo "UNSET $var"; bad=1; continue; fi
   owner="$(printf '%s\n' "$published" | grep -E ":$port->" | cut -d'|' -f1 | head -n 1)"
