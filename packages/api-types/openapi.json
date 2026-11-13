@@ -2792,6 +2792,39 @@
                 }
             }
         },
+        "/v1/public/sections": {
+            "get": {
+                "operationId": "section.publicIndex",
+                "description": "Visible sections ordered by `sort_order`. The portal renders them by `key`. No authentication.",
+                "summary": "List visible sections (public)",
+                "tags": [
+                    "Section"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of `SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/SectionResource"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/v1/sections/reorder": {
             "put": {
                 "operationId": "section.reorder",
@@ -3472,6 +3505,36 @@
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/v1/public/settings": {
+            "get": {
+                "operationId": "setting.publicShow",
+                "description": "The single settings record, for the site header, footer and metadata. No authentication.",
+                "summary": "Show settings (public)",
+                "tags": [
+                    "Setting"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`SettingResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SettingResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
                     }
                 }
             }

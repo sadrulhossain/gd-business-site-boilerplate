@@ -85,6 +85,11 @@ services:
       - PORTAL_DEV_PORT=${PORTAL_DEV_PORT}
       - ADMIN_DEV_PORT=${ADMIN_DEV_PORT}
       - OAUTH_ADMIN_CLIENT_ID=${OAUTH_ADMIN_CLIENT_ID}
+      # Portal server-side API calls go through nginx (api.<domain> is an alias of the nginx service on the compose network).
+      - API_INTERNAL_URL=${API_INTERNAL_URL:-http://api.${APP_DOMAIN}/api}
+      - LOCALE_DEFAULT=${LOCALE_DEFAULT}
+      - LOCALE_SUPPORTED=${LOCALE_SUPPORTED}
+      - PORTAL_REVALIDATE_SECRET=${PORTAL_REVALIDATE_SECRET:-}
       - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
     volumes:
       - .:/app
@@ -127,6 +132,10 @@ services:
       - ADMIN_DEV_PORT=${ADMIN_DEV_PORT}
       - UPLOADS_CONTAINER_PATH=${UPLOADS_CONTAINER_PATH}
       - UPLOADS_MAX_MB=${UPLOADS_MAX_MB}
+    networks:
+      default:
+        aliases:
+          - api.${APP_DOMAIN}
     ports:
       - "${NGINX_HTTP_PORT}:80"
     volumes:
