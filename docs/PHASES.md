@@ -15,6 +15,7 @@ Tick a phase only when it is finished and committed.
 | [x] | 8 | Admin shell | API login page + PKCE login, memory-only tokens with single-flight refresh, route guards, sidebar from /me/menus, permission-gated routes, 403/404, dashboard counts; shared DataTable/FormField/BilingualField/ConfirmDialog/Toast; config-driven CrudPage; TanStack Query + Zustand; Vitest (store, guards); Playwright login + dashboard screenshots |
 
 | [x] | 9 | Admin modules | users, roles (permission matrix), menus (tree + reorder), settings (tabbed bilingual singleton), sections (visibility toggle, drag reorder) as CrudPage configs; API: users, roles, permissions, menus, reorder endpoints; Vitest on configs |
+| [x] | 10 | Content modules | services, FAQs, testimonials, team, gallery as CrudPage configs with image upload (progress); gallery multi-upload; contact messages read-only list/detail + mark read; Vitest on configs and upload helpers |
 
 <!-- TODO: the phase table was not included in the Phase 0 brief ("[paste the table below]").
      Paste phases 1..N here, one row each, with a [ ] checkbox. -->

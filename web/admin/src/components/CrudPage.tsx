@@ -8,6 +8,7 @@ import { moveId } from '../lib/reorder'
 import type { Listing } from '../types'
 import { BilingualField } from './BilingualField'
 import { ConfirmDialog, Modal } from './ConfirmDialog'
+import { ImagePanel } from './ImagePanel'
 import { DataTable, type Column } from './DataTable'
 import { FormField, type FieldOption, type FieldType } from './FormField'
 import { toast } from './Toast'
@@ -52,6 +53,8 @@ export interface CrudConfig {
    * Rows become draggable. Dropping sends the new order of the rows sharing `group` (all rows when omitted) as
    * `PUT endpoint {ids}`. Needs `${key}.update`.
    */
+  /** The rows have an image at `${endpoint}/${id}/image` (POST to replace, DELETE to remove); shown in the edit form. */
+  image?: boolean
   reorder?: { endpoint: string; group?: (row: Row) => unknown }
 }
 
@@ -189,6 +192,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
 }
 
 function CrudForm({ config, row, onDone, onCancel }: { config: CrudConfig; row: Row | null; onDone: () => void; onCancel: () => void }) {
+  const queryClient = useQueryClient()
   const [values, setValues] = useState<Record<string, unknown>>(() => ({ ...blank(config.fields), ...(row ?? {}) }))
   const [errors, setErrors] = useState<Record<string, string>>({})
   const set = (name: string, value: unknown) => setValues((v) => ({ ...v, [name]: value }))
@@ -234,6 +238,12 @@ function CrudForm({ config, row, onDone, onCancel }: { config: CrudConfig; row: 
           <OptionsField key={f.name} field={f} value={values[f.name]} error={errors[f.name]} onChange={(v) => set(f.name, v)} />
         ),
       )}
+      {config.image &&
+        (row ? (
+          <ImagePanel endpoint={`${config.endpoint}/${row.id}/image`} image={row.image as { url: string } | null | undefined} onChange={() => void queryClient.invalidateQueries({ queryKey: ['crud', config.endpoint] })} />
+        ) : (
+          <p className="text-sm text-ink-muted">Save first, then add an image.</p>
+        ))}
       <div className="flex justify-end gap-2 pt-2">
         <button type="button" className="rounded-md border border-line bg-surface px-3 py-1.5 hover:bg-primary-50" onClick={onCancel}>
           Cancel

@@ -1,14 +1,31 @@
+import type { ComponentType } from 'react'
 import { createBrowserRouter } from 'react-router'
 import { RequireAuth, RequirePermission } from './auth/guards'
-import { CrudPage } from './components/CrudPage'
+import { CrudPage, type CrudConfig } from './components/CrudPage'
+import { GalleryUploader } from './components/GalleryUploader'
 import { AppShell } from './layout/AppShell'
+import { messages } from './messagesConfig'
 import { modules } from './modules'
 import { Callback, SignedOut } from './pages/auth'
 import { Dashboard } from './pages/Dashboard'
 import { NotFound } from './pages/errors'
+import { MessagesPage } from './pages/Messages'
 import { SettingsPage } from './pages/Settings'
 import { settings } from './settingsConfig'
 import { Showcase } from './showcase'
+
+/** Plain CrudPage plus the gallery's bulk uploader above it. */
+function GalleryPage({ config }: { config: CrudConfig }) {
+  return (
+    <div className="space-y-4">
+      <GalleryUploader endpoint={config.endpoint} />
+      <CrudPage config={config} />
+    </div>
+  )
+}
+
+/** Modules that need more than the plain page; everything else renders CrudPage directly. */
+const pages: Record<string, ComponentType<{ config: CrudConfig }>> = { gallery: GalleryPage }
 
 export const router = createBrowserRouter([
   // Public: the OAuth redirect target, the post-logout page and the theme showcase.
@@ -32,19 +49,31 @@ export const router = createBrowserRouter([
           </RequirePermission>
         ),
       },
-      ...modules.map((config) => ({
-        path: config.path.slice(1),
-        element: (
-          <RequirePermission permission={`${config.key}.view`}>
-            <CrudPage config={config} />
-          </RequirePermission>
-        ),
-      })),
+      ...modules.map((config) => {
+        const Page = pages[config.key] ?? CrudPage
+
+        return {
+          path: config.path.slice(1),
+          element: (
+            <RequirePermission permission={`${config.key}.view`}>
+              <Page config={config} />
+            </RequirePermission>
+          ),
+        }
+      }),
       {
         path: settings.path.slice(1),
         element: (
           <RequirePermission permission={`${settings.key}.view`}>
             <SettingsPage config={settings} />
+          </RequirePermission>
+        ),
+      },
+      {
+        path: messages.path.slice(1),
+        element: (
+          <RequirePermission permission={`${messages.key}.view`}>
+            <MessagesPage config={messages} />
           </RequirePermission>
         ),
       },

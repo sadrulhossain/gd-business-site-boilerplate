@@ -8,6 +8,13 @@ export function permissionOption(name: string) {
   return { value: name, label: action.join('.') || name, group }
 }
 
+/** Small preview for a row's `image` ({url} or null). */
+const thumb = (r: Record<string, unknown>) => {
+  const image = r.image as { url: string } | null | undefined
+
+  return image ? <img src={image.url} alt="" className="h-10 w-14 rounded object-cover" /> : null
+}
+
 const yesNo = (value: unknown) => (value ? 'Yes' : 'No')
 
 /**
@@ -36,12 +43,14 @@ export const modules: CrudConfig[] = [
   },
   {
     key: 'services',
+    image: true,
     path: '/services',
     title: 'Services',
     noun: 'Service',
     endpoint: '/v1/services',
     rowLabel: (r) => String(r.title),
     columns: [
+      { key: 'image', header: 'Image', render: thumb },
       { key: 'title', header: 'Title' },
       { key: 'sort_order', header: 'Order' },
       { key: 'is_visible', header: 'Visible', render: (r) => yesNo(r.is_visible) },
@@ -55,12 +64,14 @@ export const modules: CrudConfig[] = [
   },
   {
     key: 'testimonials',
+    image: true,
     path: '/testimonials',
     title: 'Testimonials',
     noun: 'Testimonial',
     endpoint: '/v1/testimonials',
     rowLabel: (r) => String(r.author_name),
     columns: [
+      { key: 'image', header: 'Photo', render: thumb },
       { key: 'author_name', header: 'Author' },
       { key: 'quote', header: 'Quote' },
       { key: 'is_visible', header: 'Visible', render: (r) => yesNo(r.is_visible) },
@@ -75,12 +86,14 @@ export const modules: CrudConfig[] = [
   },
   {
     key: 'team',
+    image: true,
     path: '/team',
     title: 'Team',
     noun: 'Team member',
     endpoint: '/v1/team',
     rowLabel: (r) => String(r.name),
     columns: [
+      { key: 'image', header: 'Photo', render: thumb },
       { key: 'name', header: 'Name' },
       { key: 'role', header: 'Role' },
       { key: 'is_visible', header: 'Visible', render: (r) => yesNo(r.is_visible) },
@@ -95,12 +108,14 @@ export const modules: CrudConfig[] = [
   },
   {
     key: 'gallery',
+    image: true,
     path: '/gallery',
     title: 'Gallery',
     noun: 'Gallery item',
     endpoint: '/v1/gallery',
     rowLabel: (r) => String(r.title ?? r.id),
     columns: [
+      { key: 'image', header: 'Image', render: thumb },
       { key: 'title', header: 'Title' },
       { key: 'caption', header: 'Caption' },
       { key: 'is_visible', header: 'Visible', render: (r) => yesNo(r.is_visible) },
