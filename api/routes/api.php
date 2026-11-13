@@ -12,8 +12,11 @@ use App\Http\Controllers\Api\V1\LocalesController;
 use App\Http\Controllers\Api\V1\LogoutController;
 use App\Http\Controllers\Api\V1\MeController;
 use App\Http\Controllers\Api\V1\MeMenusController;
+use App\Http\Controllers\Api\V1\MenuController;
+use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\PostImageController;
+use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\SectionController;
 use App\Http\Controllers\Api\V1\SectionImageController;
 use App\Http\Controllers\Api\V1\ServiceController;
@@ -23,6 +26,7 @@ use App\Http\Controllers\Api\V1\TeamMemberController;
 use App\Http\Controllers\Api\V1\TeamMemberImageController;
 use App\Http\Controllers\Api\V1\TestimonialController;
 use App\Http\Controllers\Api\V1\TestimonialImageController;
+use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Middleware\LocalizePublicResponse;
 use Illuminate\Support\Facades\Route;
 
@@ -55,9 +59,18 @@ Route::prefix('v1')->group(function (): void {
 
         // Content (edit-only: seeded rows, no create/delete)
         Route::apiSingleton('settings', SettingController::class);
+        Route::put('sections/reorder', [SectionController::class, 'reorder']);
         Route::apiResource('sections', SectionController::class)->only(['index', 'show', 'update']);
         Route::post('sections/{section}/image', [SectionImageController::class, 'store']);
         Route::delete('sections/{section}/image', [SectionImageController::class, 'destroy']);
+
+        // Access: users, roles (+ the permission list for the matrix), menu tree
+        Route::apiResource('users', UserController::class);
+        Route::apiResource('roles', RoleController::class);
+        Route::get('permissions', PermissionController::class)->middleware('can:roles.view');
+        Route::put('menus/reorder', [MenuController::class, 'reorder']);
+        Route::get('menus', [MenuController::class, 'index']);
+        Route::patch('menus/{menu}', [MenuController::class, 'update']);
 
         // Content lists (full CRUD)
         Route::apiResource('faqs', FaqController::class);

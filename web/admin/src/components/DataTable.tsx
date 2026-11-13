@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 
 export interface Column<Row> {
   key: string
@@ -14,6 +14,7 @@ export function DataTable<Row>({
   loading = false,
   empty = 'Nothing here yet.',
   actions,
+  onDropRow,
 }: {
   columns: Column<Row>[]
   rows: Row[]
@@ -22,7 +23,10 @@ export function DataTable<Row>({
   empty?: string
   /** Rendered in a trailing cell of every row. */
   actions?: (row: Row) => ReactNode
+  /** Makes rows draggable; called with the dragged row and the row it was dropped on. */
+  onDropRow?: (from: Row, to: Row) => void
 }) {
+  const [dragging, setDragging] = useState<Row | null>(null)
   const span = columns.length + (actions ? 1 : 0)
 
   return (
@@ -55,7 +59,23 @@ export function DataTable<Row>({
           )}
           {!loading &&
             rows.map((row) => (
-              <tr key={rowKey(row)} className="border-b border-line last:border-0">
+              <tr
+                key={rowKey(row)}
+                className={`border-b border-line last:border-0 ${onDropRow ? 'cursor-grab' : ''} ${dragging === row ? 'opacity-50' : ''}`}
+                draggable={onDropRow ? true : undefined}
+                onDragStart={onDropRow ? () => setDragging(row) : undefined}
+                onDragEnd={onDropRow ? () => setDragging(null) : undefined}
+                onDragOver={onDropRow ? (e) => e.preventDefault() : undefined}
+                onDrop={
+                  onDropRow
+                    ? (e) => {
+                        e.preventDefault()
+                        if (dragging && dragging !== row) onDropRow(dragging, row)
+                        setDragging(null)
+                      }
+                    : undefined
+                }
+              >
                 {columns.map((c) => (
                   <td key={c.key} className="px-3 py-2">
                     {c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? '')}

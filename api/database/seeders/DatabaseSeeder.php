@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             BlogModuleSeeder::class,
             ContactModuleSeeder::class,
             SettingsModuleSeeder::class,
+            AccessModuleSeeder::class,
             SuperadminSeeder::class,
             OauthClientSeeder::class,
         ]);

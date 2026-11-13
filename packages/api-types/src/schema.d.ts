@@ -433,6 +433,83 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/menus/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Reorder menu entries
+         * @description `ids` is the new order of one set of siblings; entries keep their parent. Ids from different parents are rejected.
+         */
+        put: operations["menu.reorder"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/menus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List all menu entries
+         * @description The whole tree, unfiltered, flattened depth-first (`depth` 0 = top level) in display order.
+         */
+        get: operations["menu.index"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/menus/{menu}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update a menu entry's title or icon */
+        patch: operations["menu.update"];
+        trace?: never;
+    };
+    "/v1/permissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List permissions
+         * @description Every permission name (`<module>.<action>`), for the role matrix. The route is gated by `roles.view`.
+         */
+        get: operations["v1.permission"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/public/posts": {
         parameters: {
             query?: never;
@@ -530,6 +607,69 @@ export interface paths {
         post: operations["postImage.store"];
         /** Remove the post image */
         delete: operations["postImage.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List roles
+         * @description Every role except the superadmin, with its permission names. Not paginated.
+         */
+        get: operations["roles.index"];
+        put?: never;
+        /** Create a role */
+        post: operations["roles.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/roles/{role}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Show a role */
+        get: operations["roles.show"];
+        /**
+         * Update a role
+         * @description `permissions` replaces the role's permission names. A permission you do not hold yourself is rejected (422).
+         */
+        put: operations["roles.update"];
+        post?: never;
+        /** Delete a role */
+        delete: operations["roles.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/sections/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Reorder sections
+         * @description `ids` is the new order; `sort_order` becomes 10, 20, 30... in that sequence.
+         */
+        put: operations["section.reorder"];
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -877,6 +1017,49 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List users
+         * @description Paginated, 15 per page, oldest first.
+         */
+        get: operations["users.index"];
+        put?: never;
+        /** Create a user */
+        post: operations["users.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/users/{user}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Show a user */
+        get: operations["users.show"];
+        /**
+         * Update a user
+         * @description A blank password keeps the current one. `roles` replaces the user's roles (the superadmin role is never touched here).
+         */
+        put: operations["users.update"];
+        post?: never;
+        /** Delete a user (never yourself) */
+        delete: operations["users.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -929,6 +1112,18 @@ export interface components {
             /** Format: date-time */
             updated_at: string | null;
         };
+        /** MenuResource */
+        MenuResource: {
+            id: number;
+            parent_id: number | null;
+            /** @description Set by MenuController::index: rows come depth-first, so the UI can indent without rebuilding the tree. */
+            depth: string | 0;
+            title: string;
+            icon: string | null;
+            path: string | null;
+            permission_name: string | null;
+            sort: number;
+        };
         /** PostResource */
         PostResource: {
             id: number;
@@ -947,6 +1142,20 @@ export interface components {
             published_at: string | null;
             /** Format: date-time */
             updated_at: string | null;
+        };
+        /** ReorderMenusRequest */
+        ReorderMenusRequest: {
+            ids: number[];
+        };
+        /** ReorderSectionsRequest */
+        ReorderSectionsRequest: {
+            ids: number[];
+        };
+        /** RoleResource */
+        RoleResource: {
+            id: number;
+            name: string;
+            permissions: unknown[];
         };
         /** SectionResource */
         SectionResource: {
@@ -1060,6 +1269,11 @@ export interface components {
             /** Format: date-time */
             published_at?: string | null;
         };
+        /** StoreRoleRequest */
+        StoreRoleRequest: {
+            name: string;
+            permissions?: ""[];
+        };
         /** StoreSectionImageRequest */
         StoreSectionImageRequest: {
             /**
@@ -1121,6 +1335,14 @@ export interface components {
             sort_order?: number;
             is_visible?: boolean;
         };
+        /** StoreUserRequest */
+        StoreUserRequest: {
+            name: string;
+            /** Format: email */
+            email: string;
+            password: string;
+            roles?: string[];
+        };
         /** TeamMemberResource */
         TeamMemberResource: {
             id: number;
@@ -1174,6 +1396,11 @@ export interface components {
             sort_order?: number;
             is_visible?: boolean;
         };
+        /** UpdateMenuRequest */
+        UpdateMenuRequest: {
+            title?: string;
+            icon?: string | null;
+        };
         /** UpdatePostRequest */
         UpdatePostRequest: {
             title?: string;
@@ -1187,6 +1414,11 @@ export interface components {
             is_published?: boolean;
             /** Format: date-time */
             published_at?: string | null;
+        };
+        /** UpdateRoleRequest */
+        UpdateRoleRequest: {
+            name?: string;
+            permissions?: ""[];
         };
         /** UpdateSectionRequest */
         UpdateSectionRequest: {
@@ -1258,6 +1490,25 @@ export interface components {
             author_name?: string;
             sort_order?: number;
             is_visible?: boolean;
+        };
+        /** UpdateUserRequest */
+        UpdateUserRequest: {
+            name?: string;
+            /** Format: email */
+            email?: string;
+            password?: string | null;
+            roles?: string[];
+        };
+        /** UserResource */
+        UserResource: {
+            id: number;
+            name: string;
+            email: string;
+            /** @description The superadmin role is not assignable here, so it is left out of the editable list. */
+            roles: unknown[];
+            is_superadmin: boolean;
+            /** Format: date-time */
+            created_at: string | null;
         };
     };
     responses: {
@@ -2178,6 +2429,116 @@ export interface operations {
             401: components["responses"]["AuthenticationException"];
         };
     };
+    "menu.reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderMenusRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            reordered: number;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "menu.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `MenuResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["MenuResource"][];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "menu.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The menu ID */
+                menu: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateMenuRequest"];
+            };
+        };
+        responses: {
+            /** @description `MenuResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["MenuResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v1.permission": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: unknown[];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
     "post.publicIndex": {
         parameters: {
             query?: {
@@ -2473,6 +2834,174 @@ export interface operations {
             401: components["responses"]["AuthenticationException"];
             403: components["responses"]["AuthorizationException"];
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "roles.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `RoleResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["RoleResource"][];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "roles.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StoreRoleRequest"];
+            };
+        };
+        responses: {
+            /** @description `RoleResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["RoleResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "roles.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The role ID */
+                role: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `RoleResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["RoleResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "roles.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The role ID */
+                role: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateRoleRequest"];
+            };
+        };
+        responses: {
+            /** @description `RoleResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["RoleResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "roles.destroy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The role ID */
+                role: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "section.reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderSectionsRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            reordered: number;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
         };
     };
     "sections.index": {
@@ -3331,6 +3860,169 @@ export interface operations {
                         data: components["schemas"]["TestimonialResource"];
                     };
                 };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "users.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paginated set of `UserResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["UserResource"][];
+                        links: {
+                            first: string | null;
+                            last: string | null;
+                            prev: string | null;
+                            next: string | null;
+                        };
+                        meta: {
+                            current_page: number;
+                            from: number | null;
+                            last_page: number;
+                            /** @description Generated paginator links. */
+                            links: {
+                                url: string | null;
+                                label: string;
+                                active: boolean;
+                            }[];
+                            /** @description Base path for paginator generated URLs. */
+                            path: string | null;
+                            /** @description Number of items shown per page. */
+                            per_page: number;
+                            /** @description Number of the last item in the slice. */
+                            to: number | null;
+                            /** @description Total number of items being paginated. */
+                            total: number;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "users.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StoreUserRequest"];
+            };
+        };
+        responses: {
+            /** @description `UserResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["UserResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "users.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The user ID */
+                user: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `UserResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["UserResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "users.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The user ID */
+                user: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserRequest"];
+            };
+        };
+        responses: {
+            /** @description `UserResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["UserResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "users.destroy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The user ID */
+                user: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             401: components["responses"]["AuthenticationException"];
             403: components["responses"]["AuthorizationException"];

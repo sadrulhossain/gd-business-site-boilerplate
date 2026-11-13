@@ -6,6 +6,8 @@ import { modules } from './modules'
 import { Callback, SignedOut } from './pages/auth'
 import { Dashboard } from './pages/Dashboard'
 import { NotFound } from './pages/errors'
+import { SettingsPage } from './pages/Settings'
+import { settings } from './settingsConfig'
 import { Showcase } from './showcase'
 
 export const router = createBrowserRouter([
@@ -38,6 +40,14 @@ export const router = createBrowserRouter([
           </RequirePermission>
         ),
       })),
+      {
+        path: settings.path.slice(1),
+        element: (
+          <RequirePermission permission={`${settings.key}.view`}>
+            <SettingsPage config={settings} />
+          </RequirePermission>
+        ),
+      },
       { path: '*', element: <NotFound /> },
     ],
   },

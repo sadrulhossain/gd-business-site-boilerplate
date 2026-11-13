@@ -3,14 +3,16 @@ import { useState, type ReactNode } from 'react'
 import { ApiError } from '@gd/api-client'
 import { api } from '../api'
 import { useAuth } from '../auth/store'
+import { blank, fieldErrors, payload } from '../lib/crud'
+import { moveId } from '../lib/reorder'
 import type { Listing } from '../types'
 import { BilingualField } from './BilingualField'
 import { ConfirmDialog, Modal } from './ConfirmDialog'
 import { DataTable, type Column } from './DataTable'
-import { FormField, type FieldType } from './FormField'
+import { FormField, type FieldOption, type FieldType } from './FormField'
 import { toast } from './Toast'
 
-type Row = Record<string, unknown> & { id: number }
+export type Row = Record<string, unknown> & { id: number }
 
 export interface CrudField {
   name: string
@@ -20,7 +22,9 @@ export interface CrudField {
   bilingual?: boolean
   required?: boolean
   hint?: string
-  options?: { value: string | number; label: string }[]
+  options?: FieldOption[]
+  /** Options fetched from the API instead (roles for a user, permissions for a role); `map` turns one item of `data` into an option. */
+  optionsFrom?: { endpoint: string; map: (item: never) => FieldOption }
   /** Starting value on create. */
   initial?: unknown
 }
@@ -44,26 +48,11 @@ export interface CrudConfig {
   /** Seeded, edit-only modules (sections) turn these off. */
   canCreate?: boolean
   canDelete?: boolean
-}
-
-function blank(fields: CrudField[]): Record<string, unknown> {
-  return Object.fromEntries(fields.flatMap((f) => (f.bilingual ? [[f.name, f.initial ?? ''], [`${f.name}_2nd`, '']] : [[f.name, f.initial ?? (f.type === 'checkbox' ? false : '')]])))
-}
-
-/** Field values sent to the API: only configured fields (and their _2nd twins), `''` for optional text becomes null. */
-function payload(fields: CrudField[], values: Record<string, unknown>): Record<string, unknown> {
-  const entries = fields.flatMap((f) =>
-    (f.bilingual ? [f.name, `${f.name}_2nd`] : [f.name]).map((n) => ({ n, v: values[n] === '' ? null : values[n], type: f.type })),
-  )
-
-  // A blank number is left out: the API takes absent, not null, for those.
-  return Object.fromEntries(entries.filter((e) => !(e.type === 'number' && e.v === null)).map((e) => [e.n, e.v]))
-}
-
-function fieldErrors(error: unknown): Record<string, string> {
-  if (!(error instanceof ApiError) || !error.details) return {}
-
-  return Object.fromEntries(Object.entries(error.details).map(([name, messages]) => [name, messages[0] ?? '']))
+  /**
+   * Rows become draggable. Dropping sends the new order of the rows sharing `group` (all rows when omitted) as
+   * `PUT endpoint {ids}`. Needs `${key}.update`.
+   */
+  reorder?: { endpoint: string; group?: (row: Row) => unknown }
 }
 
 export function CrudPage({ config }: { config: CrudConfig }) {
@@ -84,7 +73,25 @@ export function CrudPage({ config }: { config: CrudConfig }) {
     queryFn: async () => (await api.request('GET', config.endpoint, { query: { page } })) as Listing<Row>,
   })
 
-  const refresh = () => queryClient.invalidateQueries({ queryKey: ['crud', config.endpoint] })
+  const move = useMutation({
+    mutationFn: (ids: number[]) => api.request('PUT', config.reorder!.endpoint, { body: { ids } }),
+    onSuccess: () => void refresh(),
+    onError: () => toast.error('Could not save the new order'),
+  })
+
+  const onDropRow = (from: Row, to: Row) => {
+    const group = config.reorder?.group
+    if (group && group(from) !== group(to)) return
+
+    const siblings = group ? rows.filter((r) => group(r) === group(from)) : rows
+    const ids = siblings.map((r) => r.id)
+    const next = moveId(ids, from.id, to.id)
+    if (next !== ids) move.mutate(next)
+  }
+
+  const rows = list.data?.data ?? []
+  // Menu, role and user edits can change the signed-in user's sidebar, so it reloads after every write.
+  const refresh = () => Promise.all([queryClient.invalidateQueries({ queryKey: ['crud', config.endpoint] }), queryClient.invalidateQueries({ queryKey: ['menus'] })])
 
   const remove = useMutation({
     mutationFn: (row: Row) => api.request('DELETE', `${config.endpoint}/${row.id}`),
@@ -96,7 +103,6 @@ export function CrudPage({ config }: { config: CrudConfig }) {
     onError: () => toast.error(`Could not delete the ${config.noun.toLowerCase()}`),
   })
 
-  const rows = list.data?.data ?? []
   const meta = list.data?.meta
   const actions = (row: Row): ReactNode => (
     <span className="inline-flex gap-2">
@@ -135,6 +141,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
           rowKey={(r) => r.id}
           loading={list.isPending}
           actions={canUpdate || canDelete ? actions : undefined}
+          onDropRow={config.reorder && canUpdate ? onDropRow : undefined}
         />
       )}
 
@@ -224,18 +231,7 @@ function CrudForm({ config, row, onDone, onCancel }: { config: CrudConfig; row: 
             onChange={set}
           />
         ) : (
-          <FormField
-            key={f.name}
-            label={f.label}
-            name={f.name}
-            type={f.type}
-            required={f.required}
-            hint={f.hint}
-            options={f.options}
-            value={values[f.name]}
-            error={errors[f.name]}
-            onChange={(v) => set(f.name, v)}
-          />
+          <OptionsField key={f.name} field={f} value={values[f.name]} error={errors[f.name]} onChange={(v) => set(f.name, v)} />
         ),
       )}
       <div className="flex justify-end gap-2 pt-2">
@@ -247,5 +243,30 @@ function CrudForm({ config, row, onDone, onCancel }: { config: CrudConfig; row: 
         </button>
       </div>
     </form>
+  )
+}
+
+/** A plain field whose options may come from the API. */
+function OptionsField({ field, value, error, onChange }: { field: CrudField; value: unknown; error?: string; onChange: (value: unknown) => void }) {
+  const remote = field.optionsFrom
+  const options = useQuery({
+    queryKey: ['options', remote?.endpoint],
+    enabled: remote !== undefined,
+    staleTime: 60_000,
+    queryFn: async () => ((await api.request('GET', remote!.endpoint)) as { data: never[] }).data.map(remote!.map),
+  })
+
+  return (
+    <FormField
+      label={field.label}
+      name={field.name}
+      type={field.type}
+      required={field.required}
+      hint={field.hint}
+      options={remote ? options.data : field.options}
+      value={value}
+      error={error}
+      onChange={onChange}
+    />
   )
 }
