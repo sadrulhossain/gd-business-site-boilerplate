@@ -14,12 +14,14 @@ use App\Models\TeamMember;
 use App\Models\Testimonial;
 use App\Models\User;
 use App\Observers\ContentObserver;
+use App\Policies\RolePolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
+use Spatie\Permission\Models\Role;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -52,6 +54,8 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('login', fn (Request $request) => Limit::perMinute(10)->by($request->ip().'|'.strtolower((string) $request->input('email'))));
         RateLimiter::for('contact', fn (Request $request) => Limit::perMinute(config('contact.per_minute'))->by($request->ip()));
+
+        Gate::policy(Role::class, RolePolicy::class);
 
         // Superadmin passes every gate check (permissions, policies, can: middleware).
         Gate::before(fn (User $user) => $user->isSuperadmin() ? true : null);

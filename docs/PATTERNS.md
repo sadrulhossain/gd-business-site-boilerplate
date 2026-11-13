@@ -57,3 +57,11 @@ singleton reference: Settings. Paths below are relative to `api/app` unless note
 - Calls go through `src/api.ts` (token + refresh handled); never read tokens from the store in components. Use `can('x.y')` for UI gating,
   the API remains the authority.
 - Shared pieces: `DataTable`, `FormField`, `BilingualField`, `ConfirmDialog`, `Toast`; do not add a second of any.
+
+## Admin modules (phase 9)
+- CrudPage extensions, each used by two modules: `type: 'checkgroup'` (string[]; grouped options render a matrix) with `optionsFrom`
+  (options fetched from the API) for users/roles; `reorder: {endpoint, group?}` (drag rows, sends `PUT {ids}`) for sections/menus.
+- Inline boolean save in a table cell: `ToggleCell` from a column's `render`. Not a CrudPage feature.
+- Single-record screens are not CrudPage: `SettingsPage` + a `SingletonConfig` (tabs of dot-path fields, e.g. `hours.mon.open`).
+- API: reorder endpoints are `PUT <resource>/reorder {ids}` registered before the resource route (`ReorderRequest` subclass per table).
+  The superadmin role is never assignable, editable or deletable through the API; a non-superadmin can only grant permissions they hold.
