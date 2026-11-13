@@ -112,6 +112,57 @@ export async function getSections(locale: string): Promise<Section[]> {
   return rows.filter((section) => section.is_visible)
 }
 
+export interface Category {
+  id: number
+  name: string
+  slug: string
+}
+
+export interface Post {
+  id: number
+  title: string
+  slug: string
+  excerpt: string | null
+  /** Sanitised HTML (the API's HtmlSanitizer), safe to render as is. */
+  body: string | null
+  image: Media | null
+  category: Category | null
+  seo_title: string | null
+  seo_description: string | null
+  published_at: string | null
+  updated_at: string
+}
+
+export interface PostPage {
+  posts: Post[]
+  page: number
+  lastPage: number
+}
+
+/** One page of published posts (12 per page), optionally of one category. */
+export async function getPosts(locale: string, { page = 1, category }: { page?: number; category?: string } = {}): Promise<PostPage> {
+  const body = (await apiFor(locale).request('GET', '/v1/public/posts', { query: { page, category } })) as {
+    data: Post[]
+    meta?: { current_page: number; last_page: number }
+  }
+
+  return { posts: body.data, page: body.meta?.current_page ?? 1, lastPage: body.meta?.last_page ?? 1 }
+}
+
+/** One published post by slug; null when it is a draft, scheduled or gone. */
+export async function getPost(locale: string, slug: string): Promise<Post | null> {
+  try {
+    return ((await apiFor(locale).request('GET', `/v1/public/posts/${encodeURIComponent(slug)}`)) as { data: Post }).data
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null
+    throw error
+  }
+}
+
+export async function getCategories(locale: string): Promise<Category[]> {
+  return ((await apiFor(locale).request('GET', '/v1/public/categories')) as Listing<Category>).data
+}
+
 /** One visible service; null when it is hidden or gone (the API answers 404). */
 export async function getService(locale: string, id: string): Promise<Service | null> {
   try {

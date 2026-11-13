@@ -98,3 +98,12 @@ singleton reference: Settings. Paths below are relative to `api/app` unless note
 - `getMessages` falls back key by key to `en.json`, so a missing or empty entry in `second.json` shows the default text. API content does the same via `?lang=`.
 - 404: `app/[locale]/[...rest]/page.tsx` calls `notFound()` for unknown paths; `not-found.tsx` finds its locale from the `x-locale` header set by `proxy.ts`.
 - Proxy matcher: keep the double backslash in `.*\..*`; a single one silently matches nothing useful. After editing `proxy.ts` restart node with a clean `.next`.
+
+## Blog, contact and SEO (phase 14)
+- Every page builds its metadata with `lib/seo.ts` `pageMetadata({locale, path, siteName, ...})`: title, description, canonical, hreflang (all locales + x-default), Open Graph, Twitter.
+  `SITE_URL` is the public origin used for all absolute URLs; `metadataBase` is set in the locale layout.
+- JSON-LD goes through `components/JsonLd.tsx` (escapes `<`): LocalBusiness on Home, Article on a post. Build the objects in `lib/seo.ts`.
+- `app/sitemap.ts` and `app/robots.ts` use the same cached, tagged fetches as the pages, so the revalidate webhook refreshes them. New public page: add it to the sitemap.
+- Blog: `/blog` (`?category=<slug>`, `?page=n`, canonical is the plain list), `/blog/<slug>`. Post `body` is sanitised by the API and rendered as HTML in `.post-body`.
+- Contact: `components/ContactForm.tsx` talks only to `app/api/contact/*` (server proxies to the API; the captcha is one-time, refetched after every submit). The honeypot field is `website`.
+- Smoke tests: `web/portal/e2e/smoke.spec.ts` (`docker compose --profile e2e run --rm --no-deps -T -w /app/web/portal e2e npx playwright test smoke`). The contact test leaves one message with subject `e2e-smoke`; the blog test skips without published posts.

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getSettings } from './api'
 import { fill, getMessages, isLocale } from './i18n'
+import { pageMetadata } from './seo'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -11,7 +12,9 @@ export function legalPage(kind: 'privacy' | 'terms') {
     const { locale } = await params
     if (!isLocale(locale)) notFound()
 
-    return { title: getMessages(locale).pages[kind] }
+    const settings = await getSettings(locale)
+
+    return pageMetadata({ locale, path: `/${kind}`, siteName: settings.site_name, title: getMessages(locale).pages[kind] })
   }
 
   async function Page({ params }: Props) {

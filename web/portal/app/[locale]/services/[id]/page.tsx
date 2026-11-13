@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Picture } from '../../../../components/Media'
-import { getSections, getService } from '../../../../lib/api'
+import { getSections, getService, getSettings } from '../../../../lib/api'
 import { getMessages, isLocale, localePath } from '../../../../lib/i18n'
+import { pageMetadata } from '../../../../lib/seo'
 
 type Props = { params: Promise<{ locale: string; id: string }> }
 
@@ -18,9 +19,9 @@ async function load(locale: string, id: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, id } = await params
-  const service = await load(locale, id)
+  const [service, settings] = await Promise.all([load(locale, id), getSettings(locale)])
 
-  return { title: service.title, description: service.description?.slice(0, 160) || undefined }
+  return pageMetadata({ locale, path: `/services/${service.id}`, siteName: settings.site_name, title: service.title, description: service.description, image: service.image?.url })
 }
 
 export default async function ServiceDetail({ params }: Props) {

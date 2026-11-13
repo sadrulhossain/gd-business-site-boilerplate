@@ -4,7 +4,7 @@ import { defaultLocale, localePath, locales, type Messages } from '../lib/i18n'
 import { SECTION_PAGES } from '../lib/section-page'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
-/** Site name and one anchor per visible section (the hero is the page top, so it has none). */
+/** Site name, one link per visible section (the hero is the page top, so it has none; contact has its own page), Blog and Contact. */
 export function Header({ locale, settings, sections, messages }: { locale: string; settings: Settings; sections: Section[]; messages: Messages }) {
   const home = localePath(locale)
 
@@ -16,12 +16,18 @@ export function Header({ locale, settings, sections, messages }: { locale: strin
         </Link>
         <nav aria-label={messages.nav.label} className="flex flex-wrap items-center gap-x-5 gap-y-1">
           {sections
-            .filter((s) => s.key !== 'hero')
+            .filter((s) => s.key !== 'hero' && s.key !== 'contact')
             .map((s) => (
               <Link key={s.key} href={SECTION_PAGES[s.key] ? localePath(locale, SECTION_PAGES[s.key]) : `${home}#${s.key}`} className="text-ink-muted hover:text-brand-700">
                 {s.title}
               </Link>
             ))}
+          <Link href={localePath(locale, '/blog')} className="text-ink-muted hover:text-brand-700">
+            {messages.nav.blog}
+          </Link>
+          <Link href={localePath(locale, '/contact')} className="text-ink-muted hover:text-brand-700">
+            {messages.nav.contact}
+          </Link>
           {locales.length > 1 && <LanguageSwitcher current={locale} label={messages.language.label} locales={locales} unprefixed={defaultLocale} />}
         </nav>
       </div>

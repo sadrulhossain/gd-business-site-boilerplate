@@ -4,7 +4,8 @@ import type { ReactNode } from 'react'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { getSections, getSettings } from '../../lib/api'
-import { getMessages, isLocale, locales, localePath } from '../../lib/i18n'
+import { getMessages, isLocale, locales } from '../../lib/i18n'
+import { siteUrl } from '../../lib/seo'
 import '../globals.css'
 
 const RTL = new Set(['ar', 'he', 'fa', 'ur'])
@@ -21,8 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title: { default: settings.tagline ? `${settings.site_name} | ${settings.tagline}` : settings.site_name, template: `%s | ${settings.site_name}` },
     description: settings.tagline ?? undefined,
+    metadataBase: new URL(siteUrl()),
     icons: { icon: '/icon.svg' },
-    alternates: { languages: Object.fromEntries(locales.map((code) => [code, localePath(code)])) },
   }
 }
 
