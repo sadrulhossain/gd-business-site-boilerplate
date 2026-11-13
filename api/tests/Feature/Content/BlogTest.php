@@ -175,3 +175,18 @@ it('seeds the menu rows idempotently', function () {
     expect(Menu::where('permission_name', 'posts.view')->count())->toBe(1)
         ->and(Menu::where('permission_name', 'categories.view')->count())->toBe(1);
 });
+
+it('maps status to is_published, exposes it, and stores SEO fields in both languages', function () {
+    actingAsRole('editor', ['posts.view', 'posts.create', 'posts.update']);
+
+    $id = $this->postJson('/api/v1/posts', ['title' => 'T', 'slug' => 'seo-post', 'status' => 'published', 'seo_title' => 'S', 'seo_title_2nd' => 'S2', 'seo_description' => 'D'])
+        ->assertCreated()
+        ->assertJsonPath('data.status', 'published')
+        ->assertJsonPath('data.is_published', true)
+        ->assertJsonPath('data.seo_title_2nd', 'S2')
+        ->json('data.id');
+
+    $this->patchJson("/api/v1/posts/{$id}", ['status' => 'draft'])->assertOk()->assertJsonPath('data.status', 'draft')->assertJsonPath('data.is_published', false);
+    $this->patchJson("/api/v1/posts/{$id}", ['status' => 'archived', 'seo_title' => str_repeat('x', 71)])
+        ->assertUnprocessable()->assertJsonStructure(['error' => ['details' => ['status', 'seo_title']]]);
+});

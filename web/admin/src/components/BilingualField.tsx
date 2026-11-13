@@ -30,7 +30,7 @@ export function BilingualField({
 }: {
   label: string
   name: string
-  type?: Extract<FieldType, 'text' | 'textarea'>
+  type?: Extract<FieldType, 'text' | 'textarea' | 'richtext'>
   values: Record<string, unknown>
   errors: Record<string, string>
   required?: boolean

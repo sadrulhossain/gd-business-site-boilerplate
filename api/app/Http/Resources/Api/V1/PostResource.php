@@ -24,8 +24,13 @@ class PostResource extends JsonResource
             'excerpt_2nd' => $this->excerpt_2nd,
             'body' => $this->body,
             'body_2nd' => $this->body_2nd,
+            'seo_title' => $this->seo_title,
+            'seo_title_2nd' => $this->seo_title_2nd,
+            'seo_description' => $this->seo_description,
+            'seo_description_2nd' => $this->seo_description_2nd,
             'image' => app(MediaService::class)->describe($this->image),
             'is_published' => $this->is_published,
+            'status' => $this->is_published ? 'published' : 'draft',
             'published_at' => $this->published_at,
             'updated_at' => $this->updated_at,
         ];

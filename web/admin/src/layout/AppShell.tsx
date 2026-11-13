@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { NavLink, Outlet } from 'react-router'
+import { Link, NavLink, Outlet } from 'react-router'
 import { api } from '../api'
 import { signOut } from '../auth/signOut'
 import { useAuth } from '../auth/store'
@@ -50,7 +50,9 @@ export function AppShell() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center justify-end gap-3 border-b border-line bg-surface px-4 py-2">
-          <span className="text-ink-muted">{user?.name}</span>
+          <Link to="/profile" className="text-ink-muted hover:underline">
+            {user?.name}
+          </Link>
           <button type="button" className="rounded-md border border-line px-3 py-1 hover:bg-primary-50" onClick={() => void signOut()}>
             Sign out
           </button>

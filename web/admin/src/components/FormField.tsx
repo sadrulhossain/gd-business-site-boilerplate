@@ -1,6 +1,7 @@
 import { useId } from 'react'
+import { RichText } from './RichText'
 
-export type FieldType = 'text' | 'textarea' | 'number' | 'checkbox' | 'select' | 'password' | 'checkgroup'
+export type FieldType = 'text' | 'textarea' | 'number' | 'checkbox' | 'select' | 'password' | 'checkgroup' | 'richtext'
 
 export interface FieldOption {
   value: string | number
@@ -32,6 +33,8 @@ export function FormField({ label, name, type = 'text', value, onChange, error, 
   let input
   if (type === 'textarea') {
     input = <textarea {...common} rows={4} className={control} value={String(value ?? '')} onChange={(e) => onChange(e.target.value)} />
+  } else if (type === 'richtext') {
+    input = <RichText id={id} label={label} value={String(value ?? '')} onChange={onChange} />
   } else if (type === 'select') {
     input = (
       <select {...common} className={control} value={String(value ?? '')} onChange={(e) => onChange(e.target.value)}>

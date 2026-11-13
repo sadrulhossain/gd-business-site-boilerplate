@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\V1\MenuController;
 use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\PostImageController;
+use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\SectionController;
 use App\Http\Controllers\Api\V1\SectionImageController;
@@ -54,6 +55,7 @@ Route::prefix('v1')->group(function (): void {
     Route::middleware('auth:api')->group(function (): void {
         Route::get('me', MeController::class);
         Route::get('me/menus', MeMenusController::class);
+        Route::patch('me', [ProfileController::class, 'update']);
         Route::post('logout', LogoutController::class);
         Route::get('dashboard', DashboardController::class)->middleware('can:dashboard.view');
 

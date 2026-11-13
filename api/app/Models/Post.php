@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /** A blog post. `body` holds rich-text HTML, sanitised on every write (see HtmlSanitizer). */
 #[Fillable([
     'category_id', 'title', 'title_2nd', 'slug', 'excerpt', 'excerpt_2nd', 'body', 'body_2nd',
+    'seo_title', 'seo_title_2nd', 'seo_description', 'seo_description_2nd',
     'image', 'is_published', 'published_at',
 ])]
 class Post extends Model

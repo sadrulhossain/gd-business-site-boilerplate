@@ -1455,6 +1455,100 @@
                         "$ref": "#/components/responses/AuthenticationException"
                     }
                 }
+            },
+            "patch": {
+                "operationId": "profile.update",
+                "description": "`name`, and/or `password` with `current_password` and `password_confirmation`. Other sessions are signed out\nwhen the password changes. Returns the same body as `GET /me`.",
+                "summary": "Update own profile",
+                "tags": [
+                    "Profile"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProfileRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                },
+                                                "is_superadmin": {
+                                                    "type": "boolean"
+                                                },
+                                                "roles": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "relations": {
+                                                                "type": "array",
+                                                                "prefixItems": [
+                                                                    {
+                                                                        "type": "string",
+                                                                        "const": "roles"
+                                                                    }
+                                                                ],
+                                                                "minItems": 1,
+                                                                "maxItems": 1
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "relations"
+                                                        ]
+                                                    }
+                                                },
+                                                "permissions": {
+                                                    "type": "array",
+                                                    "items": {}
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "name",
+                                                "email",
+                                                "is_superadmin",
+                                                "roles",
+                                                "permissions"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    }
+                }
             }
         },
         "/v1/me/menus": {
@@ -4873,11 +4967,42 @@
                             "null"
                         ]
                     },
+                    "seo_title": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "seo_title_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "seo_description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "seo_description_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
                     "image": {
                         "type": "string"
                     },
                     "is_published": {
                         "type": "boolean"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "published",
+                            "draft"
+                        ]
                     },
                     "published_at": {
                         "type": [
@@ -4904,8 +5029,13 @@
                     "excerpt_2nd",
                     "body",
                     "body_2nd",
+                    "seo_title",
+                    "seo_title_2nd",
+                    "seo_description",
+                    "seo_description_2nd",
                     "image",
                     "is_published",
+                    "status",
                     "published_at",
                     "updated_at"
                 ],
@@ -5375,6 +5505,20 @@
                         ],
                         "maxLength": 1000
                     },
+                    "seo_title": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 70
+                    },
+                    "seo_description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 320
+                    },
                     "body": {
                         "type": [
                             "string",
@@ -5396,6 +5540,20 @@
                         ],
                         "maxLength": 1000
                     },
+                    "seo_title_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 70
+                    },
+                    "seo_description_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 320
+                    },
                     "body_2nd": {
                         "type": [
                             "string",
@@ -5416,6 +5574,13 @@
                     },
                     "is_published": {
                         "type": "boolean"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "draft",
+                            "published"
+                        ]
                     },
                     "published_at": {
                         "type": [
@@ -5939,6 +6104,20 @@
                         ],
                         "maxLength": 1000
                     },
+                    "seo_title": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 70
+                    },
+                    "seo_description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 320
+                    },
                     "body": {
                         "type": [
                             "string",
@@ -5959,6 +6138,20 @@
                             "null"
                         ],
                         "maxLength": 1000
+                    },
+                    "seo_title_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 70
+                    },
+                    "seo_description_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 320
                     },
                     "body_2nd": {
                         "type": [
@@ -5981,6 +6174,13 @@
                     "is_published": {
                         "type": "boolean"
                     },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "draft",
+                            "published"
+                        ]
+                    },
                     "published_at": {
                         "type": [
                             "string",
@@ -5990,6 +6190,29 @@
                     }
                 },
                 "title": "UpdatePostRequest"
+            },
+            "UpdateProfileRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 120
+                    },
+                    "current_password": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string",
+                        "minLength": 12,
+                        "maxLength": 255
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "minLength": 12,
+                        "maxLength": 255
+                    }
+                },
+                "title": "UpdateProfileRequest"
             },
             "UpdateRoleRequest": {
                 "type": "object",
