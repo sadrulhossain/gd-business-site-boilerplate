@@ -15,6 +15,16 @@ use Illuminate\Support\Facades\Gate;
 class SectionController extends Controller
 {
     /**
+     * List visible sections (public)
+     *
+     * Visible sections ordered by `sort_order`. The portal renders them by `key`. No authentication.
+     */
+    public function publicIndex(): AnonymousResourceCollection
+    {
+        return SectionResource::collection(Section::query()->where('is_visible', true)->orderBy('sort_order')->orderBy('id')->get());
+    }
+
+    /**
      * List sections
      *
      * All sections ordered by `sort_order`. Sections are seeded, so there is no create or delete.

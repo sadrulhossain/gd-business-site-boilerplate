@@ -660,6 +660,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/public/sections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List visible sections (public)
+         * @description Visible sections ordered by `sort_order`. The portal renders them by `key`. No authentication.
+         */
+        get: operations["section.publicIndex"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/sections/reorder": {
         parameters: {
             query?: never;
@@ -823,6 +843,26 @@ export interface paths {
         post: operations["serviceImage.store"];
         /** Remove the service image */
         delete: operations["serviceImage.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Show settings (public)
+         * @description The single settings record, for the site header, footer and metadata. No authentication.
+         */
+        get: operations["setting.publicShow"];
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -3043,6 +3083,28 @@ export interface operations {
             404: components["responses"]["ModelNotFoundException"];
         };
     };
+    "section.publicIndex": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"][];
+                    };
+                };
+            };
+        };
+    };
     "section.reorder": {
         parameters: {
             query?: never;
@@ -3438,6 +3500,28 @@ export interface operations {
             401: components["responses"]["AuthenticationException"];
             403: components["responses"]["AuthorizationException"];
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "setting.publicShow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SettingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SettingResource"];
+                    };
+                };
+            };
         };
     };
     "settings.show": {

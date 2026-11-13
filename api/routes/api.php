@@ -37,6 +37,8 @@ Route::prefix('v1')->group(function (): void {
 
     // Public content (visible rows only). `?lang=` collapses bilingual pairs into one language.
     Route::middleware(LocalizePublicResponse::class)->group(function (): void {
+        Route::get('public/settings', [SettingController::class, 'publicShow']);
+        Route::get('public/sections', [SectionController::class, 'publicIndex']);
         Route::get('public/faqs', [FaqController::class, 'publicIndex']);
         Route::get('public/services', [ServiceController::class, 'publicIndex']);
         Route::get('public/testimonials', [TestimonialController::class, 'publicIndex']);
