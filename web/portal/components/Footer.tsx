@@ -1,19 +1,14 @@
 import type { Settings } from '../lib/api'
 import Link from 'next/link'
 import { localePath, type Messages } from '../lib/i18n'
-
-const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const
+import { HoursList } from './HoursList'
 
 const SOCIAL: Record<string, string> = { facebook: 'Facebook', instagram: 'Instagram', x: 'X', linkedin: 'LinkedIn', youtube: 'YouTube', tiktok: 'TikTok', whatsapp: 'WhatsApp' }
 
 /** Contact details, opening hours and social links, all from public settings. */
 export function Footer({ locale, settings, messages }: { locale: string; settings: Settings; messages: Messages }) {
   const social = Object.entries(settings.social_links ?? {}).filter(([, url]) => url)
-  const hours = DAYS.flatMap((day) => {
-    const entry = settings.hours?.[day]
-
-    return entry ? [{ day, entry }] : []
-  })
+  const hasHours = Object.keys(settings.hours ?? {}).length > 0
 
   return (
     <footer className="border-t border-line bg-surface">
@@ -55,17 +50,10 @@ export function Footer({ locale, settings, messages }: { locale: string; setting
           )}
         </div>
 
-        {hours.length > 0 && (
+        {hasHours && (
           <div className="space-y-2">
             <h2 className="font-semibold">{messages.footer.hours}</h2>
-            <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-ink-muted">
-              {hours.map(({ day, entry }) => (
-                <div key={day} className="contents">
-                  <dt>{messages.days[day]}</dt>
-                  <dd>{entry.closed || !entry.open ? messages.footer.closed : `${entry.open} - ${entry.close}`}</dd>
-                </div>
-              ))}
-            </dl>
+            <HoursList settings={settings} messages={messages} />
           </div>
         )}
       </div>

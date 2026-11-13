@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { SectionBlock } from '../components/sections'
 import { getSections, getSettings } from './api'
+import { pageMetadata } from './seo'
 import { getMessages, isLocale } from './i18n'
 
 type Props = { params: Promise<{ locale: string }> }
@@ -25,9 +26,9 @@ export function sectionPage(main: string, extra: string[] = []) {
 
   async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { locale } = await params
-    const { section } = await load(locale)
+    const [{ section }, settings] = await Promise.all([load(locale), getSettings(locale)])
 
-    return { title: section.title, description: section.content?.slice(0, 160) || undefined }
+    return pageMetadata({ locale, path: SECTION_PAGES[main] ?? `/${main}`, siteName: settings.site_name, title: section.title, description: section.content, image: section.image?.url })
   }
 
   async function Page({ params }: Props) {
