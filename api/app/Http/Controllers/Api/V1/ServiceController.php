@@ -25,6 +25,18 @@ class ServiceController extends Controller
     }
 
     /**
+     * Show a visible service (public)
+     *
+     * One service by id; a hidden service answers 404. No authentication.
+     */
+    public function publicShow(Service $service): ServiceResource
+    {
+        abort_unless($service->is_visible, 404);
+
+        return new ServiceResource($service);
+    }
+
+    /**
      * List Services
      *
      * All Services ordered by `sort_order`, hidden ones included.

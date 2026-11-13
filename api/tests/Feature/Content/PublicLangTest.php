@@ -3,6 +3,7 @@
 use App\Models\Category;
 use App\Models\Faq;
 use App\Models\Post;
+use App\Models\Service;
 
 beforeEach(function () {
     config(['locales.supported' => ['en', 'bn'], 'locales.default' => 'en', 'locales.second' => 'bn']);
@@ -50,4 +51,17 @@ it('localises nested and paginated resources', function () {
         ->assertJsonPath('meta.current_page', 1);
 
     $this->getJson('/api/v1/public/posts/t?lang=bn')->assertOk()->assertJsonPath('data.title', 'শি');
+});
+
+it('shows one visible service publicly, falls back per field, and hides the others with 404', function () {
+    $shown = Service::create(['title' => 'Cut', 'title_2nd' => 'কাট', 'description' => 'Haircut', 'is_visible' => true]);
+    $hidden = Service::create(['title' => 'Secret', 'is_visible' => false]);
+
+    $this->getJson("/api/v1/public/services/{$shown->id}?lang=bn")
+        ->assertOk()
+        ->assertJsonPath('data.title', 'কাট')
+        ->assertJsonPath('data.description', 'Haircut'); // empty description_2nd falls back
+
+    $this->getJson("/api/v1/public/services/{$hidden->id}")->assertNotFound();
+    $this->getJson('/api/v1/public/services/999999')->assertNotFound();
 });

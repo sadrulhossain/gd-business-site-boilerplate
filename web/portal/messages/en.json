@@ -12,7 +12,10 @@
     "hours": "Opening hours",
     "follow": "Follow us",
     "closed": "Closed",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "legal": "Legal"
   },
   "days": {
     "mon": "Monday",
@@ -29,6 +32,73 @@
     "contactIntro": "Get in touch",
     "call": "Call",
     "email": "Email",
-    "visit": "Visit"
+    "visit": "Visit",
+    "details": "Details"
+  },
+  "pages": {
+    "about": "About us",
+    "services": "Services",
+    "gallery": "Gallery",
+    "faq": "FAQ",
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "back": "Back to services",
+    "allServices": "All services"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "The page you are looking for does not exist or has moved.",
+    "home": "Go to the home page"
+  },
+  "legal": {
+    "updated": "This text is a general template. Please have it reviewed for your business before relying on it.",
+    "privacy": [
+      {
+        "heading": "What we collect",
+        "body": "{site} collects only what you send us, such as your name, email address, phone number and message when you use the contact form."
+      },
+      {
+        "heading": "How we use it",
+        "body": "We use your details to answer your enquiry. We do not sell them and we share them only with providers who help us run this website."
+      },
+      {
+        "heading": "Cookies",
+        "body": "This website does not use advertising or tracking cookies."
+      },
+      {
+        "heading": "Your rights",
+        "body": "You can ask us at any time to see, correct or delete the personal data we hold about you."
+      },
+      {
+        "heading": "Contact",
+        "body": "Questions about this policy can be sent to {email}."
+      }
+    ],
+    "terms": [
+      {
+        "heading": "Using this website",
+        "body": "By using the website of {site} you agree to these terms. Please do not use it unlawfully or in a way that could harm it or other visitors."
+      },
+      {
+        "heading": "Content",
+        "body": "Text, images and logos on this website belong to {site} or its licensors. You may not copy them without permission."
+      },
+      {
+        "heading": "Accuracy",
+        "body": "We try to keep the information accurate and up to date, but we cannot guarantee it is free of errors."
+      },
+      {
+        "heading": "Liability",
+        "body": "To the extent the law allows, {site} is not liable for losses arising from the use of this website."
+      },
+      {
+        "heading": "Changes",
+        "body": "We may update these terms from time to time. The version on this page is the current one."
+      },
+      {
+        "heading": "Contact",
+        "body": "Questions about these terms can be sent to {email}."
+      }
+    ]
   }
 }

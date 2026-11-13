@@ -43,7 +43,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <main id="main" className="flex-1">
           {children}
         </main>
-        <Footer settings={settings} messages={messages} />
+        <Footer locale={locale} settings={settings} messages={messages} />
       </body>
     </html>
   )

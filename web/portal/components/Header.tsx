@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { Section, Settings } from '../lib/api'
 import { defaultLocale, localePath, locales, type Messages } from '../lib/i18n'
+import { SECTION_PAGES } from '../lib/section-page'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 /** Site name and one anchor per visible section (the hero is the page top, so it has none). */
@@ -17,7 +18,7 @@ export function Header({ locale, settings, sections, messages }: { locale: strin
           {sections
             .filter((s) => s.key !== 'hero')
             .map((s) => (
-              <Link key={s.key} href={`${home}#${s.key}`} className="text-ink-muted hover:text-brand-700">
+              <Link key={s.key} href={SECTION_PAGES[s.key] ? localePath(locale, SECTION_PAGES[s.key]) : `${home}#${s.key}`} className="text-ink-muted hover:text-brand-700">
                 {s.title}
               </Link>
             ))}

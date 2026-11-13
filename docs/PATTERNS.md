@@ -89,3 +89,12 @@ singleton reference: Settings. Paths below are relative to `api/app` unless note
 - Styling: logical utilities only (`ms-`, `me-`, `ps-`, `pe-`, `text-start`, `border-s`), so RTL locales work. `images.unoptimized` is on: use `components/Media.tsx`.
 - Dev note: after changing a server component that a client component consumes, a stale Turbopack cache can serve old props; `rm -rf web/portal/.next` and restart node.
 - Screenshots: `docker compose --profile e2e run --rm --no-deps -T -w /app/web/portal e2e npx playwright test`.
+
+## Portal pages (phase 13)
+- A page for a section is `lib/section-page.tsx` `sectionPage('<key>', [extra keys])` in a two-line `page.tsx`: it renders the same `SectionBlock` view as Home
+  (title becomes the h1) and 404s when the section is hidden. Add the key to `SECTION_PAGES` so the header links to the page instead of a Home anchor.
+- Static legal text (`privacy`, `terms`) lives in `messages/*.json` under `legal`, with `{site}` / `{email}` filled from settings (`lib/legal-page.tsx`).
+  It is a generic template: the business must review it.
+- `getMessages` falls back key by key to `en.json`, so a missing or empty entry in `second.json` shows the default text. API content does the same via `?lang=`.
+- 404: `app/[locale]/[...rest]/page.tsx` calls `notFound()` for unknown paths; `not-found.tsx` finds its locale from the `x-locale` header set by `proxy.ts`.
+- Proxy matcher: keep the double backslash in `.*\..*`; a single one silently matches nothing useful. After editing `proxy.ts` restart node with a clean `.next`.
