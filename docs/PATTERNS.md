@@ -96,7 +96,7 @@ singleton reference: Settings. Paths below are relative to `api/app` unless note
 - Static legal text (`privacy`, `terms`) lives in `messages/*.json` under `legal`, with `{site}` / `{email}` filled from settings (`lib/legal-page.tsx`).
   It is a generic template: the business must review it.
 - `getMessages` falls back key by key to `en.json`, so a missing or empty entry in `second.json` shows the default text. API content does the same via `?lang=`.
-- 404: `app/[locale]/[...rest]/page.tsx` calls `notFound()` for unknown paths; `not-found.tsx` finds its locale from the `x-locale` header set by `proxy.ts`.
+- 404: `app/[locale]/[...rest]/page.tsx` calls `notFound()` for unknown paths; `not-found.tsx` must not read request headers (that makes every locale route dynamic, no ISR): `NotFoundContent` picks the locale from the URL.
 - Proxy matcher: keep the double backslash in `.*\..*`; a single one silently matches nothing useful. After editing `proxy.ts` restart node with a clean `.next`.
 
 ## Blog, contact and SEO (phase 14)
@@ -107,3 +107,10 @@ singleton reference: Settings. Paths below are relative to `api/app` unless note
 - Blog: `/blog` (`?category=<slug>`, `?page=n`, canonical is the plain list), `/blog/<slug>`. Post `body` is sanitised by the API and rendered as HTML in `.post-body`.
 - Contact: `components/ContactForm.tsx` talks only to `app/api/contact/*` (server proxies to the API; the captcha is one-time, refetched after every submit). The honeypot field is `website`.
 - Smoke tests: `web/portal/e2e/smoke.spec.ts` (`docker compose --profile e2e run --rm --no-deps -T -w /app/web/portal e2e npx playwright test smoke`). The contact test leaves one message with subject `e2e-smoke`; the blog test skips without published posts.
+
+## Security and quality gates (phase 15)
+- `make security` (also part of `make check`): `php artisan security:routes` (every `auth:api` route needs `can:` or a policy/Gate call; own-account routes are listed in `AuditRoutes::ALLOWED`), `scripts/check-secrets.sh`, `scripts/check-floors.mjs`. A new route gets its check; do not add allowlist entries.
+- nginx: `include /etc/nginx/snippets/security-headers.conf;` in every server and in every location that sets its own `add_header` (those replace inherited ones). Set the CSP per vhost.
+- The OAuth authorize step is S256-only (`RequirePkceS256`). Cross-origin API access is closed; list origins in `CORS_ALLOWED_ORIGINS` only when a browser app needs it.
+- Portal: never read `headers()` or `cookies()` in the locale layout, `not-found.tsx` or shared components (every page turns dynamic and loses ISR). `web/portal/e2e/a11y.spec.ts` (axe) must stay at zero violations; white text needs `bg-brand-700` or darker.
+- Dev edits do not reach the node container's file watcher on Windows: after changing code, stop node, delete `web/portal/.next` and start it again.

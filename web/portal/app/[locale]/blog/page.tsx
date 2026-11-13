@@ -56,7 +56,7 @@ export default async function BlogIndex({ params, searchParams }: Props) {
           <Link
             href={href(locale, {})}
             aria-current={!query.category ? 'true' : undefined}
-            className={`rounded-sm px-3 py-1 ${!query.category ? 'bg-brand-600 text-white' : 'border border-line hover:bg-brand-50'}`}
+            className={`rounded-sm px-3 py-1 ${!query.category ? 'bg-brand-700 text-white' : 'border border-line hover:bg-brand-50'}`}
           >
             {t.all}
           </Link>
@@ -65,7 +65,7 @@ export default async function BlogIndex({ params, searchParams }: Props) {
               key={c.id}
               href={href(locale, { category: c.slug })}
               aria-current={query.category === c.slug ? 'true' : undefined}
-              className={`rounded-sm px-3 py-1 ${query.category === c.slug ? 'bg-brand-600 text-white' : 'border border-line hover:bg-brand-50'}`}
+              className={`rounded-sm px-3 py-1 ${query.category === c.slug ? 'bg-brand-700 text-white' : 'border border-line hover:bg-brand-50'}`}
             >
               {c.name}
             </Link>

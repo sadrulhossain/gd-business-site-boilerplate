@@ -15,5 +15,6 @@ RUN apk add --no-cache git unzip libwebp libjpeg-turbo libpng \
 RUN mkdir -p ${UPLOADS_CONTAINER_PATH} && chown www-data:www-data ${UPLOADS_CONTAINER_PATH}
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY security.ini $PHP_INI_DIR/conf.d/zz-security.ini
 COPY artisan-or-idle.sh fpm-start.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/artisan-or-idle.sh /usr/local/bin/fpm-start.sh

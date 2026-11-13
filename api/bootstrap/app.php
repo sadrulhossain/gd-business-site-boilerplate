@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\JsonErrorRenderer;
+use App\Http\Middleware\RequirePkceS256;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -15,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Passport registers /oauth/authorize in the web group; PKCE must be S256 (see the middleware).
+        $middleware->web(prepend: [RequirePkceS256::class]);
+
         // /api/* guests get the JSON 401. Browser pages (the OAuth authorize step) go to the login page.
         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('api/*') ? null : route('login'));
     })

@@ -10,6 +10,9 @@ import '../globals.css'
 
 const RTL = new Set(['ar', 'he', 'fa', 'ur'])
 
+/** Pages are built once per locale and refreshed hourly or on the webhook (ISR); the API fetches carry the same tags. */
+export const revalidate = 3600
+
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
 }

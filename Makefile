@@ -7,7 +7,7 @@ define quiet
 mkdir -p .cache; $(1) >$(LOG) 2>&1 || { tail -n 20 $(LOG); exit 1; }
 endef
 
-.PHONY: up down ports versions t check env openapi web e2e
+.PHONY: up down ports versions security t check env openapi web e2e
 
 env:
 	@[ -f .env ] || { cp .env.example .env; sed -i.bak "s|^APP_KEY=.*|APP_KEY=base64:$$(openssl rand -base64 32)|" .env; rm -f .env.bak; echo "created .env from .env.example (APP_KEY generated; change the passwords)"; }
@@ -32,6 +32,12 @@ versions:
 	  if grep -qF "| $$v " docs/VERSIONS.md; then echo "ok       $$k=$$v"; else echo "MISMATCH $$k=$$v"; bad=1; fi; \
 	done; exit $$bad
 
+# security gates: routes without a policy/permission, secrets in the repo, versions below their floor (docs/SECURITY.md)
+security:
+	@$(COMPOSE) exec -T php php artisan security:routes
+	@sh scripts/check-secrets.sh
+	@node scripts/check-floors.mjs | tail -n 1
+
 # targeted tests: make t FILTER=SomeTest
 t:
 	@[ -n "$(FILTER)" ] || { echo "usage: make t FILTER=<name>"; exit 2; }
@@ -49,6 +55,7 @@ check:
 	@$(call quiet,$(COMPOSE) exec -T php vendor/bin/pest --compact)
 	@$(call quiet,$(COMPOSE) exec -T php composer audit)
 	@$(MAKE) --no-print-directory versions
+	@$(MAKE) --no-print-directory security
 	@echo "check: ok"
 
 openapi:

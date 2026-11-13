@@ -189,7 +189,7 @@ export function ContactForm({ messages }: { messages: Messages['contactPage'] })
         />
       </div>
 
-      <button type="submit" disabled={status === 'sending' || !captcha} className="rounded-md bg-brand-600 px-5 py-2 text-white hover:bg-brand-700 disabled:opacity-60">
+      <button type="submit" disabled={status === 'sending' || !captcha} className="rounded-md bg-brand-700 px-5 py-2 text-white hover:bg-brand-800 disabled:opacity-60">
         {status === 'sending' ? messages.sending : messages.send}
       </button>
     </form>
