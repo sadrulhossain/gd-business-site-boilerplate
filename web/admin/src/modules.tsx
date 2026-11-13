@@ -128,6 +128,33 @@ export const modules: CrudConfig[] = [
     ],
   },
   {
+    // Draft/published is the API's `status`; leave "Publish at" empty to publish immediately.
+    key: 'posts',
+    path: '/posts',
+    title: 'Posts',
+    noun: 'Post',
+    endpoint: '/v1/posts',
+    image: true,
+    rowLabel: (r) => String(r.title),
+    columns: [
+      { key: 'image', header: 'Cover', render: thumb },
+      { key: 'title', header: 'Title' },
+      { key: 'category', header: 'Category', render: (r) => String((r.category as { name?: string } | null)?.name ?? '') },
+      { key: 'status', header: 'Status' },
+    ],
+    fields: [
+      { name: 'title', label: 'Title', bilingual: true, required: true },
+      { name: 'slug', label: 'Slug', required: true, hint: 'Lowercase letters, numbers and dashes. Used in the post URL.' },
+      { name: 'category_id', label: 'Category', type: 'select', optionsFrom: { endpoint: '/v1/categories', map: (c: { id: number; name: string }) => ({ value: c.id, label: c.name }) } },
+      { name: 'status', label: 'Status', type: 'select', initial: 'draft', options: [{ value: 'draft', label: 'Draft' }, { value: 'published', label: 'Published' }] },
+      { name: 'published_at', label: 'Publish at', hint: 'Date and time, e.g. 2026-12-01 09:00. Empty publishes immediately.' },
+      { name: 'excerpt', label: 'Excerpt', type: 'textarea', bilingual: true },
+      { name: 'body', label: 'Body', type: 'richtext', bilingual: true },
+      { name: 'seo_title', label: 'SEO title', bilingual: true, hint: 'Up to 70 characters. Falls back to the title.' },
+      { name: 'seo_description', label: 'SEO description', type: 'textarea', bilingual: true, hint: 'Up to 320 characters; about 155 shows fully in search results.' },
+    ],
+  },
+  {
     key: 'categories',
     path: '/categories',
     title: 'Categories',

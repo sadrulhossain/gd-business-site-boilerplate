@@ -10,6 +10,7 @@ import { Callback, SignedOut } from './pages/auth'
 import { Dashboard } from './pages/Dashboard'
 import { NotFound } from './pages/errors'
 import { MessagesPage } from './pages/Messages'
+import { ProfilePage } from './pages/Profile'
 import { SettingsPage } from './pages/Settings'
 import { settings } from './settingsConfig'
 import { Showcase } from './showcase'
@@ -77,6 +78,8 @@ export const router = createBrowserRouter([
           </RequirePermission>
         ),
       },
+      // Own profile: any signed-in user, no permission.
+      { path: 'profile', element: <ProfilePage /> },
       { path: '*', element: <NotFound /> },
     ],
   },

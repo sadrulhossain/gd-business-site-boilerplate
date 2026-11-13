@@ -410,7 +410,12 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        /**
+         * Update own profile
+         * @description `name`, and/or `password` with `current_password` and `password_confirmation`. Other sessions are signed out
+         *     when the password changes. Returns the same body as `GET /me`.
+         */
+        patch: operations["profile.update"];
         trace?: never;
     };
     "/v1/me/menus": {
@@ -1136,8 +1141,14 @@ export interface components {
             excerpt_2nd: string | null;
             body: string | null;
             body_2nd: string | null;
+            seo_title: string | null;
+            seo_title_2nd: string | null;
+            seo_description: string | null;
+            seo_description_2nd: string | null;
             image: string;
             is_published: boolean;
+            /** @enum {string} */
+            status: "published" | "draft";
             /** Format: date-time */
             published_at: string | null;
             /** Format: date-time */
@@ -1259,13 +1270,19 @@ export interface components {
         StorePostRequest: {
             title: string;
             excerpt?: string | null;
+            seo_title?: string | null;
+            seo_description?: string | null;
             body?: string | null;
             title_2nd?: string | null;
             excerpt_2nd?: string | null;
+            seo_title_2nd?: string | null;
+            seo_description_2nd?: string | null;
             body_2nd?: string | null;
             slug: string;
             category_id?: number | null;
             is_published?: boolean;
+            /** @enum {string} */
+            status?: "draft" | "published";
             /** Format: date-time */
             published_at?: string | null;
         };
@@ -1405,15 +1422,28 @@ export interface components {
         UpdatePostRequest: {
             title?: string;
             excerpt?: string | null;
+            seo_title?: string | null;
+            seo_description?: string | null;
             body?: string | null;
             title_2nd?: string | null;
             excerpt_2nd?: string | null;
+            seo_title_2nd?: string | null;
+            seo_description_2nd?: string | null;
             body_2nd?: string | null;
             slug?: string;
             category_id?: number | null;
             is_published?: boolean;
+            /** @enum {string} */
+            status?: "draft" | "published";
             /** Format: date-time */
             published_at?: string | null;
+        };
+        /** UpdateProfileRequest */
+        UpdateProfileRequest: {
+            name?: string;
+            current_password?: string;
+            password?: string;
+            password_confirmation?: string;
         };
         /** UpdateRoleRequest */
         UpdateRoleRequest: {
@@ -2389,6 +2419,45 @@ export interface operations {
                 };
             };
             401: components["responses"]["AuthenticationException"];
+        };
+    };
+    "profile.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateProfileRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            id: number;
+                            name: string;
+                            email: string;
+                            is_superadmin: boolean;
+                            roles: {
+                                relations: [
+                                    "roles"
+                                ];
+                            }[];
+                            permissions: unknown[];
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
         };
     };
     "v1.meMenus": {

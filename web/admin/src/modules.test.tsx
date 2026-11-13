@@ -23,7 +23,7 @@ describe('module configs', () => {
       expect(m.columns.length).toBeGreaterThan(0)
       const names = m.fields.map((f) => f.name)
       expect(new Set(names).size, m.key).toBe(names.length)
-      for (const f of m.fields) if (f.bilingual) expect(['text', 'textarea', undefined]).toContain(f.type)
+      for (const f of m.fields) if (f.bilingual) expect(['text', 'textarea', 'richtext', undefined]).toContain(f.type)
     }
   })
 

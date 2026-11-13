@@ -19,7 +19,7 @@ export interface CrudField {
   name: string
   label: string
   type?: FieldType
-  /** Renders `name` and `name_2nd`, labelled with the locale codes. Text and textarea only. */
+  /** Renders `name` and `name_2nd`, labelled with the locale codes. Text, textarea and richtext only. */
   bilingual?: boolean
   required?: boolean
   hint?: string
@@ -228,7 +228,7 @@ function CrudForm({ config, row, onDone, onCancel }: { config: CrudConfig; row: 
             key={f.name}
             label={f.label}
             name={f.name}
-            type={f.type === 'textarea' ? 'textarea' : 'text'}
+            type={f.type === 'textarea' || f.type === 'richtext' ? f.type : 'text'}
             required={f.required}
             values={values}
             errors={errors}

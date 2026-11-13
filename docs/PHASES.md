@@ -16,6 +16,7 @@ Tick a phase only when it is finished and committed.
 
 | [x] | 9 | Admin modules | users, roles (permission matrix), menus (tree + reorder), settings (tabbed bilingual singleton), sections (visibility toggle, drag reorder) as CrudPage configs; API: users, roles, permissions, menus, reorder endpoints; Vitest on configs |
 | [x] | 10 | Content modules | services, FAQs, testimonials, team, gallery as CrudPage configs with image upload (progress); gallery multi-upload; contact messages read-only list/detail + mark read; Vitest on configs and upload helpers |
+| [x] | 11 | Blog and profile | posts CrudPage config (TipTap rich text, bilingual, draft/published `status`, cover upload, SEO fields), categories, profile page (name, password: PATCH /me); posts SEO columns; Vitest on configs |
 
 <!-- TODO: the phase table was not included in the Phase 0 brief ("[paste the table below]").
      Paste phases 1..N here, one row each, with a [ ] checkbox. -->

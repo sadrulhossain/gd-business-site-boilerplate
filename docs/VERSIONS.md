@@ -34,6 +34,9 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 | @vitejs/plugin-react | 6.3.0 | 6.3.0 | https://www.npmjs.com/package/@vitejs/plugin-react/v/6.3.0 | 2026-11-12 | n/a (npm) |
 | @types/react / @types/react-dom | 19.3.0 | 19.3.0 | https://www.npmjs.com/package/@types/react/v/19.3.0 | 2026-11-12 | n/a (npm) |
 | @types/node | 24.19.2 | 24.19.2 | https://www.npmjs.com/package/@types/node/v/24.19.2 | 2026-11-12 | n/a (npm; 24.x line to match Node 24) |
+| @tiptap/react | 3.33.1 | 3.33.1 | https://www.npmjs.com/package/@tiptap/react/v/3.33.1 | 2026-11-13 | n/a (npm; the three TipTap packages share one version) |
+| @tiptap/pm | 3.33.1 | 3.33.1 | https://www.npmjs.com/package/@tiptap/pm/v/3.33.1 | 2026-11-13 | n/a (npm) |
+| @tiptap/starter-kit | 3.33.1 | 3.33.1 | https://www.npmjs.com/package/@tiptap/starter-kit/v/3.33.1 | 2026-11-13 | n/a (npm) |
 
 ## Notes
 - Node: the 11 Nov 2026 official security release patches 24.x at **v24.22.3** (fixes 16 CVEs, highest severity High; 26.x -> v26.13.1, 22.x -> v22.23.5). v24.22.3 is on nodejs.org/dist (dated 2026-11-10), but the official Docker image has only 24.22.2 so far. Until `node:24.22.3-*` appears, do not build images from `node:24.22.2` as the pin; recheck the tag.
