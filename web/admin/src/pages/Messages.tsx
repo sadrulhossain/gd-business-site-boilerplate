@@ -70,7 +70,7 @@ export function MessagesPage({ config }: { config: InboxConfig }) {
           loading={list.isPending}
           empty="No messages."
           actions={(m) => (
-            <button type="button" className="text-primary-600 hover:underline" onClick={() => setOpen(m)}>
+            <button type="button" className="text-link hover:underline" onClick={() => setOpen(m)}>
               Open
             </button>
           )}
@@ -108,11 +108,11 @@ export function MessagesPage({ config }: { config: InboxConfig }) {
             </dl>
             <div className="flex justify-end gap-2 pt-2">
               {canMark && !open.read_at && (
-                <button type="button" disabled={markRead.isPending} className="rounded-md bg-primary-600 px-3 py-1.5 text-white hover:bg-primary-700 disabled:opacity-60" onClick={() => markRead.mutate(open.id)}>
+                <button type="button" disabled={markRead.isPending} className="btn btn-primary" onClick={() => markRead.mutate(open.id)}>
                   Mark as read
                 </button>
               )}
-              <button type="button" className="rounded-md border border-line bg-surface px-3 py-1.5 hover:bg-primary-50" onClick={() => setOpen(null)}>
+              <button type="button" className="btn btn-secondary" onClick={() => setOpen(null)}>
                 Close
               </button>
             </div>

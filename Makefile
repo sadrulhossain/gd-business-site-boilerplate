@@ -7,7 +7,7 @@ define quiet
 mkdir -p .cache; $(1) >$(LOG) 2>&1 || { tail -n 20 $(LOG); exit 1; }
 endef
 
-.PHONY: up down ports versions security t check env openapi web e2e
+.PHONY: up down ports versions security t check env openapi web e2e backup
 
 env:
 	@[ -f .env ] || { cp .env.example .env; sed -i.bak "s|^APP_KEY=.*|APP_KEY=base64:$$(openssl rand -base64 32)|" .env; rm -f .env.bak; echo "created .env from .env.example (APP_KEY generated; change the passwords)"; }
@@ -47,6 +47,7 @@ t:
 # run once at the end of a phase (needs the stack up)
 check:
 	@$(call quiet,$(COMPOSE) config -q)
+	@$(call quiet,APP_KEY=check $(COMPOSE) -f docker-compose.prod.yml --env-file .env.prod.example config -q)
 	@for f in scripts/*.sh docker/*/*.sh; do sh -n $$f || exit 1; done
 	@[ -n "$$($(COMPOSE) ps --status running -q php)" ] || { echo "check: stack is down, run make up"; exit 1; }
 	@$(call quiet,$(COMPOSE) exec -T nginx nginx -t)
@@ -57,6 +58,10 @@ check:
 	@$(MAKE) --no-print-directory versions
 	@$(MAKE) --no-print-directory security
 	@echo "check: ok"
+
+# database + uploads + OAuth keys of the production stack into backups/ (docs/DEPLOY.md)
+backup:
+	@sh scripts/backup.sh
 
 openapi:
 	@mkdir -p packages/api-types

@@ -124,7 +124,7 @@ function SettingsForm({ config, initial }: { config: SingletonConfig; initial: V
       </div>
 
       {canUpdate && (
-        <button type="submit" disabled={save.isPending} className="rounded-md bg-primary-600 px-3 py-1.5 text-white hover:bg-primary-700 disabled:opacity-60">
+        <button type="submit" disabled={save.isPending} className="btn btn-primary">
           Save
         </button>
       )}

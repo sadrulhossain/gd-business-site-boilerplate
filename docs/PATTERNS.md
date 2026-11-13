@@ -114,3 +114,10 @@ singleton reference: Settings. Paths below are relative to `api/app` unless note
 - The OAuth authorize step is S256-only (`RequirePkceS256`). Cross-origin API access is closed; list origins in `CORS_ALLOWED_ORIGINS` only when a browser app needs it.
 - Portal: never read `headers()` or `cookies()` in the locale layout, `not-found.tsx` or shared components (every page turns dynamic and loses ISR). `web/portal/e2e/a11y.spec.ts` (axe) must stay at zero violations; white text needs `bg-brand-700` or darker.
 - Dev edits do not reach the node container's file watcher on Windows: after changing code, stop node, delete `web/portal/.next` and start it again.
+
+## Production (phase 16)
+- Production lives in `docker-compose.prod.yml` + `docker/prod/` + `.env.prod`, never in the dev compose file. Images contain the code; nothing is bind-mounted except TLS certs. Do not publish ports other than 80/443.
+- A new env variable: add it to the `x-php` (or service) `environment:` in the prod file, to `.env.prod.example` and to the production table in ENV.md. Required secrets use `${VAR:?message}`.
+- A new service needs `restart: always`, a `healthcheck`, the `logging` anchor and a `depends_on` with `condition: service_healthy`.
+- The portal builds on first container start (it needs the API); bump `IMAGE_ID` per release. The php entrypoint migrates and caches config; seeders are run by hand (UPGRADE.md).
+- Backups: `scripts/backup.sh` / `restore.sh`. Anything new that holds state (a volume) must be added to both.

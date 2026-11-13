@@ -110,7 +110,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
   const actions = (row: Row): ReactNode => (
     <span className="inline-flex gap-2">
       {canUpdate && (
-        <button type="button" className="text-primary-600 hover:underline" onClick={() => setEditing(row)}>
+        <button type="button" className="text-link hover:underline" onClick={() => setEditing(row)}>
           Edit
         </button>
       )}
@@ -127,7 +127,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">{config.title}</h1>
         {canCreate && (
-          <button type="button" className="rounded-md bg-primary-600 px-3 py-1.5 text-white hover:bg-primary-700" onClick={() => setEditing('new')}>
+          <button type="button" className="btn btn-primary" onClick={() => setEditing('new')}>
             New {config.noun.toLowerCase()}
           </button>
         )}
@@ -245,10 +245,10 @@ function CrudForm({ config, row, onDone, onCancel }: { config: CrudConfig; row: 
           <p className="text-sm text-ink-muted">Save first, then add an image.</p>
         ))}
       <div className="flex justify-end gap-2 pt-2">
-        <button type="button" className="rounded-md border border-line bg-surface px-3 py-1.5 hover:bg-primary-50" onClick={onCancel}>
+        <button type="button" className="btn btn-secondary" onClick={onCancel}>
           Cancel
         </button>
-        <button type="submit" disabled={save.isPending} className="rounded-md bg-primary-600 px-3 py-1.5 text-white hover:bg-primary-700 disabled:opacity-60">
+        <button type="submit" disabled={save.isPending} className="btn btn-primary">
           Save
         </button>
       </div>

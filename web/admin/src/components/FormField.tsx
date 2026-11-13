@@ -22,7 +22,7 @@ export interface FormFieldProps {
   options?: FieldOption[]
 }
 
-const control = 'w-full rounded-md border border-line bg-surface px-2.5 py-1.5 focus:outline-2 focus:outline-primary-500'
+const control = 'field'
 
 /** One labelled input with its validation error. The label is associated for screen readers and tests. */
 export function FormField({ label, name, type = 'text', value, onChange, error, required, hint, options }: FormFieldProps) {

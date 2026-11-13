@@ -45,7 +45,8 @@ return [
     /*
      * OpenAPI version of the resulting document.
      */
-    'openapi_version' => OpenApiVersion::V3_1,
+    // The enum lives in a dev-only package, so production (composer install --no-dev) must not reference it.
+    'openapi_version' => class_exists(OpenApiVersion::class) ? OpenApiVersion::V3_1 : null,
 
     'info' => [
         /*
