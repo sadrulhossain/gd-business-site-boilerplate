@@ -1,0 +1,26 @@
+# Build context for the production images (docker/prod/*.Dockerfile): source only, never env files, dependencies or build output.
+.git
+.cache
+.env
+.env.*
+!.env.example
+**/node_modules
+**/.next
+**/.next-build
+**/dist
+**/coverage
+**/e2e/.results
+**/e2e/screenshots
+api/vendor
+api/.env
+api/.env.*
+!api/.env.example
+api/storage/logs/*
+api/storage/framework/cache/*
+api/storage/framework/sessions/*
+api/storage/framework/views/*
+api/storage/oauth-*.key
+api/storage/*.json
+api/bootstrap/cache/*.php
+api/tests
+**/*.log

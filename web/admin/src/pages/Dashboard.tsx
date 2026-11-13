@@ -2,17 +2,18 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
 import { api } from '../api'
 import { useAuth } from '../auth/store'
+import { Icon } from '../components/Icon'
 
-/** Dashboard card order: key => [label, admin path]. The API only returns counts the user may see. */
-const CARDS: Record<string, [string, string]> = {
-  unread_messages: ['Unread messages', '/messages'],
-  posts: ['Posts', '/posts'],
-  categories: ['Categories', '/categories'],
-  services: ['Services', '/services'],
-  testimonials: ['Testimonials', '/testimonials'],
-  team: ['Team members', '/team'],
-  gallery: ['Gallery items', '/gallery'],
-  faqs: ['FAQs', '/faqs'],
+/** Dashboard card order: key => [label, admin path, icon]. The API only returns counts the user may see. */
+const CARDS: Record<string, [string, string, string]> = {
+  unread_messages: ['Unread messages', '/messages', 'mail'],
+  posts: ['Posts', '/posts', 'file-text'],
+  categories: ['Categories', '/categories', 'tag'],
+  services: ['Services', '/services', 'briefcase'],
+  testimonials: ['Testimonials', '/testimonials', 'message-square'],
+  team: ['Team members', '/team', 'users'],
+  gallery: ['Gallery items', '/gallery', 'image'],
+  faqs: ['FAQs', '/faqs', 'help-circle'],
 }
 
 export function Dashboard() {
@@ -23,10 +24,10 @@ export function Dashboard() {
   })
 
   return (
-    <section className="space-y-4">
-      <header>
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <p className="text-ink-muted">Welcome back, {name}.</p>
+    <section className="space-y-6">
+      <header className="rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 p-6 text-white shadow-lg">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <p className="mt-1 text-white/85">Welcome back, {name}. Here is what is happening on your site.</p>
       </header>
 
       {counts.isError && (
@@ -35,12 +36,15 @@ export function Dashboard() {
         </p>
       )}
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {Object.entries(CARDS)
           .filter(([key]) => counts.data && key in counts.data)
-          .map(([key, [label, path]]) => (
-            <Link key={key} to={path} className="rounded-lg border border-line bg-surface p-4 hover:border-primary-400">
-              <p className="text-3xl font-semibold" data-testid={`count-${key}`}>
+          .map(([key, [label, path, icon]]) => (
+            <Link key={key} to={path} className="card group p-4 transition hover:-translate-y-0.5 hover:border-primary-400 hover:shadow-md">
+              <span className="flex size-10 items-center justify-center rounded-lg bg-primary-100 text-primary-600 transition group-hover:bg-primary-600 group-hover:text-white">
+                <Icon name={icon} className="size-5" />
+              </span>
+              <p className="mt-3 text-3xl font-bold" data-testid={`count-${key}`}>
                 {counts.data?.[key]}
               </p>
               <p className="text-ink-muted">{label}</p>

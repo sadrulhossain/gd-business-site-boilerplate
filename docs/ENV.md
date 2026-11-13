@@ -34,3 +34,26 @@ each service lists its own `environment:` (no `env_file`). Commit only `*.exampl
 `php*` = php, php-queue, php-scheduler.
 
 Read from `api/.env` (not compose; see `api/.env.example`, `config/access.php`): `SUPERADMIN_NAME`, `SUPERADMIN_EMAIL`, `SUPERADMIN_PASSWORD` (seeder skips if empty), `OAUTH_ADMIN_CLIENT_ID` (fixed UUID), `OAUTH_ADMIN_REDIRECT_URI`. Fixed in compose for php*: `CACHE_STORE`, `SESSION_DRIVER`, `QUEUE_CONNECTION` = database, `LOG_CHANNEL` = stderr, `DB_CONNECTION` = mariadb.
+
+## Production (docker-compose.prod.yml, `.env.prod`)
+
+Everything reaches the containers through compose `environment:`; there is no `.env` file inside the images. A missing required secret stops `docker compose` before anything starts.
+Template: `.env.prod.example`.
+
+| Variable | Used by | Notes |
+|----------|---------|-------|
+| COMPOSE_PROJECT_NAME, APP_NAME, APP_DOMAIN | all | `APP_DOMAIN` is the portal host; `admin.` and `api.` subdomains are derived from it |
+| APP_KEY | php* | required; `base64:` + 32 random bytes; keep a copy outside the server |
+| HTTP_PORT / HTTPS_PORT | nginx | published ports, default 80 / 443. The only published ports of the stack |
+| TLS_CERT_DIR | nginx | host directory with `fullchain.pem` and `privkey.pem`, mounted read-only; one certificate for the three names |
+| IMAGE_ID | portal | any string that changes per release; the portal rebuilds its site when it differs from the one it built last |
+| MARIADB_DATABASE / MARIADB_USER / MARIADB_PASSWORD / MARIADB_ROOT_PASSWORD | mariadb, php* | passwords required; the database is not published |
+| UPLOADS_CONTAINER_PATH / UPLOADS_MAX_MB | php*, nginx | uploads volume mount path (same in all three) and size limit |
+| SUPERADMIN_NAME / SUPERADMIN_EMAIL / SUPERADMIN_PASSWORD | php* | read by the seeder; email and password required |
+| OAUTH_ADMIN_CLIENT_ID | php*, nginx build | public PKCE client id, baked into the admin build; the redirect URI is derived (`https://admin.<domain>/auth/callback`) |
+| MAIL_MAILER / MAIL_HOST / MAIL_PORT / MAIL_SCHEME / MAIL_USERNAME / MAIL_PASSWORD / MAIL_FROM_ADDRESS | php* | outgoing mail for contact notifications (`MAIL_MAILER=log` disables sending) |
+| LOG_LEVEL | php* | default `warning`; logs go to the container's stderr (rotated, 3 x 10 MB) |
+| PORTAL_REVALIDATE_SECRET | php*, portal | required; the URL is fixed to `http://portal:3000/api/revalidate` |
+| CORS_ALLOWED_ORIGINS, TRUSTED_PROXY_CIDR | php*, nginx | see the dev table above and docs/SECURITY.md |
+
+Set by compose, not by you: `APP_ENV=production`, `APP_DEBUG=false`, `SESSION_SECURE_COOKIE=true`, `API_INTERNAL_URL=http://nginx:8080/api`, `SITE_URL=https://<APP_DOMAIN>`, cache/session/queue on the database.

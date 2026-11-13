@@ -10,7 +10,7 @@ import { checkPasswordChange, type PasswordForm } from '../lib/profile'
 import type { Me } from '../types'
 
 const emptyPassword: PasswordForm = { current_password: '', password: '', password_confirmation: '' }
-const save = 'rounded-md bg-primary-600 px-3 py-1.5 text-white hover:bg-primary-700 disabled:opacity-60'
+const save = 'btn btn-primary'
 
 /** Own account: display name and password. Email is managed by an administrator. */
 export function ProfilePage() {

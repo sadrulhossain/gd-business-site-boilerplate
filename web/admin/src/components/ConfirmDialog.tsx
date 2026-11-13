@@ -16,9 +16,9 @@ export function Modal({ open, title, onClose, children }: { open: boolean; title
       ref={ref}
       aria-label={title}
       onClose={onClose}
-      className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-lg border border-line bg-surface p-5 text-ink backdrop:bg-ink/40"
+      className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-2xl border border-line bg-surface p-6 text-ink shadow-lg backdrop:bg-black/50 backdrop:backdrop-blur-sm"
     >
-      <h2 className="mb-3 text-lg font-semibold">{title}</h2>
+      <h2 className="mb-4 text-lg font-semibold tracking-tight">{title}</h2>
       {open && children}
     </dialog>
   )
@@ -47,13 +47,13 @@ export function ConfirmDialog({
     <Modal open={open} title={title} onClose={onCancel}>
       <p className="mb-4 text-ink-muted">{message}</p>
       <div className="flex justify-end gap-2">
-        <button type="button" className="rounded-md border border-line bg-surface px-3 py-1.5 hover:bg-primary-50" onClick={onCancel}>
+        <button type="button" className="btn btn-secondary" onClick={onCancel}>
           Cancel
         </button>
         <button
           type="button"
           disabled={busy}
-          className={`rounded-md px-3 py-1.5 text-white disabled:opacity-60 ${danger ? 'bg-danger' : 'bg-primary-600 hover:bg-primary-700'}`}
+          className={`btn ${danger ? 'btn-danger' : 'btn-primary'}`}
           onClick={onConfirm}
         >
           {confirmLabel}

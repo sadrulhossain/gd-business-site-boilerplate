@@ -1,37 +1,123 @@
 /*
- * Admin theme: dense, neutral, indigo accent. Colours are reset first so only
- * the tokens below exist as utilities (bg-primary-600, text-ink, border-line ...).
+ * Admin theme: teal brand, soft surfaces, glass sidebar, light and dark. The look follows the store-management admin.
+ * Colours are reset first so only the tokens below exist as utilities (bg-primary-600, text-ink, border-line, bg-sidebar ...).
+ * Semantic colours are CSS variables: the `.dark` class on <html> swaps them (see web/admin/public/theme.js).
+ * Contrast: ink on canvas/surface and white on primary-600/700 and on the solid status colours are AA (4.5:1).
  */
 @import './base.css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  color-scheme: light;
+
+  --canvas: #f4f8f7;
+  --surface: #ffffff;
+  --surface-muted: #edf3f2;
+  --line: #d3dfdc;
+  --line-strong: #7a908c;
+  --ink: #0f1f1d;
+  --ink-muted: #4a5f5b;
+  --link: #0f766e;
+
+  /* Light tints of the brand, used for hovers, chips and selected rows; dark theme swaps them for deep teals. */
+  --tint-50: #eff8f6;
+  --tint-100: #d9eeea;
+  --tint-200: #bfe0da;
+
+  --success: #166534;
+  --warning: #92400e;
+  --danger: #b91c1c;
+  --info: #0369a1;
+  /* Solid fills (badges, destructive buttons) carry white text in both themes. */
+  --success-solid: #166534;
+  --warning-solid: #92400e;
+  --danger-solid: #b91c1c;
+
+  --sidebar-text: #032520;
+  --sidebar-glass: rgb(163 200 189 / 0.67);
+  --sidebar-line: rgb(15 118 110 / 0.25);
+
+  --shadow-sm: 0 1px 2px 0 rgb(15 31 29 / 0.06);
+  --shadow-md: 0 4px 12px -2px rgb(15 31 29 / 0.1), 0 2px 4px -2px rgb(15 31 29 / 0.06);
+  --shadow-lg: 0 12px 28px -6px rgb(15 31 29 / 0.16), 0 4px 8px -4px rgb(15 31 29 / 0.08);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --canvas: #0a1514;
+  --surface: #10201e;
+  --surface-muted: #162a28;
+  --line: #25403c;
+  --line-strong: #5f7f7a;
+  --ink: #e6f2f0;
+  --ink-muted: #9db5b1;
+  --link: #5eead4;
+
+  --tint-50: #162a28;
+  --tint-100: #1a3330;
+  --tint-200: #1e3d39;
+
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --info: #38bdf8;
+
+  --sidebar-text: #e6f2f0;
+  --sidebar-glass: rgb(6 32 29 / 0.73);
+  --sidebar-line: rgb(94 234 212 / 0.2);
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 12px 28px -6px rgb(0 0 0 / 0.6), 0 4px 8px -4px rgb(0 0 0 / 0.5);
+}
 
 @theme {
   --color-*: initial;
 
   --color-white: #fff;
-  --color-canvas: #f4f5f7;
-  --color-surface: #fff;
-  --color-line: #d9dce3;
-  --color-ink: #1b1f2a;
-  --color-ink-muted: #5b6275;
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-link: var(--link);
 
-  --color-primary-50: #eef2ff;
-  --color-primary-100: #e0e7ff;
-  --color-primary-200: #c7d2fe;
-  --color-primary-300: #a5b4fc;
-  --color-primary-400: #818cf8;
-  --color-primary-500: #6366f1;
-  --color-primary-600: #4f46e5;
-  --color-primary-700: #4338ca;
-  --color-primary-800: #3730a3;
-  --color-primary-900: #312e81;
+  --color-primary-50: var(--tint-50);
+  --color-primary-100: var(--tint-100);
+  --color-primary-200: var(--tint-200);
+  --color-primary-300: #5fc3b8;
+  --color-primary-400: #2aa89b;
+  --color-primary-500: #14877c;
+  --color-primary-600: #0f766e;
+  --color-primary-700: #115e59;
+  --color-primary-800: #134e4a;
+  --color-primary-900: #0d3b37;
 
-  --color-success: #15803d;
-  --color-warning: #b45309;
-  --color-danger: #b91c1c;
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --color-success-solid: var(--success-solid);
+  --color-warning-solid: var(--warning-solid);
+  --color-danger-solid: var(--danger-solid);
 
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
+  --color-sidebar-text: var(--sidebar-text);
+  --color-sidebar-glass: var(--sidebar-glass);
+  --color-sidebar-line: var(--sidebar-line);
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.875rem;
+  --radius-2xl: 1.125rem;
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
 
   --text-sm: 0.8125rem;
   --text-base: 0.875rem;

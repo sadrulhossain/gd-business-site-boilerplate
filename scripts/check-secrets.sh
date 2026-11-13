@@ -15,7 +15,7 @@ lit=$(grep -rnE "env\('[A-Z_]*(PASSWORD|SECRET|TOKEN|KEY)', *'[^']+'\)" api/conf
 [ -z "$lit" ] || { echo "Literal credential default in config:"; echo "$lit"; bad=1; }
 
 # An example file (as staged or committed) must not carry a real-looking password (anything but empty, null or change-me).
-ex=$(git grep --cached -nE '^[A-Z_]*(PASSWORD|SECRET)[A-Z_]*=.+' -- '*.env.example' | grep -vE '=(change-me|null|"?\$\{[A-Z_]+\}"?)$')
+ex=$(git grep --cached -nE '^[A-Z_]*(PASSWORD|SECRET)[A-Z_]*=.+' -- '*.env.example' '*.env.prod.example' | grep -vE '=(change-me|null|"?\$\{[A-Z_]+\}"?)$')
 [ -z "$ex" ] || { echo "Real-looking secret in an example file:"; echo "$ex"; bad=1; }
 
 if [ -f .env ] && grep -qE '^APP_ENV=production' .env && grep -q 'change-me' .env; then

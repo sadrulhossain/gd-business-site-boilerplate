@@ -31,8 +31,8 @@ export const toast = {
 }
 
 const styles = {
-  success: 'border-success text-success',
-  error: 'border-danger text-danger',
+  success: 'border-s-4 border-s-success',
+  error: 'border-s-4 border-s-danger',
 } as const
 
 export function ToastHost() {
@@ -45,7 +45,7 @@ export function ToastHost() {
         <div
           key={t.id}
           role={t.kind === 'error' ? 'alert' : 'status'}
-          className={`flex items-start justify-between gap-3 rounded-md border bg-surface px-3 py-2 shadow ${styles[t.kind]}`}
+          className={`flex items-start justify-between gap-3 rounded-lg border bg-surface px-3 py-2.5 text-ink shadow-lg ${styles[t.kind]}`}
         >
           <span>{t.message}</span>
           <button type="button" aria-label="Dismiss" className="text-ink-muted" onClick={() => dismiss(t.id)}>

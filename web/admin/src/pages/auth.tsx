@@ -33,7 +33,7 @@ export function Callback() {
       <p role="alert" className="text-danger">
         {error}
       </p>
-      <button type="button" className="rounded-md bg-primary-600 px-3 py-1.5 text-white hover:bg-primary-700" onClick={() => void startLogin('/')}>
+      <button type="button" className="btn btn-primary" onClick={() => void startLogin('/')}>
         Try again
       </button>
     </section>
@@ -45,7 +45,7 @@ export function SignedOut() {
   return (
     <section className="mx-auto max-w-sm space-y-3 p-6 text-center">
       <h1 className="text-2xl font-semibold">Signed out</h1>
-      <button type="button" className="rounded-md bg-primary-600 px-3 py-1.5 text-white hover:bg-primary-700" onClick={() => void startLogin('/')}>
+      <button type="button" className="btn btn-primary" onClick={() => void startLogin('/')}>
         Sign in
       </button>
     </section>
