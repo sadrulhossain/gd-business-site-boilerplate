@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation'
 import type { components } from '@gd/api-types'
 
 export const metadata = { title: 'Portal theme' }
@@ -39,6 +40,9 @@ const faq: components['schemas']['FaqResource'] = {
 
 /** Portal theme showcase: tokens from @gd/tokens/portal.css, airy and warm. */
 export default function ShowcasePage() {
+  // A theme preview for development; not part of the public site.
+  if (process.env.NODE_ENV === 'production') notFound()
+
   return (
     <main className="mx-auto max-w-4xl space-y-10 p-8">
       <header className="space-y-2">
@@ -84,7 +88,7 @@ export default function ShowcasePage() {
       <section className="space-y-3">
         <h2 className="font-display text-2xl">Buttons</h2>
         <div className="flex gap-3">
-          <button className="rounded-md bg-brand-600 px-5 py-2.5 text-white hover:bg-brand-700">Primary</button>
+          <button className="rounded-md bg-brand-700 px-5 py-2.5 text-white hover:bg-brand-800">Primary</button>
           <button className="rounded-md border border-line bg-surface px-5 py-2.5 hover:bg-brand-50">Secondary</button>
         </div>
       </section>

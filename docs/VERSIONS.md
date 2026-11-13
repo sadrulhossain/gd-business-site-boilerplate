@@ -36,7 +36,11 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 | @types/node | 24.19.2 | 24.19.2 | https://www.npmjs.com/package/@types/node/v/24.19.2 | 2026-11-12 | n/a (npm; 24.x line to match Node 24) |
 | @tiptap/react | 3.33.1 | 3.33.1 | https://www.npmjs.com/package/@tiptap/react/v/3.33.1 | 2026-11-13 | n/a (npm; the three TipTap packages share one version) |
 | @tiptap/pm | 3.33.1 | 3.33.1 | https://www.npmjs.com/package/@tiptap/pm/v/3.33.1 | 2026-11-13 | n/a (npm) |
+| @axe-core/playwright | 4.14.0 | 4.14.0 | https://www.npmjs.com/package/@axe-core/playwright/v/4.14.0 | 2026-11-13 | n/a (npm; devDependency of web/portal, pulls axe-core ~4.14.0) |
 | @tiptap/starter-kit | 3.33.1 | 3.33.1 | https://www.npmjs.com/package/@tiptap/starter-kit/v/3.33.1 | 2026-11-13 | n/a (npm) |
+
+## Tools run on demand (not dependencies)
+- Trivy: `aquasec/trivy:latest` via `docker run`, HIGH and CRITICAL image scans (docs/SECURITY.md). Lighthouse 13.6.0 via `npx` in the Playwright container. Neither is installed in the repo.
 
 ## Notes
 - Node: the 11 Nov 2026 official security release patches 24.x at **v24.22.3** (fixes 16 CVEs, highest severity High; 26.x -> v26.13.1, 22.x -> v22.23.5). v24.22.3 is on nodejs.org/dist (dated 2026-11-10), but the official Docker image has only 24.22.2 so far. Until `node:24.22.3-*` appears, do not build images from `node:24.22.2` as the pin; recheck the tag.
@@ -53,3 +57,4 @@ Dependencies not listed here must not be added (CLAUDE.md rule 2).
 - Phase 7: JS dependencies are pinned exactly in each package.json or in the catalog: of pnpm-workspace.yaml (react, react-dom, tailwindcss, typescript, @types/*) so every workspace package resolves one version. TypeScript stays on 5.9.3 on purpose: openapi-typescript 7.13.0 peers 	ypescript ^5.x, and TypeScript 7 (native) has no JS compiler API for Next's type check. pnpm audit: no known vulnerabilities, 2026-11-12.
 - Phase 8 (pre-work): PostgreSQL 18.6 replaced by MariaDB 11.8.9 (LTS, Laravel `mariadb` driver, PHP `pdo_mysql` bundled with PHP); Redis 8.10.3 and phpredis 6.3.0 removed.
 - Phase 8: new exact JS pins in web/admin: react-router 7.18.5, @tanstack/react-query 5.107.1, zustand 5.1.0, vitest 5.1.0, jsdom 31.0.0, @testing-library/react 16.3.3, @testing-library/dom 10.4.2, @playwright/test 1.65.0; `pnpm audit` clean 2026-11-13. Floors equal pins. Browser tests use the image `mcr.microsoft.com/playwright:v1.65.0-noble` (compose service `e2e`, profile `e2e`), matching @playwright/test.
+- Phase 15: floors re-checked against advisories on 2026-11-13 and enforced by `node scripts/check-floors.mjs` (`make security`). Added `@axe-core/playwright` 4.14.0 (pnpm audit clean). A pnpm `overrides` entry forces postcss 8.5.32 because Next 16.4.6 pins 8.5.23 (below the floor). Full results: docs/SECURITY.md.

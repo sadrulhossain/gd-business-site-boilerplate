@@ -17,6 +17,11 @@ async function load(locale: string, id: string) {
   return service
 }
 
+// Rendered on first request, then cached (ISR) until the content tag is revalidated.
+export function generateStaticParams() {
+  return []
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, id } = await params
   const [service, settings] = await Promise.all([load(locale, id), getSettings(locale)])

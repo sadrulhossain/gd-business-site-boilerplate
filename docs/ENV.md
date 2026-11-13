@@ -18,6 +18,8 @@ each service lists its own `environment:` (no `env_file`). Commit only `*.exampl
 | MARIADB_ROOT_PASSWORD | mariadb | change-me | only used by `make up` to create the testing database |
 | UPLOADS_CONTAINER_PATH | php*, nginx, Dockerfile | /var/www/uploads | disk root and volume mount point; nginx serves `/uploads/` |
 | UPLOADS_MAX_MB | php*, nginx | 5 | validation, php.ini upload limits and nginx `client_max_body_size` |
+| CORS_ALLOWED_ORIGINS | php | empty (closed) | comma separated exact origins allowed to call the API from a browser; credentials are never allowed |
+| TRUSTED_PROXY_CIDR | nginx | 172.16.0.0/12 | the only source whose `X-Forwarded-For` the api vhost believes (`set_real_ip_from`), so throttles see the visitor, not the portal. Production: the portal/load-balancer range only |
 | SITE_URL | node (portal) | http://${APP_DOMAIN}:${NGINX_HTTP_PORT} | public origin of the portal: canonical, hreflang, Open Graph, sitemap.xml, robots.txt, JSON-LD. Set it to the real https origin in production |
 | API_INTERNAL_URL | node (portal) | http://api.${APP_DOMAIN}/api | where the portal's server reaches the API inside compose (nginx answers to the `api.` alias); never exposed to the browser |
 | LOCALE_DEFAULT / LOCALE_SUPPORTED | also node (portal) | | the portal derives its locales from these: default has no URL prefix, the first other supported locale is served at `/<code>` |

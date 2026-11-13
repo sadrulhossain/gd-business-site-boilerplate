@@ -19,6 +19,7 @@ $overrides = [
     'SESSION_DRIVER' => 'array',
     'QUEUE_CONNECTION' => 'sync',
     'LOG_CHANNEL' => 'null',
+    'LOCALE_SUPPORTED' => 'en', // tests assume one locale unless they set config themselves; the dev .env may enable a second
 ];
 
 foreach ($overrides as $name => $value) {

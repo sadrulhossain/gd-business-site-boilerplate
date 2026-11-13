@@ -11,3 +11,6 @@ catalog:
   '@types/node': 24.19.2
   '@types/react': 19.3.0
   '@types/react-dom': 19.3.0
+# Next 16.4.6 pins postcss 8.5.23, below our floor (docs/VERSIONS.md). Force the pinned one everywhere.
+overrides:
+  postcss: 8.5.32
