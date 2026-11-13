@@ -1,12 +1,13 @@
 import type { Settings } from '../lib/api'
-import type { Messages } from '../lib/i18n'
+import Link from 'next/link'
+import { localePath, type Messages } from '../lib/i18n'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const
 
 const SOCIAL: Record<string, string> = { facebook: 'Facebook', instagram: 'Instagram', x: 'X', linkedin: 'LinkedIn', youtube: 'YouTube', tiktok: 'TikTok', whatsapp: 'WhatsApp' }
 
 /** Contact details, opening hours and social links, all from public settings. */
-export function Footer({ settings, messages }: { settings: Settings; messages: Messages }) {
+export function Footer({ locale, settings, messages }: { locale: string; settings: Settings; messages: Messages }) {
   const social = Object.entries(settings.social_links ?? {}).filter(([, url]) => url)
   const hours = DAYS.flatMap((day) => {
     const entry = settings.hours?.[day]
@@ -68,9 +69,19 @@ export function Footer({ settings, messages }: { settings: Settings; messages: M
           </div>
         )}
       </div>
-      <p className="border-t border-line px-4 py-3 text-center text-sm text-ink-muted">
-        © {new Date().getFullYear()} {settings.site_name}. {messages.footer.rights}
-      </p>
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 border-t border-line px-4 py-3 text-sm text-ink-muted">
+        <p>
+          © {new Date().getFullYear()} {settings.site_name}. {messages.footer.rights}
+        </p>
+        <nav aria-label={messages.footer.legal} className="flex gap-4">
+          <Link href={localePath(locale, '/privacy')} className="hover:text-brand-700">
+            {messages.footer.privacy}
+          </Link>
+          <Link href={localePath(locale, '/terms')} className="hover:text-brand-700">
+            {messages.footer.terms}
+          </Link>
+        </nav>
+      </div>
     </footer>
   )
 }

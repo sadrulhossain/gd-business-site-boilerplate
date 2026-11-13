@@ -18,9 +18,27 @@ export function isLocale(value: string): boolean {
   return locales.includes(value)
 }
 
-/** messages/en.json belongs to the default locale, messages/second.json to the second. */
+/** Objects merge key by key; anything else (strings, arrays) from `override` replaces, but only when it is non-empty. */
+function withFallback<T>(base: T, override: unknown): T {
+  if (override === undefined || override === null || override === '') return base
+  if (typeof base === 'object' && base !== null && !Array.isArray(base) && typeof override === 'object' && !Array.isArray(override)) {
+    return Object.fromEntries(Object.entries(base).map(([key, value]) => [key, withFallback(value, (override as Record<string, unknown>)[key])])) as T
+  }
+
+  return override as T
+}
+
+/**
+ * messages/en.json belongs to the default locale, messages/second.json to the second. A key missing or empty in
+ * second.json shows the default text instead of nothing.
+ */
 export function getMessages(locale: string): Messages {
-  return locale === secondLocale ? (second as Messages) : en
+  return locale === secondLocale ? withFallback(en, second) : en
+}
+
+/** Replaces {site}, {email} ... in a message. */
+export function fill(text: string, values: Record<string, string | null | undefined>): string {
+  return text.replace(/{(w+)}/g, (_, key: string) => values[key] ?? '')
 }
 
 /** Browser-facing path of `path` ("/", "/blog") in `locale`. `fallback` is the unprefixed locale (the server's default). */

@@ -783,6 +783,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/public/services/{service}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Show a visible service (public)
+         * @description One service by id; a hidden service answers 404. No authentication.
+         */
+        get: operations["service.publicShow"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/services": {
         parameters: {
             query?: never;
@@ -1582,6 +1602,18 @@ export interface components {
         };
     };
     responses: {
+        /** @description Not found */
+        ModelNotFoundException: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": {
+                    /** @description Error overview. */
+                    message: string;
+                };
+            };
+        };
         /** @description Validation error */
         ValidationException: {
             headers: {
@@ -1612,18 +1644,6 @@ export interface components {
         };
         /** @description Authorization error */
         AuthorizationException: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": {
-                    /** @description Error overview. */
-                    message: string;
-                };
-            };
-        };
-        /** @description Not found */
-        ModelNotFoundException: {
             headers: {
                 [name: string]: unknown;
             };
@@ -3301,6 +3321,32 @@ export interface operations {
                     };
                 };
             };
+        };
+    };
+    "service.publicShow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The service ID */
+                service: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `ServiceResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ServiceResource"];
+                    };
+                };
+            };
+            404: components["responses"]["ModelNotFoundException"];
         };
     };
     "services.index": {

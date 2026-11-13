@@ -1,4 +1,4 @@
-import { createClient } from '@gd/api-client'
+import { ApiError, createClient } from '@gd/api-client'
 import { defaultLocale } from './i18n'
 
 /**
@@ -110,6 +110,16 @@ export async function getSections(locale: string): Promise<Section[]> {
   const rows = ((await apiFor(locale).request('GET', '/v1/public/sections')) as Listing<Section>).data
 
   return rows.filter((section) => section.is_visible)
+}
+
+/** One visible service; null when it is hidden or gone (the API answers 404). */
+export async function getService(locale: string, id: string): Promise<Service | null> {
+  try {
+    return ((await apiFor(locale).request('GET', `/v1/public/services/${encodeURIComponent(id)}`)) as { data: Service }).data
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null
+    throw error
+  }
 }
 
 export async function getList<T>(locale: string, resource: 'services' | 'testimonials' | 'team' | 'gallery' | 'faqs'): Promise<T[]> {

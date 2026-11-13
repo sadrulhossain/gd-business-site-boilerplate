@@ -41,6 +41,7 @@ Route::prefix('v1')->group(function (): void {
         Route::get('public/sections', [SectionController::class, 'publicIndex']);
         Route::get('public/faqs', [FaqController::class, 'publicIndex']);
         Route::get('public/services', [ServiceController::class, 'publicIndex']);
+        Route::get('public/services/{service}', [ServiceController::class, 'publicShow']);
         Route::get('public/testimonials', [TestimonialController::class, 'publicIndex']);
         Route::get('public/team', [TeamMemberController::class, 'publicIndex']);
         Route::get('public/gallery', [GalleryItemController::class, 'publicIndex']);
