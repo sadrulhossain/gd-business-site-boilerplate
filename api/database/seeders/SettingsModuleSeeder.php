@@ -14,7 +14,9 @@ class SettingsModuleSeeder extends ModuleSeeder
     protected function menus(): array
     {
         return [
-            ['title' => 'Settings', 'permission' => 'settings.view', 'path' => '/settings', 'icon' => 'settings', 'sort' => 90],
+            ['title' => 'Access', 'sort' => 80, 'children' => [
+                ['title' => 'Settings', 'permission' => 'settings.view', 'path' => '/settings', 'icon' => 'settings', 'sort' => 40],
+            ]],
         ];
     }
 

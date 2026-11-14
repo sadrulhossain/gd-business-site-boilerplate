@@ -20,7 +20,7 @@ export function LanguageSwitcher({ current, label, locales, unprefixed }: { curr
             hrefLang={code}
             lang={code}
             aria-current={code === current ? 'true' : undefined}
-            className={`rounded-sm px-2 py-1 ${code === current ? 'bg-brand-700 text-white' : 'text-ink-muted hover:bg-brand-50'}`}
+            className={`rounded-full px-3 py-2 text-sm font-semibold ${code === current ? 'bg-brand-700 text-white' : 'text-ink-muted hover:bg-brand-50'}`}
           >
             {localeName(code)}
           </Link>

@@ -35,11 +35,11 @@ export default async function ServiceDetail({ params }: Props) {
   const messages = getMessages(locale)
 
   return (
-    <article className="mx-auto max-w-4xl px-4 py-14">
+    <article className="mx-auto max-w-4xl px-4 py-10 sm:py-14">
       <Link href={localePath(locale, '/services')} className="text-brand-700 hover:underline">
         <span aria-hidden="true">←</span> {messages.pages.back}
       </Link>
-      <h1 className="mt-4 font-display text-4xl font-semibold">{service.title}</h1>
+      <h1 className="mt-4 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">{service.title}</h1>
       <div className={`mt-8 grid items-start gap-8 ${service.image ? 'md:grid-cols-2' : ''}`}>
         {service.image && <Picture image={service.image} alt={service.title} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[4/3] w-full rounded-lg object-cover" />}
         {service.description && <p className="text-lg whitespace-pre-line text-ink-muted">{service.description}</p>}

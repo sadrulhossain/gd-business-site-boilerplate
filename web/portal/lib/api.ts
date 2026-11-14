@@ -46,6 +46,8 @@ export interface Media {
 export interface Settings {
   site_name: string
   tagline: string | null
+  logo?: Media | null
+  favicon?: Media | null
   address: string | null
   phone: string | null
   email: string | null

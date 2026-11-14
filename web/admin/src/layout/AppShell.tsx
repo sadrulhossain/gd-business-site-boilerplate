@@ -4,35 +4,84 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { api } from '../api'
 import { signOut } from '../auth/signOut'
 import { useAuth } from '../auth/store'
+import { Brand } from '../components/Brand'
 import { Icon } from '../components/Icon'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { ToastHost } from '../components/Toast'
+import { useFavicon } from '../lib/branding'
 import type { MenuItem } from '../types'
 
 const navLink = 'flex items-center gap-3 rounded-lg px-3 py-2 font-medium text-sidebar-text transition-colors hover:bg-white/30 dark:hover:bg-white/10'
 const navActive = '!bg-primary-600 !text-white shadow-md'
 
-function MenuNode({ item, collapsed }: { item: MenuItem; collapsed: boolean }) {
+const GROUP_ICONS: Record<string, string> = { content: 'layers', access: 'shield', blog: 'file-text' }
+
+function findGroup(items: MenuItem[], id: number): MenuItem | undefined {
+  for (const item of items) {
+    if (item.id === id) return item
+    const found = findGroup(item.children, id)
+    if (found) return found
+  }
+
+  return undefined
+}
+
+function hasPath(item: MenuItem, pathname: string): boolean {
+  return item.children.some((c) => (c.path ? (c.path === '/' ? pathname === '/' : pathname === c.path || pathname.startsWith(`${c.path}/`)) : hasPath(c, pathname)))
+}
+
+/** A leaf link, or a group: an accordion button that expands its children (nested, indented under a guide line). */
+function MenuNode({ item, collapsed, open, onToggle, nested = false }: { item: MenuItem; collapsed: boolean; open: (id: number) => boolean; onToggle: (id: number) => void; nested?: boolean }) {
   if (item.children.length > 0) {
+    // The slim sidebar has no room to expand: it lists the children's icons under a divider.
+    if (collapsed) {
+      return (
+        <li className="space-y-1">
+          <hr className="my-2 border-sidebar-line" />
+          <ul className="space-y-1">
+            {item.children.map((child) => (
+              <MenuNode key={child.id} item={child} collapsed open={open} onToggle={onToggle} />
+            ))}
+          </ul>
+        </li>
+      )
+    }
+
+    const expanded = open(item.id)
+
     return (
-      <li className="space-y-1">
-        {collapsed ? <hr className="my-2 border-sidebar-line" /> : <p className="px-3 pt-4 pb-1 text-xs font-semibold tracking-wider text-sidebar-text/70 uppercase">{item.title}</p>}
-        <ul className="space-y-1">
-          {item.children.map((child) => (
-            <MenuNode key={child.id} item={child} collapsed={collapsed} />
-          ))}
-        </ul>
+      <li>
+        <button
+          type="button"
+          aria-expanded={expanded}
+          aria-controls={`menu-group-${item.id}`}
+          onClick={() => onToggle(item.id)}
+          className={`${navLink} w-full text-left ${expanded ? 'bg-white/20 dark:bg-white/5' : ''}`}
+        >
+          <Icon name={item.icon ?? GROUP_ICONS[(item.title ?? '').toLowerCase()] ?? 'folder'} className="size-[18px]" />
+          <span className="flex-1 truncate">{item.title}</span>
+          <span className="rounded-full bg-black/10 px-1.5 text-[11px] leading-5 font-semibold dark:bg-white/10">{item.children.length}</span>
+          <Icon name="chevron-right" className={`size-4 shrink-0 transition-transform duration-200 ${expanded ? 'rotate-90' : ''}`} />
+        </button>
+        <div id={`menu-group-${item.id}`} className={`grid transition-[grid-template-rows] duration-200 ease-out ${expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+          <ul className="min-h-0 space-y-0.5 overflow-hidden" inert={!expanded}>
+            <li aria-hidden="true" className="h-1" />
+            {item.children.map((child) => (
+              <MenuNode key={child.id} item={child} collapsed={false} open={open} onToggle={onToggle} nested />
+            ))}
+          </ul>
+        </div>
       </li>
     )
   }
 
   return (
-    <li>
+    <li className={nested ? 'ml-5 border-l border-sidebar-line pl-2' : ''}>
       <NavLink
         to={item.path ?? '/'}
         end={item.path === '/'}
         title={collapsed ? (item.title ?? undefined) : undefined}
-        className={({ isActive }) => `${navLink} ${collapsed ? 'justify-center' : ''} ${isActive ? navActive : ''}`}
+        className={({ isActive }) => `${navLink} ${nested ? '!py-1.5 text-[0.95rem]' : ''} ${collapsed ? 'justify-center' : ''} ${isActive ? navActive : ''}`}
       >
         <Icon name={item.icon} className="size-[18px]" />
         <span className={collapsed ? 'sr-only' : 'truncate'}>{item.title}</span>
@@ -101,6 +150,32 @@ export function AppShell() {
   })
   const [drawer, setDrawer] = useState(false)
   const location = useLocation()
+  useFavicon()
+
+  // Groups the user opened or closed by hand; a group holding the current page is open unless closed by hand.
+  const [manual, setManual] = useState<Record<number, boolean>>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('admin-nav-groups') ?? '{}') as Record<number, boolean>
+    } catch {
+      return {}
+    }
+  })
+  const isOpen = (id: number) => {
+    const group = findGroup(menus.data ?? [], id)
+
+    return manual[id] ?? (group ? hasPath(group, location.pathname) : false)
+  }
+  const toggleGroup = (id: number) =>
+    setManual((m) => {
+      const next = { ...m, [id]: !isOpen(id) }
+      try {
+        localStorage.setItem('admin-nav-groups', JSON.stringify(next))
+      } catch {
+        /* not persisted */
+      }
+
+      return next
+    })
 
   useEffect(() => setDrawer(false), [location.pathname])
 
@@ -129,17 +204,14 @@ export function AppShell() {
       >
         <div className="flex h-full flex-col bg-sidebar-glass p-3 backdrop-blur-md">
           <div className={`flex h-12 items-center gap-3 px-2 ${slim ? 'justify-center' : ''}`}>
-            <span className="flex size-9 items-center justify-center rounded-lg bg-primary-600 text-white shadow-md">
-              <Icon name="layers" className="size-5" />
-            </span>
-            {!slim && <p className="text-lg font-bold text-sidebar-text">Admin</p>}
+            <Brand showName={!slim} />
             <button type="button" className="ml-auto text-sidebar-text lg:hidden" onClick={() => setDrawer(false)} aria-label="Close menu">
               <Icon name="x" className="size-5" />
             </button>
           </div>
 
-          <nav aria-label="Main navigation" className="mt-3 flex-1 overflow-y-auto">
-            <ul className="space-y-1">{menus.data?.map((item) => <MenuNode key={item.id} item={item} collapsed={slim} />)}</ul>
+          <nav aria-label="Main navigation" className="nav-scroll -mx-1 mt-3 flex-1 overflow-y-auto px-1">
+            <ul className="space-y-1 pb-4">{menus.data?.map((item) => <MenuNode key={item.id} item={item} collapsed={slim} open={isOpen} onToggle={toggleGroup} />)}</ul>
           </nav>
 
           <button type="button" className={`${navLink} mt-2 hidden lg:flex ${collapsed ? 'justify-center' : ''}`} onClick={toggleCollapsed} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
@@ -159,7 +231,7 @@ export function AppShell() {
             <UserMenu />
           </div>
         </header>
-        <main className="flex-1 p-4 sm:p-6">
+        <main className="min-w-0 flex-1 p-3 sm:p-6">
           <Outlet />
         </main>
       </div>

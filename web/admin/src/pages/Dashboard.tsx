@@ -25,7 +25,7 @@ export function Dashboard() {
 
   return (
     <section className="space-y-6">
-      <header className="rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 p-6 text-white shadow-lg">
+      <header className="rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 p-4 sm:p-6 text-white shadow-lg">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="mt-1 text-white/85">Welcome back, {name}. Here is what is happening on your site.</p>
       </header>

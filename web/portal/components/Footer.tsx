@@ -2,46 +2,28 @@ import type { Settings } from '../lib/api'
 import Link from 'next/link'
 import { localePath, type Messages } from '../lib/i18n'
 import { HoursList } from './HoursList'
+import { SiteLogo } from './SiteLogo'
 
 const SOCIAL: Record<string, string> = { facebook: 'Facebook', instagram: 'Instagram', x: 'X', linkedin: 'LinkedIn', youtube: 'YouTube', tiktok: 'TikTok', whatsapp: 'WhatsApp' }
 
-/** Contact details, opening hours and social links, all from public settings. */
+/** Dark footer: contact details, opening hours and social links, all from public settings. */
 export function Footer({ locale, settings, messages }: { locale: string; settings: Settings; messages: Messages }) {
   const social = Object.entries(settings.social_links ?? {}).filter(([, url]) => url)
   const hasHours = Object.keys(settings.hours ?? {}).length > 0
+  const link = 'text-white/75 transition-colors hover:text-white'
 
   return (
-    <footer className="border-t border-line bg-surface">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 md:grid-cols-3">
-        <div className="space-y-2">
-          <p className="font-display text-lg font-semibold">{settings.site_name}</p>
-          {settings.tagline && <p className="text-ink-muted">{settings.tagline}</p>}
-        </div>
-
-        <div className="space-y-2">
-          <h2 className="font-semibold">{messages.footer.contact}</h2>
-          <address className="space-y-1 not-italic text-ink-muted">
-            {settings.address && <p className="whitespace-pre-line">{settings.address}</p>}
-            {settings.phone && (
-              <p>
-                <a href={`tel:${settings.phone.replace(/\s+/g, '')}`} className="hover:text-brand-700">
-                  {settings.phone}
-                </a>
-              </p>
-            )}
-            {settings.email && (
-              <p>
-                <a href={`mailto:${settings.email}`} className="hover:text-brand-700">
-                  {settings.email}
-                </a>
-              </p>
-            )}
-          </address>
+    <footer className="relative overflow-hidden bg-night text-white/80">
+      <div aria-hidden="true" className="pointer-events-none absolute -top-32 -end-32 size-96 rounded-full bg-brand-600/25 blur-3xl" />
+      <div className="relative mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 md:py-16 lg:grid-cols-3">
+        <div className="space-y-4">
+          <SiteLogo settings={settings} dark />
+          {settings.tagline && <p className="max-w-xs text-white/70">{settings.tagline}</p>}
           {social.length > 0 && (
-            <ul aria-label={messages.footer.follow} className="flex flex-wrap gap-x-4 gap-y-1 pt-1">
+            <ul aria-label={messages.footer.follow} className="flex flex-wrap gap-2 pt-1">
               {social.map(([network, url]) => (
                 <li key={network}>
-                  <a href={url!} rel="noopener noreferrer" target="_blank" className="text-brand-700 hover:underline">
+                  <a href={url!} rel="noopener noreferrer" target="_blank" className="inline-block rounded-full border border-white/20 px-3 py-1.5 text-sm text-white/85 transition hover:border-white hover:bg-white hover:text-night">
                     {SOCIAL[network] ?? network}
                   </a>
                 </li>
@@ -50,25 +32,48 @@ export function Footer({ locale, settings, messages }: { locale: string; setting
           )}
         </div>
 
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold tracking-widest text-accent-400 uppercase">{messages.footer.contact}</h2>
+          <address className="space-y-2 not-italic">
+            {settings.address && <p className="whitespace-pre-line text-white/75">{settings.address}</p>}
+            {settings.phone && (
+              <p>
+                <a href={`tel:${settings.phone.replace(/\s+/g, '')}`} className={link}>
+                  {settings.phone}
+                </a>
+              </p>
+            )}
+            {settings.email && (
+              <p className="break-words">
+                <a href={`mailto:${settings.email}`} className={link}>
+                  {settings.email}
+                </a>
+              </p>
+            )}
+          </address>
+        </div>
+
         {hasHours && (
-          <div className="space-y-2">
-            <h2 className="font-semibold">{messages.footer.hours}</h2>
-            <HoursList settings={settings} messages={messages} />
+          <div className="space-y-3">
+            <h2 className="text-sm font-semibold tracking-widest text-accent-400 uppercase">{messages.footer.hours}</h2>
+            <HoursList settings={settings} messages={messages} className="text-white/75" />
           </div>
         )}
       </div>
-      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 border-t border-line px-4 py-3 text-sm text-ink-muted">
-        <p>
-          © {new Date().getFullYear()} {settings.site_name}. {messages.footer.rights}
-        </p>
-        <nav aria-label={messages.footer.legal} className="flex gap-4">
-          <Link href={localePath(locale, '/privacy')} className="hover:text-brand-700">
-            {messages.footer.privacy}
-          </Link>
-          <Link href={localePath(locale, '/terms')} className="hover:text-brand-700">
-            {messages.footer.terms}
-          </Link>
-        </nav>
+      <div className="relative border-t border-white/10 px-4 py-5">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 text-sm text-white/65 sm:flex-row">
+          <p>
+            © {new Date().getFullYear()} {settings.site_name}. {messages.footer.rights}
+          </p>
+          <nav aria-label={messages.footer.legal} className="flex gap-5">
+            <Link href={localePath(locale, '/privacy')} className={link}>
+              {messages.footer.privacy}
+            </Link>
+            <Link href={localePath(locale, '/terms')} className={link}>
+              {messages.footer.terms}
+            </Link>
+          </nav>
+        </div>
       </div>
     </footer>
   )

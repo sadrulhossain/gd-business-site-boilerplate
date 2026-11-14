@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { Splash } from '../components/Splash'
 import { completeLogin, loadUser, startLogin } from '../auth/oauth'
 
 /** OAuth redirect target: trades the code for tokens, loads the account, then goes where sign-in started. */
@@ -20,13 +21,8 @@ export function Callback() {
       .catch((e: unknown) => setError(e instanceof Error ? e.message : 'Sign-in failed.'))
   }, [navigate])
 
-  if (!error) {
-    return (
-      <p role="status" className="p-6 text-ink-muted">
-        Signing in...
-      </p>
-    )
-  }
+  if (!error) return <Splash />
+
 
   return (
     <section className="mx-auto max-w-sm space-y-3 p-6 text-center">

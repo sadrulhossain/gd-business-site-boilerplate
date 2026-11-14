@@ -16,7 +16,7 @@ export function Modal({ open, title, onClose, children }: { open: boolean; title
       ref={ref}
       aria-label={title}
       onClose={onClose}
-      className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-2xl border border-line bg-surface p-6 text-ink shadow-lg backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+      className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-2xl border border-line bg-surface p-4 text-ink sm:p-6 shadow-lg backdrop:bg-black/50 backdrop:backdrop-blur-sm max-h-[calc(100dvh-1.5rem)] overflow-y-auto"
     >
       <h2 className="mb-4 text-lg font-semibold tracking-tight">{title}</h2>
       {open && children}

@@ -124,7 +124,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
 
   return (
     <section className="space-y-4">
-      <header className="flex items-center justify-between">
+      <header className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-semibold">{config.title}</h1>
         {canCreate && (
           <button type="button" className="btn btn-primary" onClick={() => setEditing('new')}>

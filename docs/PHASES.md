@@ -22,6 +22,7 @@ Tick a phase only when it is finished and committed.
 | [x] | 14 | Blog, contact, SEO | Blog list (category filter, pagination) and detail, contact page (captcha, honeypot, states, hours, map link), metadata/Open Graph/canonical/hreflang, sitemap.xml, robots.txt, JSON-LD, ISR tags + revalidate, Playwright smoke |
 | [x] | 15 | Security, accessibility, performance | Advisory and floor re-check, composer/pnpm audit, Trivy; review of PKCE, policies (route audit script), uploads, captcha/throttle, CORS, nginx headers, secrets; axe + Lighthouse on the portal; memory sizing; findings in docs/SECURITY.md |
 | [x] | 16 | Production and release | docker-compose.prod.yml (portal Node server, admin static via nginx, TLS from mounted certs, no dev ports/Mailpit, private DB, restart + healthchecks), backup/restore scripts, README, DEPLOY, CUSTOMIZE, UPGRADE, CHANGELOG, tag v1.0.0 |
+| [x] | 17 | Polish and theming | admin splash, collapsible nested sidebar menu, logo + favicon upload (settings, admin, portal), manual `Site*Seeder` sample data, portal redesign, mobile-friendly admin and portal |
 
 <!-- TODO: the phase table was not included in the Phase 0 brief ("[paste the table below]").
      Paste phases 1..N here, one row each, with a [ ] checkbox. -->

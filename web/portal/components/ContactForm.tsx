@@ -11,7 +11,7 @@ interface Captcha {
 }
 
 const empty = { name: '', email: '', phone: '', subject: '', message: '', captcha_answer: '', website: '' }
-const control = 'w-full rounded-md border border-line bg-surface px-3 py-2 focus:outline-2 focus:outline-brand-500'
+const control = 'w-full rounded-md border border-line bg-surface px-4 py-3 shadow-sm focus:outline-2 focus:outline-brand-500'
 
 /**
  * Contact form. The captcha comes from the API through /api/contact/captcha, one challenge per attempt (a new one is
@@ -189,7 +189,7 @@ export function ContactForm({ messages }: { messages: Messages['contactPage'] })
         />
       </div>
 
-      <button type="submit" disabled={status === 'sending' || !captcha} className="rounded-md bg-brand-700 px-5 py-2 text-white hover:bg-brand-800 disabled:opacity-60">
+      <button type="submit" disabled={status === 'sending' || !captcha} className="rounded-full bg-brand-600 px-7 py-3 font-semibold text-white shadow-soft transition hover:bg-brand-700 disabled:opacity-60">
         {status === 'sending' ? messages.sending : messages.send}
       </button>
     </form>

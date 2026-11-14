@@ -46,12 +46,12 @@ export default async function PostPage({ params }: Props) {
   const date = post.published_at ? new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(new Date(post.published_at)) : null
 
   return (
-    <article className="mx-auto max-w-3xl px-4 py-14">
+    <article className="mx-auto max-w-3xl px-4 py-10 sm:py-14">
       <JsonLd data={articleJsonLd(post, settings, locale)} />
       <Link href={localePath(locale, '/blog')} className="text-brand-700 hover:underline">
         <span aria-hidden="true">←</span> {t.back}
       </Link>
-      <h1 className="mt-4 font-display text-4xl leading-tight font-semibold">{post.title}</h1>
+      <h1 className="mt-4 font-display text-3xl leading-tight font-extrabold tracking-tight text-balance sm:text-4xl">{post.title}</h1>
       <p className="mt-3 text-ink-muted">
         {post.category && (
           <Link href={`${localePath(locale, '/blog')}?category=${post.category.slug}`} className="text-brand-700 hover:underline">

@@ -11,10 +11,18 @@ export interface SettingsField {
   hint?: string
 }
 
+/** An uploaded image kept by its own endpoint (`POST|DELETE /v1/settings/<name>`), not by the PATCH form. */
+export interface SettingsImage {
+  name: 'logo' | 'favicon'
+  label: string
+  hint: string
+}
+
 export interface SettingsTab {
   id: string
   label: string
   fields: SettingsField[]
+  images?: SettingsImage[]
 }
 
 /** The singleton screen: one record, one form, fields grouped into tabs. Edit-only, gated by settings.view / settings.update. */
@@ -55,6 +63,10 @@ export const settings: SingletonConfig = {
     {
       id: 'general',
       label: 'General',
+      images: [
+        { name: 'logo', label: 'Site logo', hint: 'Shown in the portal header and footer and in this admin. JPEG, PNG or WebP; a wide transparent PNG works best. Until you upload one, the built-in logo is shown.' },
+        { name: 'favicon', label: 'Favicon', hint: 'The small icon in the browser tab. A square PNG, at least 64 x 64 px. Until you upload one, the built-in icon is shown.' },
+      ],
       fields: [
         { name: 'site_name', label: 'Site name', bilingual: true, required: true },
         { name: 'tagline', label: 'Tagline', bilingual: true },
