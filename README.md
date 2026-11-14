@@ -1,7 +1,7 @@
 # gd-business-site-boilerplate
 
 A small-business website you can run on one VPS: a public portal (Next.js) in two languages, an admin app (React) to edit everything,
-and a Laravel API behind both. Content: sections, services, team, testimonials, gallery, FAQ, blog, contact inbox, settings, users and roles.
+and a Laravel API behind both. Content: hero, about us, sections, services, pricing (per service, hidden until switched on), team, testimonials, gallery, FAQ, blog, contact inbox, settings (logo, favicon, currency, social links), users and roles.
 
 | Part | Where | Stack |
 |------|-------|-------|
@@ -32,6 +32,8 @@ Then open (the `.localhost` names resolve to your machine in modern browsers; no
 
 First run only: set `SUPERADMIN_EMAIL`, `SUPERADMIN_PASSWORD` and `OAUTH_ADMIN_REDIRECT_URI` in `api/.env` (copy `api/.env.example`), then
 `docker compose exec php php artisan migrate --seed`. Change every `change-me` in `.env`.
+
+Optional demo content in English and the second language (not part of `DatabaseSeeder`): `docker compose exec php php artisan db:seed --class="Database\Seeders\Site\SiteDataSeeder"`. Logo and favicon are uploaded in the admin under Settings; the built-in ones show until then. Footer credit: Powered by Orvyx Technologies.
 
 Daily commands:
 
