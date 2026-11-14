@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { localePath, type Messages } from '../lib/i18n'
 import { HoursList } from './HoursList'
 import { SiteLogo } from './SiteLogo'
+import { SocialIcon } from './SocialIcon'
 
 const SOCIAL: Record<string, string> = { facebook: 'Facebook', instagram: 'Instagram', x: 'X', linkedin: 'LinkedIn', youtube: 'YouTube', tiktok: 'TikTok', whatsapp: 'WhatsApp' }
 
@@ -20,11 +21,18 @@ export function Footer({ locale, settings, messages }: { locale: string; setting
           <SiteLogo settings={settings} dark />
           {settings.tagline && <p className="max-w-xs text-white/70">{settings.tagline}</p>}
           {social.length > 0 && (
-            <ul aria-label={messages.footer.follow} className="flex flex-wrap gap-2 pt-1">
+            <ul aria-label={messages.footer.follow} className="flex flex-wrap gap-3 pt-1">
               {social.map(([network, url]) => (
                 <li key={network}>
-                  <a href={url!} rel="noopener noreferrer" target="_blank" className="inline-block rounded-full border border-white/20 px-3 py-1.5 text-sm text-white/85 transition hover:border-white hover:bg-white hover:text-night">
-                    {SOCIAL[network] ?? network}
+                  <a
+                    href={url!}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    aria-label={SOCIAL[network] ?? network}
+                    title={SOCIAL[network] ?? network}
+                    className="flex size-11 items-center justify-center rounded-full border border-white/20 text-white/85 transition hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-night"
+                  >
+                    <SocialIcon network={network} />
                   </a>
                 </li>
               ))}

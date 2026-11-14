@@ -4,6 +4,7 @@ import { ApiError } from '@gd/api-client'
 import { api } from '../api'
 import { checkImage, uploadFile } from '../lib/upload'
 import { toast } from './Toast'
+import { IconButton } from './IconButton'
 
 export interface ImageInfo {
   url: string
@@ -57,9 +58,7 @@ export function ImagePanel({ endpoint, image, onChange, label = 'Image', hint, p
           onChange={(e) => e.target.files?.[0] && void upload(e.target.files[0])}
         />
         {current && progress === null && (
-          <button type="button" className="text-danger hover:underline" disabled={remove.isPending} onClick={() => remove.mutate()}>
-            Remove
-          </button>
+          <IconButton variant="row-danger" icon="trash" label="Remove" disabled={remove.isPending} onClick={() => remove.mutate()} />
         )}
       </div>
       {hint && <p className="text-sm text-ink-muted">{hint}</p>}

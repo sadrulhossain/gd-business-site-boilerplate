@@ -199,7 +199,7 @@ export function AppShell() {
       <aside
         className={`fixed inset-y-0 left-0 z-40 flex shrink-0 flex-col border-r border-sidebar-line bg-cover bg-center transition-all lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${
           drawer ? 'translate-x-0' : '-translate-x-full'
-        } ${slim ? 'w-[4.5rem]' : 'w-64'}`}
+        } ${slim ? 'w-[4.5rem]' : 'w-72'}`}
         style={{ backgroundImage: 'url(/images/sidebar-bg-img.jpg)' }}
       >
         <div className="flex h-full flex-col bg-sidebar-glass p-3 backdrop-blur-md">

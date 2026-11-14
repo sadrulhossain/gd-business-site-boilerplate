@@ -16,8 +16,11 @@ class SiteSettingsSeeder extends Seeder
 
         Setting::current()->update([
             'site_name' => 'Northwind Consulting',
+            'site_name_2nd' => 'নর্থউইন্ড কনসালটিং',
             'tagline' => 'Practical advice that helps small businesses grow',
+            'tagline_2nd' => 'ব্যবহারিক পরামর্শ যা ছোট ব্যবসাকে এগিয়ে নিতে সাহায্য করে',
             'address' => "12 Market Street\nSpringfield, 12345",
+            'address_2nd' => "১২ মার্কেট স্ট্রিট\nস্প্রিংফিল্ড, ১২৩৪৫",
             'phone' => '+1 555 010 2030',
             'email' => 'hello@northwind.example',
             'hours' => ['mon' => $day, 'tue' => $day, 'wed' => $day, 'thu' => $day, 'fri' => $day, 'sat' => $half, 'sun' => $off],

@@ -1,3 +1,4 @@
+import { IconButton } from './IconButton'
 import { useEffect, useRef, type ReactNode } from 'react'
 
 /** Modal built on <dialog>: focus trap, Escape and backdrop come from the browser. Shared by ConfirmDialog and CrudPage forms. */
@@ -47,17 +48,8 @@ export function ConfirmDialog({
     <Modal open={open} title={title} onClose={onCancel}>
       <p className="mb-4 text-ink-muted">{message}</p>
       <div className="flex justify-end gap-2">
-        <button type="button" className="btn btn-secondary" onClick={onCancel}>
-          Cancel
-        </button>
-        <button
-          type="button"
-          disabled={busy}
-          className={`btn ${danger ? 'btn-danger' : 'btn-primary'}`}
-          onClick={onConfirm}
-        >
-          {confirmLabel}
-        </button>
+        <IconButton variant="secondary" icon="x" label="Cancel" onClick={onCancel} />
+        <IconButton variant={danger ? 'danger' : 'primary'} icon={danger ? 'trash' : 'check'} label={confirmLabel} disabled={busy} onClick={onConfirm} />
       </div>
     </Modal>
   )

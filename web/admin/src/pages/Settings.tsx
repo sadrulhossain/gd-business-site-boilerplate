@@ -7,6 +7,7 @@ import { BilingualField } from '../components/BilingualField'
 import { FormField } from '../components/FormField'
 import { ImagePanel } from '../components/ImagePanel'
 import { toast } from '../components/Toast'
+import { IconButton } from '../components/IconButton'
 import { fieldErrors } from '../lib/crud'
 import { blanksToNull, getPath, setPath } from '../lib/object-path'
 import { settingsKeys, type SingletonConfig } from '../settingsConfig'
@@ -140,9 +141,7 @@ function SettingsForm({ config, initial }: { config: SingletonConfig; initial: V
       </div>
 
       {canUpdate && (
-        <button type="submit" disabled={save.isPending} className="btn btn-primary">
-          Save
-        </button>
+        <IconButton type="submit" variant="primary" icon="save" label="Save" disabled={save.isPending} />
       )}
     </form>
   )

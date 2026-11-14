@@ -4,6 +4,7 @@ import { defaultLocale, localePath, locales, type Messages } from '../lib/i18n'
 import { SECTION_PAGES } from '../lib/section-page'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { MobileNav } from './MobileNav'
+import { NavDropdown } from './NavDropdown'
 import { SiteLogo } from './SiteLogo'
 
 /** Sticky glass header: logo, one link per visible section (the hero is the page top, contact has its own button), Blog, Contact. */
@@ -13,8 +14,8 @@ export function Header({ locale, settings, sections, messages }: { locale: strin
     ...sections
       .filter((s) => s.key !== 'hero' && s.key !== 'contact')
       .map((s) => ({ key: s.key, label: s.title, href: SECTION_PAGES[s.key] ? localePath(locale, SECTION_PAGES[s.key]) : `${home}#${s.key}` })),
-    { key: 'blog', label: messages.nav.blog, href: localePath(locale, '/blog') },
   ]
+  const blog = localePath(locale, '/blog')
   const contact = localePath(locale, '/contact')
   const switcher = locales.length > 1 && <LanguageSwitcher current={locale} label={messages.language.label} locales={locales} unprefixed={defaultLocale} />
 
@@ -26,11 +27,20 @@ export function Header({ locale, settings, sections, messages }: { locale: strin
         </Link>
 
         <nav aria-label={messages.nav.label} className="hidden items-center gap-1 md:flex">
-          {links.map((l) => (
-            <Link key={l.key} href={l.href} className="rounded-full px-3 py-2 text-[0.95rem] font-medium text-ink-muted transition-colors hover:bg-brand-50 hover:text-brand-700">
-              {l.label}
-            </Link>
-          ))}
+          {links.length > 0 && (
+            <NavDropdown label={messages.nav.explore}>
+              {links.map((l) => (
+                <li key={l.key}>
+                  <Link href={l.href} className="block rounded-md px-3 py-2.5 font-medium text-ink hover:bg-brand-50 hover:text-brand-700">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </NavDropdown>
+          )}
+          <Link href={blog} className="rounded-full px-3 py-2 text-[0.95rem] font-medium text-ink-muted transition-colors hover:bg-brand-50 hover:text-brand-700">
+            {messages.nav.blog}
+          </Link>
           {switcher}
           <Link href={contact} className="ms-2 rounded-full bg-brand-600 px-5 py-2.5 text-[0.95rem] font-semibold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lift">
             {messages.nav.contact}
@@ -39,11 +49,15 @@ export function Header({ locale, settings, sections, messages }: { locale: strin
 
         <MobileNav label={messages.nav.label}>
           <nav aria-label={messages.nav.label} className="flex flex-col gap-1">
+            {links.length > 0 && <p className="px-4 pt-1 text-xs font-semibold tracking-widest text-ink-muted uppercase">{messages.nav.explore}</p>}
             {links.map((l) => (
-              <Link key={l.key} href={l.href} className="rounded-md px-4 py-3 text-lg font-medium text-ink hover:bg-brand-50">
+              <Link key={l.key} href={l.href} className="rounded-md py-3 ps-8 pe-4 text-lg font-medium text-ink hover:bg-brand-50">
                 {l.label}
               </Link>
             ))}
+            <Link href={blog} className="rounded-md px-4 py-3 text-lg font-medium text-ink hover:bg-brand-50">
+              {messages.nav.blog}
+            </Link>
             <Link href={contact} className="mt-2 rounded-full bg-brand-600 px-5 py-3 text-center text-lg font-semibold text-white">
               {messages.nav.contact}
             </Link>
