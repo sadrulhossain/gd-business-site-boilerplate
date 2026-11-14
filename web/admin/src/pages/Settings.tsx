@@ -141,7 +141,7 @@ function SettingsForm({ config, initial }: { config: SingletonConfig; initial: V
       </div>
 
       {canUpdate && (
-        <IconButton type="submit" variant="primary" icon="save" label="Save" disabled={save.isPending} />
+        <IconButton showText type="submit" variant="primary" icon="save" label="Save" disabled={save.isPending} />
       )}
     </form>
   )

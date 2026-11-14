@@ -48,8 +48,8 @@ export function ConfirmDialog({
     <Modal open={open} title={title} onClose={onCancel}>
       <p className="mb-4 text-ink-muted">{message}</p>
       <div className="flex justify-end gap-2">
-        <IconButton variant="secondary" icon="x" label="Cancel" onClick={onCancel} />
-        <IconButton variant={danger ? 'danger' : 'primary'} icon={danger ? 'trash' : 'check'} label={confirmLabel} disabled={busy} onClick={onConfirm} />
+        <IconButton showText variant="secondary" icon="x" label="Cancel" onClick={onCancel} />
+        <IconButton showText variant={danger ? 'danger' : 'primary'} icon={danger ? 'trash' : 'check'} label={confirmLabel} disabled={busy} onClick={onConfirm} />
       </div>
     </Modal>
   )

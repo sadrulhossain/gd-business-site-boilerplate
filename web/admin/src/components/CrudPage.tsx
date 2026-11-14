@@ -124,7 +124,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
       <header className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-semibold">{config.title}</h1>
         {canCreate && (
-          <IconButton variant="primary" icon="plus" label={`New ${config.noun.toLowerCase()}`} onClick={() => setEditing('new')} />
+          <IconButton showText variant="primary" icon="plus" label={`New ${config.noun.toLowerCase()}`} onClick={() => setEditing('new')} />
         )}
       </header>
 
@@ -236,8 +236,8 @@ function CrudForm({ config, row, onDone, onCancel }: { config: CrudConfig; row: 
           <p className="text-sm text-ink-muted">Save first, then add an image.</p>
         ))}
       <div className="flex justify-end gap-2 pt-2">
-        <IconButton variant="secondary" icon="x" label="Cancel" onClick={onCancel} />
-        <IconButton type="submit" variant="primary" icon="save" label="Save" disabled={save.isPending} />
+        <IconButton showText variant="secondary" icon="x" label="Cancel" onClick={onCancel} />
+        <IconButton showText type="submit" variant="primary" icon="save" label="Save" disabled={save.isPending} />
       </div>
     </form>
   )

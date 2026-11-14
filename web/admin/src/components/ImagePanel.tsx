@@ -58,7 +58,7 @@ export function ImagePanel({ endpoint, image, onChange, label = 'Image', hint, p
           onChange={(e) => e.target.files?.[0] && void upload(e.target.files[0])}
         />
         {current && progress === null && (
-          <IconButton variant="row-danger" icon="trash" label="Remove" disabled={remove.isPending} onClick={() => remove.mutate()} />
+          <IconButton showText variant="secondary" icon="trash" label="Remove" disabled={remove.isPending} onClick={() => remove.mutate()} />
         )}
       </div>
       {hint && <p className="text-sm text-ink-muted">{hint}</p>}
