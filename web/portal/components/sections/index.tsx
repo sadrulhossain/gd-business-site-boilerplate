@@ -127,9 +127,7 @@ const Services: SectionView = async ({ section, locale, messages, page }) => {
           {items.map((s, i) => (
             <li key={s.id} className={`${card} group flex flex-col`}>
               {s.image ? (
-                <div className="-mx-2 -mt-2 mb-5 overflow-hidden rounded-md">
-                  <Picture image={s.image} className="aspect-[3/2] w-full object-cover transition duration-500 group-hover:scale-105" />
-                </div>
+                <Picture image={s.image} sizes="48px" className="mb-5 size-12 rounded-md object-cover shadow-soft" />
               ) : (
                 <span aria-hidden="true" className="mb-5 flex size-12 items-center justify-center rounded-md bg-gradient-to-br from-brand-500 to-brand-700 text-lg font-bold text-white shadow-soft">
                   {String(i + 1).padStart(2, '0')}

@@ -5,11 +5,11 @@ namespace App\Http\Requests\Api\V1;
 use App\Services\MediaService;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreHeroImageRequest extends FormRequest
+class StoreSectionPanelImageRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('hero.update') ?? false;
+        return $this->user()?->can($this->route('key').'.update') ?? false;
     }
 
     /** @return array<string, mixed> */

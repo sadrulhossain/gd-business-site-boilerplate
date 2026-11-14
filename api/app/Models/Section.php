@@ -12,10 +12,17 @@ class Section extends Model
 {
     use HasSecondLanguage;
 
-    /** The landing-page hero row, created on first use. */
-    public static function hero(): self
+    /** Titles for the single-section screens, used when the row has to be created. */
+    private const PANEL_TITLES = ['hero' => 'Welcome', 'about' => 'About us'];
+
+    /** A section with a screen of its own (hero, about), created on first use. */
+    public static function panel(string $key): self
     {
-        return static::query()->firstOrCreate(['key' => 'hero'], ['title' => 'Welcome', 'sort_order' => 10, 'is_visible' => true]);
+        return static::query()->firstOrCreate(['key' => $key], [
+            'title' => self::PANEL_TITLES[$key] ?? ucfirst($key),
+            'sort_order' => $key === 'hero' ? 10 : 20,
+            'is_visible' => true,
+        ]);
     }
 
     /** @return array<string, string> */

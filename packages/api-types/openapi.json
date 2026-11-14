@@ -1312,170 +1312,6 @@
                 }
             }
         },
-        "/v1/hero": {
-            "get": {
-                "operationId": "hero.show",
-                "description": "Title, description (both languages) and banner of the landing-page hero.",
-                "summary": "Show the hero",
-                "tags": [
-                    "Hero"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "`SectionResource`",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/SectionResource"
-                                        }
-                                    },
-                                    "required": [
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "$ref": "#/components/responses/AuthorizationException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            },
-            "patch": {
-                "operationId": "hero.update",
-                "description": "Partial update of the title and description (both languages).",
-                "summary": "Update the hero",
-                "tags": [
-                    "Hero"
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateHeroRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "`SectionResource`",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/SectionResource"
-                                        }
-                                    },
-                                    "required": [
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "$ref": "#/components/responses/AuthorizationException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationException"
-                    }
-                }
-            }
-        },
-        "/v1/hero/image": {
-            "post": {
-                "operationId": "hero.storeImage",
-                "description": "Multipart field `image` (jpeg, png or webp). Replaces the current banner.",
-                "summary": "Upload the hero banner",
-                "tags": [
-                    "Hero"
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "$ref": "#/components/schemas/StoreHeroImageRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "`SectionResource`",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/SectionResource"
-                                        }
-                                    },
-                                    "required": [
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "$ref": "#/components/responses/AuthorizationException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationException"
-                    }
-                }
-            },
-            "delete": {
-                "operationId": "hero.destroyImage",
-                "summary": "Remove the hero banner",
-                "tags": [
-                    "Hero"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "`SectionResource`",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/SectionResource"
-                                        }
-                                    },
-                                    "required": [
-                                        "data"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "$ref": "#/components/responses/AuthorizationException"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/AuthenticationException"
-                    }
-                }
-            }
-        },
         "/v1/meta/locales": {
             "get": {
                 "operationId": "v1.locales",
@@ -3616,6 +3452,334 @@
                     },
                     "404": {
                         "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/v1/hero": {
+            "get": {
+                "operationId": "v1.sectionPanel.show_21",
+                "description": "Title and text (both languages) and image of the hero or about section.",
+                "summary": "Show a section panel",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "v1.sectionPanel.update_22",
+                "description": "Partial update of the title and text (both languages).",
+                "summary": "Update a section panel",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSectionPanelRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/v1/hero/image": {
+            "post": {
+                "operationId": "v1.sectionPanel.storeImage_23",
+                "description": "Multipart field `image` (jpeg, png or webp). Replaces the current image.",
+                "summary": "Upload the section image",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreSectionPanelImageRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "v1.sectionPanel.destroyImage_24",
+                "summary": "Remove the section image",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/v1/about": {
+            "get": {
+                "operationId": "v1.sectionPanel.show_25",
+                "description": "Title and text (both languages) and image of the hero or about section.",
+                "summary": "Show a section panel",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "v1.sectionPanel.update_26",
+                "description": "Partial update of the title and text (both languages).",
+                "summary": "Update a section panel",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSectionPanelRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/v1/about/image": {
+            "post": {
+                "operationId": "v1.sectionPanel.storeImage_27",
+                "description": "Multipart field `image` (jpeg, png or webp). Replaces the current image.",
+                "summary": "Upload the section image",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreSectionPanelImageRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "v1.sectionPanel.destroyImage_28",
+                "summary": "Remove the section image",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
@@ -6367,21 +6531,6 @@
                 },
                 "title": "StoreGalleryItemRequest"
             },
-            "StoreHeroImageRequest": {
-                "type": "object",
-                "properties": {
-                    "image": {
-                        "type": "string",
-                        "format": "binary",
-                        "contentMediaType": "application/octet-stream",
-                        "description": "Maximum file size: 5120 kilobytes."
-                    }
-                },
-                "required": [
-                    "image"
-                ],
-                "title": "StoreHeroImageRequest"
-            },
             "StorePostImageRequest": {
                 "type": "object",
                 "properties": {
@@ -6622,6 +6771,21 @@
                     "image"
                 ],
                 "title": "StoreSectionImageRequest"
+            },
+            "StoreSectionPanelImageRequest": {
+                "type": "object",
+                "properties": {
+                    "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "contentMediaType": "application/octet-stream",
+                        "description": "Maximum file size: 5120 kilobytes."
+                    }
+                },
+                "required": [
+                    "image"
+                ],
+                "title": "StoreSectionPanelImageRequest"
             },
             "StoreServiceImageRequest": {
                 "type": "object",
@@ -7078,37 +7242,6 @@
                 },
                 "title": "UpdateGalleryItemRequest"
             },
-            "UpdateHeroRequest": {
-                "type": "object",
-                "properties": {
-                    "title": {
-                        "type": "string",
-                        "maxLength": 150
-                    },
-                    "content": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "maxLength": 2000
-                    },
-                    "title_2nd": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "maxLength": 150
-                    },
-                    "content_2nd": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "maxLength": 2000
-                    }
-                },
-                "title": "UpdateHeroRequest"
-            },
             "UpdateMenuRequest": {
                 "type": "object",
                 "properties": {
@@ -7347,6 +7480,37 @@
                     }
                 },
                 "title": "UpdateRoleRequest"
+            },
+            "UpdateSectionPanelRequest": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "maxLength": 150
+                    },
+                    "content": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 10000
+                    },
+                    "title_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 150
+                    },
+                    "content_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 10000
+                    }
+                },
+                "title": "UpdateSectionPanelRequest"
             },
             "UpdateSectionRequest": {
                 "type": "object",

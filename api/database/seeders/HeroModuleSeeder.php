@@ -30,6 +30,6 @@ class HeroModuleSeeder extends ModuleSeeder
     {
         parent::run();
 
-        Section::hero(); // creates the row once
+        Section::panel('hero'); // creates the row once
     }
 }

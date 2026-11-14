@@ -3,13 +3,14 @@
 use App\Models\Pricing;
 use App\Models\Section;
 use App\Models\Service;
+use Database\Seeders\AboutModuleSeeder;
 use Database\Seeders\HeroModuleSeeder;
 use Database\Seeders\PricingModuleSeeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
-    $this->seed([PricingModuleSeeder::class, HeroModuleSeeder::class]);
+    $this->seed([PricingModuleSeeder::class, HeroModuleSeeder::class, AboutModuleSeeder::class]);
 });
 
 function plan(Service $service, array $overrides = []): Pricing
@@ -64,6 +65,16 @@ it('manages the hero through its own permissions', function () {
     actingAsRole('editor', ['hero.view', 'hero.update']);
     $this->patchJson('/api/v1/hero', ['title' => 'New title', 'content' => 'Text', 'title_2nd' => 'শিরোনাম'])->assertOk()->assertJsonPath('data.title', 'New title');
     $this->post('/api/v1/hero/image', ['image' => UploadedFile::fake()->image('b.jpg', 1600, 600)], ['Accept' => 'application/json'])->assertOk();
-    expect(Section::hero()->image)->toMatch('#^sections/[a-z0-9]{32}/original\.jpg$#');
+    expect(Section::panel('hero')->image)->toMatch('#^sections/[a-z0-9]{32}/original\.jpg$#');
     $this->deleteJson('/api/v1/hero/image')->assertOk()->assertJsonPath('data.image', null);
+});
+
+it('keeps the hero and about permissions apart', function () {
+    actingAsRole('hero-only', ['hero.view', 'hero.update']);
+
+    $this->getJson('/api/v1/hero')->assertOk();
+    $this->getJson('/api/v1/about')->assertForbidden();
+
+    actingAsRole('about-editor', ['about.view', 'about.update']);
+    $this->patchJson('/api/v1/about', ['title' => 'Who we are'])->assertOk()->assertJsonPath('data.key', 'about')->assertJsonPath('data.title', 'Who we are');
 });

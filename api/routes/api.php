@@ -8,7 +8,6 @@ use App\Http\Controllers\Api\V1\FaqController;
 use App\Http\Controllers\Api\V1\GalleryItemController;
 use App\Http\Controllers\Api\V1\GalleryItemImageController;
 use App\Http\Controllers\Api\V1\HealthController;
-use App\Http\Controllers\Api\V1\HeroController;
 use App\Http\Controllers\Api\V1\LocalesController;
 use App\Http\Controllers\Api\V1\LogoutController;
 use App\Http\Controllers\Api\V1\MeController;
@@ -22,6 +21,7 @@ use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\SectionController;
 use App\Http\Controllers\Api\V1\SectionImageController;
+use App\Http\Controllers\Api\V1\SectionPanelController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\ServiceImageController;
 use App\Http\Controllers\Api\V1\SettingController;
@@ -67,10 +67,13 @@ Route::prefix('v1')->group(function (): void {
         Route::get('dashboard', DashboardController::class)->middleware('can:dashboard.view');
 
         // Content (edit-only: seeded rows, no create/delete)
-        Route::get('hero', [HeroController::class, 'show'])->middleware('can:hero.view');
-        Route::patch('hero', [HeroController::class, 'update'])->middleware('can:hero.update');
-        Route::post('hero/image', [HeroController::class, 'storeImage'])->middleware('can:hero.update');
-        Route::delete('hero/image', [HeroController::class, 'destroyImage'])->middleware('can:hero.update');
+        // Single-section screens (hero, about): permissions <key>.view / <key>.update.
+        foreach (['hero', 'about'] as $key) {
+            Route::get($key, [SectionPanelController::class, 'show'])->defaults('key', $key)->middleware("can:{$key}.view");
+            Route::patch($key, [SectionPanelController::class, 'update'])->defaults('key', $key)->middleware("can:{$key}.update");
+            Route::post("{$key}/image", [SectionPanelController::class, 'storeImage'])->defaults('key', $key)->middleware("can:{$key}.update");
+            Route::delete("{$key}/image", [SectionPanelController::class, 'destroyImage'])->defaults('key', $key)->middleware("can:{$key}.update");
+        }
         Route::post('settings/logo', [SettingImageController::class, 'storeLogo']);
         Route::delete('settings/logo', [SettingImageController::class, 'destroyLogo']);
         Route::post('settings/favicon', [SettingImageController::class, 'storeFavicon']);

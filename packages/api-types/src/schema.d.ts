@@ -351,51 +351,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/hero": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Show the hero
-         * @description Title, description (both languages) and banner of the landing-page hero.
-         */
-        get: operations["hero.show"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * Update the hero
-         * @description Partial update of the title and description (both languages).
-         */
-        patch: operations["hero.update"];
-        trace?: never;
-    };
-    "/v1/hero/image": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Upload the hero banner
-         * @description Multipart field `image` (jpeg, png or webp). Replaces the current banner.
-         */
-        post: operations["hero.storeImage"];
-        /** Remove the hero banner */
-        delete: operations["hero.destroyImage"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/meta/locales": {
         parameters: {
             query?: never;
@@ -866,6 +821,96 @@ export interface paths {
         post: operations["sectionImage.store"];
         /** Remove the section image */
         delete: operations["sectionImage.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/hero": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Show a section panel
+         * @description Title and text (both languages) and image of the hero or about section.
+         */
+        get: operations["v1.sectionPanel.show_21"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update a section panel
+         * @description Partial update of the title and text (both languages).
+         */
+        patch: operations["v1.sectionPanel.update_22"];
+        trace?: never;
+    };
+    "/v1/hero/image": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload the section image
+         * @description Multipart field `image` (jpeg, png or webp). Replaces the current image.
+         */
+        post: operations["v1.sectionPanel.storeImage_23"];
+        /** Remove the section image */
+        delete: operations["v1.sectionPanel.destroyImage_24"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/about": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Show a section panel
+         * @description Title and text (both languages) and image of the hero or about section.
+         */
+        get: operations["v1.sectionPanel.show_25"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update a section panel
+         * @description Partial update of the title and text (both languages).
+         */
+        patch: operations["v1.sectionPanel.update_26"];
+        trace?: never;
+    };
+    "/v1/about/image": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload the section image
+         * @description Multipart field `image` (jpeg, png or webp). Replaces the current image.
+         */
+        post: operations["v1.sectionPanel.storeImage_27"];
+        /** Remove the section image */
+        delete: operations["v1.sectionPanel.destroyImage_28"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1496,14 +1541,6 @@ export interface components {
             sort_order?: number;
             is_visible?: boolean;
         };
-        /** StoreHeroImageRequest */
-        StoreHeroImageRequest: {
-            /**
-             * Format: binary
-             * @description Maximum file size: 5120 kilobytes.
-             */
-            image: string;
-        };
         /** StorePostImageRequest */
         StorePostImageRequest: {
             /**
@@ -1555,6 +1592,14 @@ export interface components {
         };
         /** StoreSectionImageRequest */
         StoreSectionImageRequest: {
+            /**
+             * Format: binary
+             * @description Maximum file size: 5120 kilobytes.
+             */
+            image: string;
+        };
+        /** StoreSectionPanelImageRequest */
+        StoreSectionPanelImageRequest: {
             /**
              * Format: binary
              * @description Maximum file size: 5120 kilobytes.
@@ -1686,13 +1731,6 @@ export interface components {
             sort_order?: number;
             is_visible?: boolean;
         };
-        /** UpdateHeroRequest */
-        UpdateHeroRequest: {
-            title?: string;
-            content?: string | null;
-            title_2nd?: string | null;
-            content_2nd?: string | null;
-        };
         /** UpdateMenuRequest */
         UpdateMenuRequest: {
             title?: string;
@@ -1745,6 +1783,13 @@ export interface components {
         UpdateRoleRequest: {
             name?: string;
             permissions?: ""[];
+        };
+        /** UpdateSectionPanelRequest */
+        UpdateSectionPanelRequest: {
+            title?: string;
+            content?: string | null;
+            title_2nd?: string | null;
+            content_2nd?: string | null;
         };
         /** UpdateSectionRequest */
         UpdateSectionRequest: {
@@ -2640,112 +2685,6 @@ export interface operations {
                     "application/json": string;
                 };
             };
-        };
-    };
-    "hero.show": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description `SectionResource` */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["SectionResource"];
-                    };
-                };
-            };
-            401: components["responses"]["AuthenticationException"];
-            403: components["responses"]["AuthorizationException"];
-        };
-    };
-    "hero.update": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["UpdateHeroRequest"];
-            };
-        };
-        responses: {
-            /** @description `SectionResource` */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["SectionResource"];
-                    };
-                };
-            };
-            401: components["responses"]["AuthenticationException"];
-            403: components["responses"]["AuthorizationException"];
-            422: components["responses"]["ValidationException"];
-        };
-    };
-    "hero.storeImage": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["StoreHeroImageRequest"];
-            };
-        };
-        responses: {
-            /** @description `SectionResource` */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["SectionResource"];
-                    };
-                };
-            };
-            401: components["responses"]["AuthenticationException"];
-            403: components["responses"]["AuthorizationException"];
-            422: components["responses"]["ValidationException"];
-        };
-    };
-    "hero.destroyImage": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description `SectionResource` */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["SectionResource"];
-                    };
-                };
-            };
-            401: components["responses"]["AuthenticationException"];
-            403: components["responses"]["AuthorizationException"];
         };
     };
     "v1.locales": {
@@ -3805,6 +3744,218 @@ export interface operations {
             401: components["responses"]["AuthenticationException"];
             403: components["responses"]["AuthorizationException"];
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "v1.sectionPanel.show_21": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "v1.sectionPanel.update_22": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateSectionPanelRequest"];
+            };
+        };
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v1.sectionPanel.storeImage_23": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["StoreSectionPanelImageRequest"];
+            };
+        };
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v1.sectionPanel.destroyImage_24": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "v1.sectionPanel.show_25": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "v1.sectionPanel.update_26": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateSectionPanelRequest"];
+            };
+        };
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v1.sectionPanel.storeImage_27": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["StoreSectionPanelImageRequest"];
+            };
+        };
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v1.sectionPanel.destroyImage_28": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
         };
     };
     "service.publicIndex": {

@@ -130,6 +130,25 @@ export const hero: SingletonConfig = {
   ],
 }
 
+/** The About us section: its own screen (permissions about.view / about.update) over the about section row. */
+export const about: SingletonConfig = {
+  key: 'about',
+  path: '/about',
+  title: 'About us',
+  endpoint: '/v1/about',
+  tabs: [
+    {
+      id: 'about',
+      label: 'About us',
+      images: [{ name: 'image', label: 'Image', preview: 'max-h-40', hint: 'Shown beside the text. JPEG, PNG or WebP. Without an image the text is centred.' }],
+      fields: [
+        { name: 'title', label: 'Title', bilingual: true, required: true },
+        { name: 'content', label: 'Text', type: 'textarea', bilingual: true, hint: 'Leave a blank line between paragraphs.' },
+      ],
+    },
+  ],
+}
+
 /** Top-level API keys the form owns (bilingual fields add their `_2nd` twin). Only these are sent back. */
 export function settingsKeys(config: SingletonConfig): string[] {
   const keys = config.tabs.flatMap((tab) => tab.fields).flatMap((f) => [f.name.split('.')[0]!, ...(f.bilingual ? [`${f.name}_2nd`] : [])])

@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             DashboardModuleSeeder::class,
             SectionsModuleSeeder::class,
             HeroModuleSeeder::class,
+            AboutModuleSeeder::class,
             ServicesModuleSeeder::class,
             PricingModuleSeeder::class,
             TestimonialsModuleSeeder::class,
