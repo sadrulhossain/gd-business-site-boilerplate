@@ -5,6 +5,7 @@ import { useAuth } from '../auth/store'
 import { Modal } from '../components/ConfirmDialog'
 import { DataTable } from '../components/DataTable'
 import { toast } from '../components/Toast'
+import { IconButton } from '../components/IconButton'
 import type { Message, InboxConfig } from '../messagesConfig'
 import type { Listing } from '../types'
 
@@ -70,24 +71,18 @@ export function MessagesPage({ config }: { config: InboxConfig }) {
           loading={list.isPending}
           empty="No messages."
           actions={(m) => (
-            <button type="button" className="text-link hover:underline" onClick={() => setOpen(m)}>
-              Open
-            </button>
+            <IconButton variant="row" icon="eye" label="Open" onClick={() => setOpen(m)} />
           )}
         />
       )}
 
       {meta && meta.last_page > 1 && (
         <nav className="flex items-center justify-end gap-3" aria-label="Pagination">
-          <button type="button" disabled={page <= 1} className="disabled:opacity-40" onClick={() => setPage(page - 1)}>
-            Previous
-          </button>
+          <IconButton variant="secondary" icon="chevron-left" label="Previous" disabled={page <= 1} onClick={() => setPage(page - 1)} />
           <span className="text-ink-muted">
             {meta.current_page} / {meta.last_page}
           </span>
-          <button type="button" disabled={page >= meta.last_page} className="disabled:opacity-40" onClick={() => setPage(page + 1)}>
-            Next
-          </button>
+          <IconButton variant="secondary" icon="chevron-right" label="Next" disabled={page >= meta.last_page} onClick={() => setPage(page + 1)} />
         </nav>
       )}
 
@@ -108,13 +103,9 @@ export function MessagesPage({ config }: { config: InboxConfig }) {
             </dl>
             <div className="flex justify-end gap-2 pt-2">
               {canMark && !open.read_at && (
-                <button type="button" disabled={markRead.isPending} className="btn btn-primary" onClick={() => markRead.mutate(open.id)}>
-                  Mark as read
-                </button>
+                <IconButton variant="primary" icon="check" label="Mark as read" disabled={markRead.isPending} onClick={() => markRead.mutate(open.id)} />
               )}
-              <button type="button" className="btn btn-secondary" onClick={() => setOpen(null)}>
-                Close
-              </button>
+              <IconButton variant="secondary" icon="x" label="Close" onClick={() => setOpen(null)} />
             </div>
           </div>
         )}

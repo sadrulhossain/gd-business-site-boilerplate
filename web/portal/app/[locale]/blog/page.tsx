@@ -47,8 +47,8 @@ export default async function BlogIndex({ params, searchParams }: Props) {
   const date = new Intl.DateTimeFormat(locale, { dateStyle: 'long' })
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-14">
-      <h1 className="font-display text-4xl font-semibold">{t.title}</h1>
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
+      <h1 className="font-display text-3xl font-extrabold tracking-tight text-balance sm:text-4xl">{t.title}</h1>
       <p className="mt-2 text-ink-muted">{t.intro}</p>
 
       {categories.length > 0 && (
@@ -56,7 +56,7 @@ export default async function BlogIndex({ params, searchParams }: Props) {
           <Link
             href={href(locale, {})}
             aria-current={!query.category ? 'true' : undefined}
-            className={`rounded-sm px-3 py-1 ${!query.category ? 'bg-brand-700 text-white' : 'border border-line hover:bg-brand-50'}`}
+            className={`rounded-full px-4 py-1.5 ${!query.category ? 'bg-brand-700 text-white' : 'border border-line hover:bg-brand-50'}`}
           >
             {t.all}
           </Link>
@@ -65,7 +65,7 @@ export default async function BlogIndex({ params, searchParams }: Props) {
               key={c.id}
               href={href(locale, { category: c.slug })}
               aria-current={query.category === c.slug ? 'true' : undefined}
-              className={`rounded-sm px-3 py-1 ${query.category === c.slug ? 'bg-brand-700 text-white' : 'border border-line hover:bg-brand-50'}`}
+              className={`rounded-full px-4 py-1.5 ${query.category === c.slug ? 'bg-brand-700 text-white' : 'border border-line hover:bg-brand-50'}`}
             >
               {c.name}
             </Link>
@@ -78,7 +78,7 @@ export default async function BlogIndex({ params, searchParams }: Props) {
       ) : (
         <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
-            <li key={post.id} className="flex flex-col overflow-hidden rounded-md border border-line bg-surface">
+            <li key={post.id} className="flex flex-col overflow-hidden rounded-lg border border-line bg-surface shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift">
               {post.image && <Picture image={post.image} className="aspect-[3/2] w-full object-cover" />}
               <div className="flex flex-1 flex-col gap-2 p-5">
                 <p className="text-sm text-ink-muted">
@@ -100,7 +100,7 @@ export default async function BlogIndex({ params, searchParams }: Props) {
       {lastPage > 1 && (
         <nav aria-label={t.pagination} className="mt-10 flex items-center justify-between gap-4">
           {page > 1 ? (
-            <Link href={href(locale, { ...query, page: page - 1 })} rel="prev" className="rounded-md border border-line px-4 py-2 hover:bg-brand-50">
+            <Link href={href(locale, { ...query, page: page - 1 })} rel="prev" className="rounded-full border border-line px-5 py-2.5 font-medium hover:bg-brand-50">
               <span aria-hidden="true">←</span> {t.previous}
             </Link>
           ) : (
@@ -108,7 +108,7 @@ export default async function BlogIndex({ params, searchParams }: Props) {
           )}
           <span className="text-ink-muted">{t.pageOf.replace('{page}', String(page)).replace('{last}', String(lastPage))}</span>
           {page < lastPage ? (
-            <Link href={href(locale, { ...query, page: page + 1 })} rel="next" className="rounded-md border border-line px-4 py-2 hover:bg-brand-50">
+            <Link href={href(locale, { ...query, page: page + 1 })} rel="next" className="rounded-full border border-line px-5 py-2.5 font-medium hover:bg-brand-50">
               {t.next} <span aria-hidden="true">→</span>
             </Link>
           ) : (

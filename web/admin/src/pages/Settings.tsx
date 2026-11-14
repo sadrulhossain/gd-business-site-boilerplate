@@ -5,7 +5,9 @@ import { api } from '../api'
 import { useAuth } from '../auth/store'
 import { BilingualField } from '../components/BilingualField'
 import { FormField } from '../components/FormField'
+import { ImagePanel } from '../components/ImagePanel'
 import { toast } from '../components/Toast'
+import { IconButton } from '../components/IconButton'
 import { fieldErrors } from '../lib/crud'
 import { blanksToNull, getPath, setPath } from '../lib/object-path'
 import { settingsKeys, type SingletonConfig } from '../settingsConfig'
@@ -76,7 +78,7 @@ function SettingsForm({ config, initial }: { config: SingletonConfig; initial: V
         save.mutate()
       }}
     >
-      <div role="tablist" aria-label={config.title} className="flex flex-wrap gap-1 border-b border-line">
+      <div role="tablist" aria-label={config.title} className="flex gap-1 overflow-x-auto border-b border-line">
         {config.tabs.map((t) => (
           <button
             key={t.id}
@@ -85,7 +87,7 @@ function SettingsForm({ config, initial }: { config: SingletonConfig; initial: V
             id={`tab-${t.id}`}
             aria-selected={t.id === active}
             aria-controls={`panel-${t.id}`}
-            className={`-mb-px border-b-2 px-3 py-2 ${t.id === active ? 'border-primary-600 font-semibold text-primary-700' : 'border-transparent text-ink-muted hover:text-ink'}`}
+            className={`-mb-px shrink-0 border-b-2 px-3 py-2 ${t.id === active ? 'border-primary-600 font-semibold text-primary-700' : 'border-transparent text-ink-muted hover:text-ink'}`}
             onClick={() => setActive(t.id)}
           >
             {t.label}
@@ -95,6 +97,21 @@ function SettingsForm({ config, initial }: { config: SingletonConfig; initial: V
       </div>
 
       <div role="tabpanel" id={`panel-${tab.id}`} aria-labelledby={`tab-${tab.id}`} className="max-w-2xl space-y-3">
+        {tab.images?.map((img) => (
+          <ImagePanel
+            key={img.name}
+            endpoint={`${config.endpoint}/${img.name}`}
+            label={img.label}
+            responseKey={img.name}
+            hint={img.hint}
+            previewClass={img.name === 'logo' ? 'max-h-24' : 'size-16'}
+            image={values[img.name] as { url: string } | null | undefined}
+            onChange={(image) => {
+              set(img.name, image)
+              void queryClient.invalidateQueries({ queryKey: ['branding'] })
+            }}
+          />
+        ))}
         {tab.fields.map((f) =>
           f.bilingual ? (
             <BilingualField
@@ -124,9 +141,7 @@ function SettingsForm({ config, initial }: { config: SingletonConfig; initial: V
       </div>
 
       {canUpdate && (
-        <button type="submit" disabled={save.isPending} className="btn btn-primary">
-          Save
-        </button>
+        <IconButton type="submit" variant="primary" icon="save" label="Save" disabled={save.isPending} />
       )}
     </form>
   )

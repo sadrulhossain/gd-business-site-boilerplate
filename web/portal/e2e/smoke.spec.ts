@@ -49,5 +49,6 @@ test('blog detail', async ({ page }) => {
   await first.click()
   await expect(page).toHaveURL(/\/blog\/[a-z0-9-]+$/)
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-  await expect(page.locator('script[type="application/ld+json"]')).toContainText('"Article"')
+  // A script's text is not rendered, so read textContent rather than the visible text.
+  await expect.poll(() => page.locator('script[type="application/ld+json"]').first().evaluate((el) => el.textContent)).toContain('"Article"')
 })

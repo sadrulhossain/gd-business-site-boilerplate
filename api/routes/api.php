@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\V1\SectionImageController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\ServiceImageController;
 use App\Http\Controllers\Api\V1\SettingController;
+use App\Http\Controllers\Api\V1\SettingImageController;
 use App\Http\Controllers\Api\V1\TeamMemberController;
 use App\Http\Controllers\Api\V1\TeamMemberImageController;
 use App\Http\Controllers\Api\V1\TestimonialController;
@@ -63,6 +64,10 @@ Route::prefix('v1')->group(function (): void {
         Route::get('dashboard', DashboardController::class)->middleware('can:dashboard.view');
 
         // Content (edit-only: seeded rows, no create/delete)
+        Route::post('settings/logo', [SettingImageController::class, 'storeLogo']);
+        Route::delete('settings/logo', [SettingImageController::class, 'destroyLogo']);
+        Route::post('settings/favicon', [SettingImageController::class, 'storeFavicon']);
+        Route::delete('settings/favicon', [SettingImageController::class, 'destroyFavicon']);
         Route::apiSingleton('settings', SettingController::class);
         Route::put('sections/reorder', [SectionController::class, 'reorder']);
         Route::apiResource('sections', SectionController::class)->only(['index', 'show', 'update']);

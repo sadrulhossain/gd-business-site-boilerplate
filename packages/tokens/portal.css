@@ -1,6 +1,7 @@
 /*
- * Portal theme: airy, warm, serif headings, rounder corners. Colours are reset first so
- * only the tokens below exist as utilities (bg-brand-600, text-ink, font-display ...).
+ * Portal theme: modern and confident. Indigo brand, amber accent, deep navy for dark bands, soft tinted canvas,
+ * large rounded corners and layered shadows. Colours are reset first so only the tokens below exist as
+ * utilities (bg-brand-600, text-ink, bg-night, font-display ...).
  */
 @import './base.css';
 
@@ -8,32 +9,43 @@
   --color-*: initial;
 
   --color-white: #fff;
-  --color-canvas: #fbf8f3;
+  --color-canvas: #f7f8fd;
   --color-surface: #fff;
-  --color-line: #e7dfd2;
-  --color-ink: #2a2118;
-  --color-ink-muted: #6f6454;
+  --color-line: #e3e7f3;
+  --color-ink: #0f172a;
+  --color-ink-muted: #56607a;
+  --color-night: #0b1024;
+  --color-night-soft: #151c3b;
 
-  --color-brand-50: #fff4ec;
-  --color-brand-100: #ffe5d2;
-  --color-brand-200: #fecaa3;
-  --color-brand-300: #fdab70;
-  --color-brand-400: #fb8a3c;
-  --color-brand-500: #f06a12;
-  --color-brand-600: #d9500a;
-  --color-brand-700: #b43c0b;
-  --color-brand-800: #92310f;
-  --color-brand-900: #782b10;
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #1e1b4b;
+
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
 
   --color-success: #2f7d4f;
   --color-warning: #b7791f;
   --color-danger: #c53030;
 
-  --font-display: ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  --font-display: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
-  --radius-sm: 0.5rem;
-  --radius-md: 0.875rem;
+  --radius-sm: 0.625rem;
+  --radius-md: 1rem;
   --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+
+  --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -8px rgb(79 70 229 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.05), 0 20px 40px -12px rgb(79 70 229 / 0.28);
 
   --text-base: 1.0625rem;
 }

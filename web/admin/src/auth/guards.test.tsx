@@ -7,6 +7,7 @@ import { startLogin } from './oauth'
 import { useAuth } from './store'
 
 vi.mock('./oauth', () => ({ startLogin: vi.fn() }))
+vi.mock('../components/Splash', () => ({ Splash: () => <p role="status">Signing in...</p> }))
 
 const me = (permissions: string[]) =>
   ({ id: 1, name: 'A', email: 'a@example.test', is_superadmin: false, roles: [], permissions }) as never

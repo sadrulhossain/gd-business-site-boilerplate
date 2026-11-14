@@ -26,7 +26,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     title: { default: settings.tagline ? `${settings.site_name} | ${settings.tagline}` : settings.site_name, template: `%s | ${settings.site_name}` },
     description: settings.tagline ?? undefined,
     metadataBase: new URL(siteUrl()),
-    icons: { icon: '/icon.svg' },
+    // The uploaded favicon, or the built-in icon until one is uploaded.
+    icons: { icon: settings.favicon?.url ?? '/icon.svg' },
   }
 }
 

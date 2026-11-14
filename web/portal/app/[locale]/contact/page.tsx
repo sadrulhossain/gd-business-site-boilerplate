@@ -27,9 +27,9 @@ export default async function ContactPage({ params }: Props) {
   const mapUrl = settings.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address.replace(/\s*\n\s*/g, ', '))}` : null
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-12 px-4 py-14 md:grid-cols-2">
+    <div className="mx-auto grid max-w-6xl gap-10 px-4 py-10 sm:py-14 md:grid-cols-2">
       <div className="space-y-4">
-        <h1 className="font-display text-4xl font-semibold">{t.title}</h1>
+        <h1 className="font-display text-3xl font-extrabold tracking-tight text-balance sm:text-4xl">{t.title}</h1>
         <p className="text-ink-muted">{t.intro}</p>
         <ContactForm messages={t} />
       </div>

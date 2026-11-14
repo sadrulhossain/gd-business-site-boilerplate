@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from 'react'
 import { useLocation } from 'react-router'
+import { Splash } from '../components/Splash'
 import { Forbidden } from '../pages/errors'
 import { startLogin } from './oauth'
 import { useAuth } from './store'
@@ -19,11 +20,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
 
   if (status === 'authenticated' && user) return <>{children}</>
 
-  return (
-    <p role="status" className="p-6 text-ink-muted">
-      Signing in...
-    </p>
-  )
+  return <Splash />
 }
 
 /** Renders children only when the user holds `permission` (the superadmin holds all); otherwise the 403 page. */

@@ -12,6 +12,7 @@ import { ImagePanel } from './ImagePanel'
 import { DataTable, type Column } from './DataTable'
 import { FormField, type FieldOption, type FieldType } from './FormField'
 import { toast } from './Toast'
+import { IconButton } from './IconButton'
 
 export type Row = Record<string, unknown> & { id: number }
 
@@ -110,26 +111,20 @@ export function CrudPage({ config }: { config: CrudConfig }) {
   const actions = (row: Row): ReactNode => (
     <span className="inline-flex gap-2">
       {canUpdate && (
-        <button type="button" className="text-link hover:underline" onClick={() => setEditing(row)}>
-          Edit
-        </button>
+        <IconButton variant="row" icon="pencil" label="Edit" onClick={() => setEditing(row)} />
       )}
       {canDelete && (
-        <button type="button" className="text-danger hover:underline" onClick={() => setDeleting(row)}>
-          Delete
-        </button>
+        <IconButton variant="row-danger" icon="trash" label="Delete" onClick={() => setDeleting(row)} />
       )}
     </span>
   )
 
   return (
     <section className="space-y-4">
-      <header className="flex items-center justify-between">
+      <header className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-semibold">{config.title}</h1>
         {canCreate && (
-          <button type="button" className="btn btn-primary" onClick={() => setEditing('new')}>
-            New {config.noun.toLowerCase()}
-          </button>
+          <IconButton variant="primary" icon="plus" label={`New ${config.noun.toLowerCase()}`} onClick={() => setEditing('new')} />
         )}
       </header>
 
@@ -150,15 +145,11 @@ export function CrudPage({ config }: { config: CrudConfig }) {
 
       {meta && meta.last_page > 1 && (
         <nav className="flex items-center justify-end gap-3" aria-label="Pagination">
-          <button type="button" disabled={page <= 1} className="disabled:opacity-40" onClick={() => setPage(page - 1)}>
-            Previous
-          </button>
+          <IconButton variant="secondary" icon="chevron-left" label="Previous" disabled={page <= 1} onClick={() => setPage(page - 1)} />
           <span className="text-ink-muted">
             {meta.current_page} / {meta.last_page}
           </span>
-          <button type="button" disabled={page >= meta.last_page} className="disabled:opacity-40" onClick={() => setPage(page + 1)}>
-            Next
-          </button>
+          <IconButton variant="secondary" icon="chevron-right" label="Next" disabled={page >= meta.last_page} onClick={() => setPage(page + 1)} />
         </nav>
       )}
 
@@ -245,12 +236,8 @@ function CrudForm({ config, row, onDone, onCancel }: { config: CrudConfig; row: 
           <p className="text-sm text-ink-muted">Save first, then add an image.</p>
         ))}
       <div className="flex justify-end gap-2 pt-2">
-        <button type="button" className="btn btn-secondary" onClick={onCancel}>
-          Cancel
-        </button>
-        <button type="submit" disabled={save.isPending} className="btn btn-primary">
-          Save
-        </button>
+        <IconButton variant="secondary" icon="x" label="Cancel" onClick={onCancel} />
+        <IconButton type="submit" variant="primary" icon="save" label="Save" disabled={save.isPending} />
       </div>
     </form>
   )

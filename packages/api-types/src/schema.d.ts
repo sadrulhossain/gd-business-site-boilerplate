@@ -912,6 +912,48 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/settings/logo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload the site logo
+         * @description Multipart field `image` (jpeg, png or webp). Replaces the current logo.
+         */
+        post: operations["settingImage.storeLogo"];
+        /** Remove the site logo */
+        delete: operations["settingImage.destroyLogo"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/settings/favicon": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload the favicon
+         * @description Multipart field `image` (jpeg, png or webp), ideally square. Replaces the current favicon.
+         */
+        post: operations["settingImage.storeFavicon"];
+        /** Remove the favicon */
+        delete: operations["settingImage.destroyFavicon"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/public/team": {
         parameters: {
             query?: never;
@@ -1261,6 +1303,8 @@ export interface components {
             site_name_2nd: string | null;
             tagline: string | null;
             tagline_2nd: string | null;
+            logo: string;
+            favicon: string;
             address: string | null;
             address_2nd: string | null;
             phone: string | null;
@@ -1375,6 +1419,17 @@ export interface components {
             description_2nd?: string | null;
             sort_order?: number;
             is_visible?: boolean;
+        };
+        /**
+         * StoreSettingImageRequest
+         * @description Logo and favicon uploads: multipart field `image`.
+         */
+        StoreSettingImageRequest: {
+            /**
+             * Format: binary
+             * @description Maximum file size: 5120 kilobytes.
+             */
+            image: string;
         };
         /** StoreTeamMemberImageRequest */
         StoreTeamMemberImageRequest: {
@@ -3621,6 +3676,112 @@ export interface operations {
             401: components["responses"]["AuthenticationException"];
             403: components["responses"]["AuthorizationException"];
             422: components["responses"]["ValidationException"];
+        };
+    };
+    "settingImage.storeLogo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["StoreSettingImageRequest"];
+            };
+        };
+        responses: {
+            /** @description `SettingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SettingResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "settingImage.destroyLogo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SettingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SettingResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "settingImage.storeFavicon": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["StoreSettingImageRequest"];
+            };
+        };
+        responses: {
+            /** @description `SettingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SettingResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "settingImage.destroyFavicon": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SettingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SettingResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
         };
     };
     "teamMember.publicIndex": {

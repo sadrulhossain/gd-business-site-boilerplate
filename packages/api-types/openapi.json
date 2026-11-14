@@ -3665,6 +3665,170 @@
                 }
             }
         },
+        "/v1/settings/logo": {
+            "post": {
+                "operationId": "settingImage.storeLogo",
+                "description": "Multipart field `image` (jpeg, png or webp). Replaces the current logo.",
+                "summary": "Upload the site logo",
+                "tags": [
+                    "SettingImage"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreSettingImageRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`SettingResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SettingResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "settingImage.destroyLogo",
+                "summary": "Remove the site logo",
+                "tags": [
+                    "SettingImage"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`SettingResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SettingResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/v1/settings/favicon": {
+            "post": {
+                "operationId": "settingImage.storeFavicon",
+                "description": "Multipart field `image` (jpeg, png or webp), ideally square. Replaces the current favicon.",
+                "summary": "Upload the favicon",
+                "tags": [
+                    "SettingImage"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreSettingImageRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`SettingResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SettingResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "settingImage.destroyFavicon",
+                "summary": "Remove the favicon",
+                "tags": [
+                    "SettingImage"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`SettingResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SettingResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
         "/v1/public/team": {
             "get": {
                 "operationId": "teamMember.publicIndex",
@@ -5347,6 +5511,12 @@
                             "null"
                         ]
                     },
+                    "logo": {
+                        "type": "string"
+                    },
+                    "favicon": {
+                        "type": "string"
+                    },
                     "address": {
                         "type": [
                             "string",
@@ -5394,6 +5564,8 @@
                     "site_name_2nd",
                     "tagline",
                     "tagline_2nd",
+                    "logo",
+                    "favicon",
                     "address",
                     "address_2nd",
                     "phone",
@@ -5797,6 +5969,22 @@
                     "title"
                 ],
                 "title": "StoreServiceRequest"
+            },
+            "StoreSettingImageRequest": {
+                "type": "object",
+                "description": "Logo and favicon uploads: multipart field `image`.",
+                "properties": {
+                    "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "contentMediaType": "application/octet-stream",
+                        "description": "Maximum file size: 5120 kilobytes."
+                    }
+                },
+                "required": [
+                    "image"
+                ],
+                "title": "StoreSettingImageRequest"
             },
             "StoreTeamMemberImageRequest": {
                 "type": "object",
