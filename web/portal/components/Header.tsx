@@ -27,6 +27,9 @@ export function Header({ locale, settings, sections, messages }: { locale: strin
         </Link>
 
         <nav aria-label={messages.nav.label} className="hidden items-center gap-1 md:flex">
+          <Link href={home} className="rounded-full px-3 py-2 text-[0.95rem] font-medium text-ink-muted transition-colors hover:bg-brand-50 hover:text-brand-700">
+            {messages.nav.home}
+          </Link>
           {links.length > 0 && (
             <NavDropdown label={messages.nav.explore}>
               {links.map((l) => (
@@ -49,6 +52,9 @@ export function Header({ locale, settings, sections, messages }: { locale: strin
 
         <MobileNav label={messages.nav.label}>
           <nav aria-label={messages.nav.label} className="flex flex-col gap-1">
+            <Link href={home} className="rounded-md px-4 py-3 text-lg font-medium text-ink hover:bg-brand-50">
+              {messages.nav.home}
+            </Link>
             {links.length > 0 && <p className="px-4 pt-1 text-xs font-semibold tracking-widest text-ink-muted uppercase">{messages.nav.explore}</p>}
             {links.map((l) => (
               <Link key={l.key} href={l.href} className="rounded-md py-3 ps-8 pe-4 text-lg font-medium text-ink hover:bg-brand-50">
