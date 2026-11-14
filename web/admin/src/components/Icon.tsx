@@ -25,6 +25,9 @@ const PATHS: Record<string, string[]> = {
   eye: ['M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z', 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'],
   save: ['M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z', 'M17 21v-8H7v8', 'M7 3v5h8'],
   'chevron-left': ['m15 18-6-6 6-6'],
+  upload: ['M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4', 'm17 8-5-5-5 5', 'M12 3v12'],
+  price: ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z', 'M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8', 'M12 18V6'],
+  info: ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z', 'M12 16v-4', 'M12 8h.01'],
   folder: ['M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2z'],
   'chevron-right': ['m9 18 6-6-6-6'],
   menu: ['M4 6h16', 'M4 12h16', 'M4 18h16'],
@@ -39,6 +42,13 @@ const PATHS: Record<string, string[]> = {
   'arrow-right': ['M5 12h14', 'm12 5 7 7-7 7'],
   globe: ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z', 'M2 12h20', 'M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'],
 }
+
+/** Icons that make sense for a menu entry (the rest are interface glyphs), for the Menus form dropdown. */
+const INTERFACE_ONLY = new Set(['x', 'menu', 'sun', 'moon', 'log-out', 'arrow-right', 'plus', 'check', 'pencil', 'trash', 'upload', 'save', 'eye', 'chevron-down', 'chevron-left', 'chevron-right', 'chevrons-left', 'chevrons-right'])
+export const ICON_OPTIONS = Object.keys(PATHS)
+  .filter((name) => !INTERFACE_ONLY.has(name))
+  .sort()
+  .map((name) => ({ value: name, label: name.replace(/-/g, ' ').replace(/^./, (c) => c.toUpperCase()) }))
 
 export function Icon({ name, ...props }: { name: string | null | undefined } & Omit<SVGProps<SVGSVGElement>, 'name'>) {
   const paths = PATHS[name ?? ''] ?? PATHS.list!

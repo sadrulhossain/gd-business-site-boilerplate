@@ -82,6 +82,9 @@ export function Footer({ locale, settings, messages }: { locale: string; setting
             </Link>
           </nav>
         </div>
+        <p className="mx-auto mt-3 max-w-6xl text-center text-xs text-white/65 sm:text-left">
+          {messages.footer.poweredBy.replace('{name}', 'Orvyx Technologies')}
+        </p>
       </div>
     </footer>
   )

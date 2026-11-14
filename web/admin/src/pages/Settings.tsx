@@ -78,7 +78,7 @@ function SettingsForm({ config, initial }: { config: SingletonConfig; initial: V
         save.mutate()
       }}
     >
-      <div role="tablist" aria-label={config.title} className="flex gap-1 overflow-x-auto border-b border-line">
+      <div role="tablist" aria-label={config.title} className={`flex gap-1 overflow-x-auto border-b border-line ${config.tabs.length < 2 ? 'hidden' : ''}`}>
         {config.tabs.map((t) => (
           <button
             key={t.id}
@@ -103,8 +103,9 @@ function SettingsForm({ config, initial }: { config: SingletonConfig; initial: V
             endpoint={`${config.endpoint}/${img.name}`}
             label={img.label}
             responseKey={img.name}
+            allowIco={img.ico}
             hint={img.hint}
-            previewClass={img.name === 'logo' ? 'max-h-24' : 'size-16'}
+            previewClass={img.preview ?? 'max-h-40'}
             image={values[img.name] as { url: string } | null | undefined}
             onChange={(image) => {
               set(img.name, image)
@@ -141,7 +142,7 @@ function SettingsForm({ config, initial }: { config: SingletonConfig; initial: V
       </div>
 
       {canUpdate && (
-        <IconButton type="submit" variant="primary" icon="save" label="Save" disabled={save.isPending} />
+        <IconButton showText type="submit" variant="primary" icon="save" label="Save" disabled={save.isPending} />
       )}
     </form>
   )

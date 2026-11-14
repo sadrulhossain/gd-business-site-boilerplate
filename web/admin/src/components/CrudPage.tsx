@@ -59,6 +59,13 @@ export interface CrudConfig {
   reorder?: { endpoint: string; group?: (row: Row) => unknown }
 }
 
+/** Forms with rich text or many fields get a wider dialog. */
+function formSize(fields: CrudField[]): 'md' | 'lg' | 'xl' {
+  if (fields.some((f) => f.type === 'richtext' || f.type === 'checkgroup')) return 'xl'
+
+  return fields.length > 4 ? 'lg' : 'md'
+}
+
 export function CrudPage({ config }: { config: CrudConfig }) {
   const queryClient = useQueryClient()
   const can = useAuth((s) => s.can)
@@ -124,7 +131,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
       <header className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-semibold">{config.title}</h1>
         {canCreate && (
-          <IconButton variant="primary" icon="plus" label={`New ${config.noun.toLowerCase()}`} onClick={() => setEditing('new')} />
+          <IconButton showText variant="primary" icon="plus" label={`New ${config.noun.toLowerCase()}`} onClick={() => setEditing('new')} />
         )}
       </header>
 
@@ -153,7 +160,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
         </nav>
       )}
 
-      <Modal open={editing !== null} title={editing === 'new' ? `New ${config.noun.toLowerCase()}` : `Edit ${config.noun.toLowerCase()}`} onClose={() => setEditing(null)}>
+      <Modal size={formSize(config.fields)} open={editing !== null} title={editing === 'new' ? `New ${config.noun.toLowerCase()}` : `Edit ${config.noun.toLowerCase()}`} onClose={() => setEditing(null)}>
         {editing !== null && (
           <CrudForm
             key={editing === 'new' ? 'new' : editing.id}
@@ -236,8 +243,8 @@ function CrudForm({ config, row, onDone, onCancel }: { config: CrudConfig; row: 
           <p className="text-sm text-ink-muted">Save first, then add an image.</p>
         ))}
       <div className="flex justify-end gap-2 pt-2">
-        <IconButton variant="secondary" icon="x" label="Cancel" onClick={onCancel} />
-        <IconButton type="submit" variant="primary" icon="save" label="Save" disabled={save.isPending} />
+        <IconButton showText variant="secondary" icon="x" label="Cancel" onClick={onCancel} />
+        <IconButton showText type="submit" variant="primary" icon="save" label="Save" disabled={save.isPending} />
       </div>
     </form>
   )

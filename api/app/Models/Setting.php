@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /** Site-wide settings. Singleton: one row (id 1), edit-only. Use Setting::current(). */
 #[Fillable([
-    'site_name', 'site_name_2nd', 'tagline', 'tagline_2nd', 'logo', 'favicon', 'address', 'address_2nd',
+    'site_name', 'site_name_2nd', 'tagline', 'tagline_2nd', 'logo', 'favicon', 'currency', 'currency_symbol', 'address', 'address_2nd',
     'phone', 'email', 'hours', 'social_links',
 ])]
 class Setting extends Model
@@ -37,6 +37,8 @@ class Setting extends Model
         return [
             'site_name' => 'My Business',
             'tagline' => 'Welcome',
+            'currency' => 'USD',
+            'currency_symbol' => '$',
             'hours' => array_combine(self::DAYS, [$open, $open, $open, $open, $open, $closed, $closed]),
             'social_links' => [],
         ];

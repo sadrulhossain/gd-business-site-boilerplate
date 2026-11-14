@@ -7,6 +7,7 @@ use App\Models\Faq;
 use App\Models\GalleryItem;
 use App\Models\OAuthClient;
 use App\Models\Post;
+use App\Models\Pricing;
 use App\Models\Section;
 use App\Models\Service;
 use App\Models\Setting;
@@ -46,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Public content changes -> queued signed webhook so the portal revalidates its cache.
         foreach ([
-            Category::class, Faq::class, GalleryItem::class, Post::class, Section::class,
+            Category::class, Faq::class, GalleryItem::class, Post::class, Pricing::class, Section::class,
             Service::class, Setting::class, TeamMember::class, Testimonial::class,
         ] as $model) {
             $model::observe(ContentObserver::class);

@@ -17,7 +17,7 @@ it('lists sections in sort order', function () {
 
     $this->getJson('/api/v1/sections')
         ->assertOk()
-        ->assertJsonCount(8, 'data')
+        ->assertJsonCount(9, 'data')
         ->assertJsonPath('data.0.key', 'hero')
         ->assertJsonPath('data.0.image', null);
 });

@@ -1,5 +1,5 @@
 /*
- * Portal theme: modern and confident. Indigo brand, amber accent, deep navy for dark bands, soft tinted canvas,
+ * Portal theme: modern and confident. Emerald brand, amber accent, deep forest green for dark bands, soft tinted canvas,
  * large rounded corners and layered shadows. Colours are reset first so only the tokens below exist as
  * utilities (bg-brand-600, text-ink, bg-night, font-display ...).
  */
@@ -9,24 +9,24 @@
   --color-*: initial;
 
   --color-white: #fff;
-  --color-canvas: #f7f8fd;
+  --color-canvas: #f5faf7;
   --color-surface: #fff;
-  --color-line: #e3e7f3;
-  --color-ink: #0f172a;
-  --color-ink-muted: #56607a;
-  --color-night: #0b1024;
-  --color-night-soft: #151c3b;
+  --color-line: #dce9e2;
+  --color-ink: #0f1f19;
+  --color-ink-muted: #51635b;
+  --color-night: #04150f;
+  --color-night-soft: #0b261c;
 
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-300: #a5b4fc;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #1e1b4b;
+  --color-brand-50: #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-200: #a7f3d0;
+  --color-brand-300: #6ee7b7;
+  --color-brand-400: #34d399;
+  --color-brand-500: #10b981;
+  --color-brand-600: #047857;
+  --color-brand-700: #065f46;
+  --color-brand-800: #064e3b;
+  --color-brand-900: #022c22;
 
   --color-accent-300: #fcd34d;
   --color-accent-400: #fbbf24;
@@ -44,8 +44,8 @@
   --radius-lg: 1.5rem;
   --radius-xl: 2rem;
 
-  --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -8px rgb(79 70 229 / 0.12);
-  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.05), 0 20px 40px -12px rgb(79 70 229 / 0.28);
+  --shadow-soft: 0 1px 2px rgb(15 31 25 / 0.04), 0 8px 24px -8px rgb(4 120 87 / 0.14);
+  --shadow-lift: 0 2px 4px rgb(15 31 25 / 0.05), 0 20px 40px -12px rgb(4 120 87 / 0.3);
 
   --text-base: 1.0625rem;
 }

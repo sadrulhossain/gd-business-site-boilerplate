@@ -13,7 +13,7 @@ it('seeds core sections on and optional sections off', function () {
     expect(Section::where('is_visible', true)->orderBy('sort_order')->pluck('key')->all())
         ->toBe(['hero', 'about', 'services', 'contact'])
         ->and(Section::where('is_visible', false)->orderBy('sort_order')->pluck('key')->all())
-        ->toBe(['testimonials', 'gallery', 'faq', 'team']);
+        ->toBe(['pricing', 'testimonials', 'gallery', 'faq', 'team']);
 });
 
 it('seeds default settings, permissions, menus and admin grants', function () {
@@ -32,7 +32,7 @@ it('never overwrites admin edits when seeded again', function () {
 
     $this->seed([SectionsModuleSeeder::class, SettingsModuleSeeder::class]);
 
-    expect(Section::count())->toBe(8)
+    expect(Section::count())->toBe(9)
         ->and(Section::where('key', 'hero')->first()->title)->toBe('Edited')
         ->and(Section::where('key', 'hero')->first()->is_visible)->toBeFalse()
         ->and(Setting::current()->site_name)->toBe('Acme');

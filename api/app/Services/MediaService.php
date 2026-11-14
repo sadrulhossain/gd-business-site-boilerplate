@@ -31,10 +31,27 @@ class MediaService
         ];
     }
 
-    /** Stores the file under a random name (extension from its content type) and queues the variants. */
-    public function store(UploadedFile $file, string $dir): string
+    /** Icon files (favicon only): not images GD can resize, so they are stored as they are, without variants. */
+    public const ICON_MIMES = ['image/x-icon' => 'ico', 'image/vnd.microsoft.icon' => 'ico'];
+
+    /**
+     * FormRequest rules for the favicon: the usual images plus .ico.
+     *
+     * @return list<string>
+     */
+    public static function faviconRules(): array
     {
-        $extension = config('uploads.mimes')[$file->getMimeType()] ?? null;
+        return [
+            'file',
+            'mimetypes:'.implode(',', [...array_keys(config('uploads.mimes')), ...array_keys(self::ICON_MIMES)]),
+            'max:'.(config('uploads.max_mb') * 1024),
+        ];
+    }
+
+    /** Stores the file under a random name (extension from its content type) and queues the variants. */
+    public function store(UploadedFile $file, string $dir, bool $allowIcon = false): string
+    {
+        $extension = (config('uploads.mimes') + ($allowIcon ? self::ICON_MIMES : []))[$file->getMimeType()] ?? null;
 
         if ($extension === null) {
             throw new InvalidArgumentException('Unsupported media type.');
@@ -44,7 +61,10 @@ class MediaService
         $path = "{$folder}/original.{$extension}";
 
         $this->disk()->putFileAs($folder, $file, "original.{$extension}");
-        GenerateWebpVariants::dispatch($path);
+
+        if ($extension !== 'ico') {
+            GenerateWebpVariants::dispatch($path);
+        }
 
         return $path;
     }

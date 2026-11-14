@@ -617,6 +617,69 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/public/pricing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List prices (public)
+         * @description Visible prices of visible services, ordered by service then `sort_order`. Optional `service_id` filter. No authentication.
+         */
+        get: operations["pricing.publicIndex"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/pricing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List prices
+         * @description All prices with their service, hidden ones included.
+         */
+        get: operations["pricing.index"];
+        put?: never;
+        /** Create a price for a service */
+        post: operations["pricing.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/pricing/{pricing}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Show a price */
+        get: operations["pricing.show"];
+        /**
+         * Update a price
+         * @description Partial update of the service, name, price, unit, description and features (both languages), flags and order.
+         */
+        put: operations["pricing.update"];
+        post?: never;
+        /** Delete a price */
+        delete: operations["pricing.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/roles": {
         parameters: {
             query?: never;
@@ -758,6 +821,96 @@ export interface paths {
         post: operations["sectionImage.store"];
         /** Remove the section image */
         delete: operations["sectionImage.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/hero": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Show a section panel
+         * @description Title and text (both languages) and image of the hero or about section.
+         */
+        get: operations["v1.sectionPanel.show_21"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update a section panel
+         * @description Partial update of the title and text (both languages).
+         */
+        patch: operations["v1.sectionPanel.update_22"];
+        trace?: never;
+    };
+    "/v1/hero/image": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload the section image
+         * @description Multipart field `image` (jpeg, png or webp). Replaces the current image.
+         */
+        post: operations["v1.sectionPanel.storeImage_23"];
+        /** Remove the section image */
+        delete: operations["v1.sectionPanel.destroyImage_24"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/about": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Show a section panel
+         * @description Title and text (both languages) and image of the hero or about section.
+         */
+        get: operations["v1.sectionPanel.show_25"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update a section panel
+         * @description Partial update of the title and text (both languages).
+         */
+        patch: operations["v1.sectionPanel.update_26"];
+        trace?: never;
+    };
+    "/v1/about/image": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload the section image
+         * @description Multipart field `image` (jpeg, png or webp). Replaces the current image.
+         */
+        post: operations["v1.sectionPanel.storeImage_27"];
+        /** Remove the section image */
+        delete: operations["v1.sectionPanel.destroyImage_28"];
         options?: never;
         head?: never;
         patch?: never;
@@ -944,7 +1097,7 @@ export interface paths {
         put?: never;
         /**
          * Upload the favicon
-         * @description Multipart field `image` (jpeg, png or webp), ideally square. Replaces the current favicon.
+         * @description Multipart field `image` (ico, jpeg, png or webp), ideally square. Replaces the current favicon.
          */
         post: operations["settingImage.storeFavicon"];
         /** Remove the favicon */
@@ -1256,6 +1409,30 @@ export interface components {
             /** Format: date-time */
             updated_at: string | null;
         };
+        /** PricingResource */
+        PricingResource: {
+            id: number;
+            service_id: number;
+            service?: {
+                id: number;
+                title: string;
+                title_2nd: string | null;
+            };
+            name: string;
+            name_2nd: string | null;
+            price: string;
+            unit: string | null;
+            unit_2nd: string | null;
+            description: string | null;
+            description_2nd: string | null;
+            features: string | null;
+            features_2nd: string | null;
+            is_featured: boolean;
+            sort_order: number;
+            is_visible: boolean;
+            /** Format: date-time */
+            updated_at: string | null;
+        };
         /** ReorderMenusRequest */
         ReorderMenusRequest: {
             ids: number[];
@@ -1303,6 +1480,8 @@ export interface components {
             site_name_2nd: string | null;
             tagline: string | null;
             tagline_2nd: string | null;
+            currency: string | null;
+            currency_symbol: string | null;
             logo: string;
             favicon: string;
             address: string | null;
@@ -1390,6 +1569,22 @@ export interface components {
             /** Format: date-time */
             published_at?: string | null;
         };
+        /** StorePricingRequest */
+        StorePricingRequest: {
+            service_id: number;
+            name: string;
+            unit?: string | null;
+            description?: string | null;
+            features?: string | null;
+            name_2nd?: string | null;
+            unit_2nd?: string | null;
+            description_2nd?: string | null;
+            features_2nd?: string | null;
+            price: number;
+            is_featured?: boolean;
+            sort_order?: number;
+            is_visible?: boolean;
+        };
         /** StoreRoleRequest */
         StoreRoleRequest: {
             name: string;
@@ -1397,6 +1592,14 @@ export interface components {
         };
         /** StoreSectionImageRequest */
         StoreSectionImageRequest: {
+            /**
+             * Format: binary
+             * @description Maximum file size: 5120 kilobytes.
+             */
+            image: string;
+        };
+        /** StoreSectionPanelImageRequest */
+        StoreSectionPanelImageRequest: {
             /**
              * Format: binary
              * @description Maximum file size: 5120 kilobytes.
@@ -1422,7 +1625,7 @@ export interface components {
         };
         /**
          * StoreSettingImageRequest
-         * @description Logo and favicon uploads: multipart field `image`.
+         * @description Logo and favicon uploads: multipart field `image` (the favicon may also be an .ico).
          */
         StoreSettingImageRequest: {
             /**
@@ -1553,6 +1756,22 @@ export interface components {
             /** Format: date-time */
             published_at?: string | null;
         };
+        /** UpdatePricingRequest */
+        UpdatePricingRequest: {
+            service_id?: number;
+            name?: string;
+            unit?: string | null;
+            description?: string | null;
+            features?: string | null;
+            name_2nd?: string | null;
+            unit_2nd?: string | null;
+            description_2nd?: string | null;
+            features_2nd?: string | null;
+            price?: number;
+            is_featured?: boolean;
+            sort_order?: number;
+            is_visible?: boolean;
+        };
         /** UpdateProfileRequest */
         UpdateProfileRequest: {
             name?: string;
@@ -1564,6 +1783,13 @@ export interface components {
         UpdateRoleRequest: {
             name?: string;
             permissions?: ""[];
+        };
+        /** UpdateSectionPanelRequest */
+        UpdateSectionPanelRequest: {
+            title?: string;
+            content?: string | null;
+            title_2nd?: string | null;
+            content_2nd?: string | null;
         };
         /** UpdateSectionRequest */
         UpdateSectionRequest: {
@@ -1591,6 +1817,8 @@ export interface components {
             site_name_2nd?: string | null;
             tagline_2nd?: string | null;
             address_2nd?: string | null;
+            currency?: string | null;
+            currency_symbol?: string | null;
             phone?: string | null;
             /** Format: email */
             email?: string | null;
@@ -3020,6 +3248,168 @@ export interface operations {
             404: components["responses"]["ModelNotFoundException"];
         };
     };
+    "pricing.publicIndex": {
+        parameters: {
+            query?: {
+                service_id?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `PricingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: (components["schemas"]["PricingResource"] & Record<string, never>)[];
+                    };
+                };
+            };
+        };
+    };
+    "pricing.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `PricingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: (components["schemas"]["PricingResource"] & Record<string, never>)[];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "pricing.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StorePricingRequest"];
+            };
+        };
+        responses: {
+            /** @description `PricingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["PricingResource"] & Record<string, never>;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "pricing.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The pricing ID */
+                pricing: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `PricingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["PricingResource"] & Record<string, never>;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "pricing.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The pricing ID */
+                pricing: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdatePricingRequest"];
+            };
+        };
+        responses: {
+            /** @description `PricingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["PricingResource"] & Record<string, never>;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "pricing.destroy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The pricing ID */
+                pricing: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
     "roles.index": {
         parameters: {
             query?: never;
@@ -3354,6 +3744,218 @@ export interface operations {
             401: components["responses"]["AuthenticationException"];
             403: components["responses"]["AuthorizationException"];
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "v1.sectionPanel.show_21": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "v1.sectionPanel.update_22": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateSectionPanelRequest"];
+            };
+        };
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v1.sectionPanel.storeImage_23": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["StoreSectionPanelImageRequest"];
+            };
+        };
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v1.sectionPanel.destroyImage_24": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "v1.sectionPanel.show_25": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "v1.sectionPanel.update_26": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateSectionPanelRequest"];
+            };
+        };
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v1.sectionPanel.storeImage_27": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["StoreSectionPanelImageRequest"];
+            };
+        };
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v1.sectionPanel.destroyImage_28": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
         };
     };
     "service.publicIndex": {

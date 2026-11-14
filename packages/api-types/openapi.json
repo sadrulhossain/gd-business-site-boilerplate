@@ -2566,6 +2566,325 @@
                 }
             }
         },
+        "/v1/public/pricing": {
+            "get": {
+                "operationId": "pricing.publicIndex",
+                "description": "Visible prices of visible services, ordered by service then `sort_order`. Optional `service_id` filter. No authentication.",
+                "summary": "List prices (public)",
+                "tags": [
+                    "Pricing"
+                ],
+                "parameters": [
+                    {
+                        "name": "service_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of `PricingResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/components/schemas/PricingResource"
+                                                    },
+                                                    {
+                                                        "type": "object",
+                                                        "required": [
+                                                            "service"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/pricing": {
+            "get": {
+                "operationId": "pricing.index",
+                "description": "All prices with their service, hidden ones included.",
+                "summary": "List prices",
+                "tags": [
+                    "Pricing"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of `PricingResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/components/schemas/PricingResource"
+                                                    },
+                                                    {
+                                                        "type": "object",
+                                                        "required": [
+                                                            "service"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "post": {
+                "operationId": "pricing.store",
+                "summary": "Create a price for a service",
+                "tags": [
+                    "Pricing"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePricingRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`PricingResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/PricingResource"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "service"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    }
+                }
+            }
+        },
+        "/v1/pricing/{pricing}": {
+            "get": {
+                "operationId": "pricing.show",
+                "summary": "Show a price",
+                "tags": [
+                    "Pricing"
+                ],
+                "parameters": [
+                    {
+                        "name": "pricing",
+                        "in": "path",
+                        "required": true,
+                        "description": "The pricing ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`PricingResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/PricingResource"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "service"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "put": {
+                "operationId": "pricing.update",
+                "description": "Partial update of the service, name, price, unit, description and features (both languages), flags and order.",
+                "summary": "Update a price",
+                "tags": [
+                    "Pricing"
+                ],
+                "parameters": [
+                    {
+                        "name": "pricing",
+                        "in": "path",
+                        "required": true,
+                        "description": "The pricing ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePricingRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`PricingResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/PricingResource"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "service"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "pricing.destroy",
+                "summary": "Delete a price",
+                "tags": [
+                    "Pricing"
+                ],
+                "parameters": [
+                    {
+                        "name": "pricing",
+                        "in": "path",
+                        "required": true,
+                        "description": "The pricing ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
         "/v1/roles": {
             "get": {
                 "operationId": "roles.index",
@@ -3133,6 +3452,334 @@
                     },
                     "404": {
                         "$ref": "#/components/responses/ModelNotFoundException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/v1/hero": {
+            "get": {
+                "operationId": "v1.sectionPanel.show_21",
+                "description": "Title and text (both languages) and image of the hero or about section.",
+                "summary": "Show a section panel",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "v1.sectionPanel.update_22",
+                "description": "Partial update of the title and text (both languages).",
+                "summary": "Update a section panel",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSectionPanelRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/v1/hero/image": {
+            "post": {
+                "operationId": "v1.sectionPanel.storeImage_23",
+                "description": "Multipart field `image` (jpeg, png or webp). Replaces the current image.",
+                "summary": "Upload the section image",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreSectionPanelImageRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "v1.sectionPanel.destroyImage_24",
+                "summary": "Remove the section image",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/v1/about": {
+            "get": {
+                "operationId": "v1.sectionPanel.show_25",
+                "description": "Title and text (both languages) and image of the hero or about section.",
+                "summary": "Show a section panel",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "v1.sectionPanel.update_26",
+                "description": "Partial update of the title and text (both languages).",
+                "summary": "Update a section panel",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSectionPanelRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/v1/about/image": {
+            "post": {
+                "operationId": "v1.sectionPanel.storeImage_27",
+                "description": "Multipart field `image` (jpeg, png or webp). Replaces the current image.",
+                "summary": "Upload the section image",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreSectionPanelImageRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "v1.sectionPanel.destroyImage_28",
+                "summary": "Remove the section image",
+                "tags": [
+                    "SectionPanel"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "`SectionResource`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SectionResource"
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/AuthorizationException"
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
@@ -3750,7 +4397,7 @@
         "/v1/settings/favicon": {
             "post": {
                 "operationId": "settingImage.storeFavicon",
-                "description": "Multipart field `image` (jpeg, png or webp), ideally square. Replaces the current favicon.",
+                "description": "Multipart field `image` (ico, jpeg, png or webp), ideally square. Replaces the current favicon.",
                 "summary": "Upload the favicon",
                 "tags": [
                     "SettingImage"
@@ -5312,6 +5959,121 @@
                 ],
                 "title": "PostResource"
             },
+            "PricingResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "service_id": {
+                        "type": "integer"
+                    },
+                    "service": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "title_2nd": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "title",
+                            "title_2nd"
+                        ]
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "name_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "price": {
+                        "type": "string"
+                    },
+                    "unit": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "unit_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "description_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "features": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "features_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "is_featured": {
+                        "type": "boolean"
+                    },
+                    "sort_order": {
+                        "type": "integer"
+                    },
+                    "is_visible": {
+                        "type": "boolean"
+                    },
+                    "updated_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "id",
+                    "service_id",
+                    "name",
+                    "name_2nd",
+                    "price",
+                    "unit",
+                    "unit_2nd",
+                    "description",
+                    "description_2nd",
+                    "features",
+                    "features_2nd",
+                    "is_featured",
+                    "sort_order",
+                    "is_visible",
+                    "updated_at"
+                ],
+                "title": "PricingResource"
+            },
             "ReorderMenusRequest": {
                 "type": "object",
                 "properties": {
@@ -5511,6 +6273,18 @@
                             "null"
                         ]
                     },
+                    "currency": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "currency_symbol": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
                     "logo": {
                         "type": "string"
                     },
@@ -5564,6 +6338,8 @@
                     "site_name_2nd",
                     "tagline",
                     "tagline_2nd",
+                    "currency",
+                    "currency_symbol",
                     "logo",
                     "favicon",
                     "address",
@@ -5875,6 +6651,89 @@
                 ],
                 "title": "StorePostRequest"
             },
+            "StorePricingRequest": {
+                "type": "object",
+                "properties": {
+                    "service_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "unit": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 80
+                    },
+                    "description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 2000
+                    },
+                    "features": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 4000
+                    },
+                    "name_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 255
+                    },
+                    "unit_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 80
+                    },
+                    "description_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 2000
+                    },
+                    "features_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 4000
+                    },
+                    "price": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 99999999
+                    },
+                    "is_featured": {
+                        "type": "boolean"
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 65535
+                    },
+                    "is_visible": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "service_id",
+                    "name",
+                    "price"
+                ],
+                "title": "StorePricingRequest"
+            },
             "StoreRoleRequest": {
                 "type": "object",
                 "properties": {
@@ -5912,6 +6771,21 @@
                     "image"
                 ],
                 "title": "StoreSectionImageRequest"
+            },
+            "StoreSectionPanelImageRequest": {
+                "type": "object",
+                "properties": {
+                    "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "contentMediaType": "application/octet-stream",
+                        "description": "Maximum file size: 5120 kilobytes."
+                    }
+                },
+                "required": [
+                    "image"
+                ],
+                "title": "StoreSectionPanelImageRequest"
             },
             "StoreServiceImageRequest": {
                 "type": "object",
@@ -5972,7 +6846,7 @@
             },
             "StoreSettingImageRequest": {
                 "type": "object",
-                "description": "Logo and favicon uploads: multipart field `image`.",
+                "description": "Logo and favicon uploads: multipart field `image` (the favicon may also be an .ico).",
                 "properties": {
                     "image": {
                         "type": "string",
@@ -6486,6 +7360,84 @@
                 },
                 "title": "UpdatePostRequest"
             },
+            "UpdatePricingRequest": {
+                "type": "object",
+                "properties": {
+                    "service_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "unit": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 80
+                    },
+                    "description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 2000
+                    },
+                    "features": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 4000
+                    },
+                    "name_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 255
+                    },
+                    "unit_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 80
+                    },
+                    "description_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 2000
+                    },
+                    "features_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 4000
+                    },
+                    "price": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 99999999
+                    },
+                    "is_featured": {
+                        "type": "boolean"
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 65535
+                    },
+                    "is_visible": {
+                        "type": "boolean"
+                    }
+                },
+                "title": "UpdatePricingRequest"
+            },
             "UpdateProfileRequest": {
                 "type": "object",
                 "properties": {
@@ -6528,6 +7480,37 @@
                     }
                 },
                 "title": "UpdateRoleRequest"
+            },
+            "UpdateSectionPanelRequest": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "maxLength": 150
+                    },
+                    "content": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 10000
+                    },
+                    "title_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 150
+                    },
+                    "content_2nd": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 10000
+                    }
+                },
+                "title": "UpdateSectionPanelRequest"
             },
             "UpdateSectionRequest": {
                 "type": "object",
@@ -6648,6 +7631,20 @@
                             "null"
                         ],
                         "maxLength": 500
+                    },
+                    "currency": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 10
+                    },
+                    "currency_symbol": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 10
                     },
                     "phone": {
                         "type": [

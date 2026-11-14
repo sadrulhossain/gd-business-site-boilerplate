@@ -4,6 +4,7 @@ import { ApiError } from '@gd/api-client'
 import { api } from '../api'
 import { useAuth } from '../auth/store'
 import { checkImage, runPool, uploadFile } from '../lib/upload'
+import { Icon } from './Icon'
 
 type Status = 'queued' | 'uploading' | 'done' | 'error'
 interface Entry {
@@ -61,18 +62,22 @@ export function GalleryUploader({ endpoint }: { endpoint: string }) {
 
   return (
     <div className="space-y-3 rounded-lg border border-line bg-surface p-4">
-      <label className="block text-sm text-ink-muted" htmlFor="gallery-files">
-        Add images (JPEG, PNG or WebP)
+      <label className={`btn btn-secondary cursor-pointer focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary-500 ${busy ? 'pointer-events-none opacity-60' : ''}`}>
+        <Icon name="upload" className="size-[18px]" />
+        <span>Add images</span>
+        <input
+          id="gallery-files"
+          ref={input}
+          type="file"
+          multiple
+          className="sr-only"
+          aria-label="Add images (JPEG, PNG or WebP)"
+          accept="image/jpeg,image/png,image/webp"
+          disabled={busy}
+          onChange={(e) => e.target.files && e.target.files.length > 0 && void start([...e.target.files])}
+        />
       </label>
-      <input
-        id="gallery-files"
-        ref={input}
-        type="file"
-        multiple
-        accept="image/jpeg,image/png,image/webp"
-        disabled={busy}
-        onChange={(e) => e.target.files && e.target.files.length > 0 && void start([...e.target.files])}
-      />
+      <p className="text-sm text-ink-muted">JPEG, PNG or WebP</p>
       {entries.length > 0 && (
         <ul className="space-y-2" aria-label="Uploads">
           {entries.map((e) => (

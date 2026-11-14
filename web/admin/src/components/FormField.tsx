@@ -1,7 +1,8 @@
 import { useId } from 'react'
+import { Icon, ICON_OPTIONS } from './Icon'
 import { RichText } from './RichText'
 
-export type FieldType = 'text' | 'textarea' | 'number' | 'checkbox' | 'select' | 'password' | 'checkgroup' | 'richtext'
+export type FieldType = 'text' | 'textarea' | 'number' | 'checkbox' | 'select' | 'password' | 'checkgroup' | 'richtext' | 'date' | 'datetime' | 'icon'
 
 export interface FieldOption {
   value: string | number
@@ -23,6 +24,25 @@ export interface FormFieldProps {
 }
 
 const control = 'field'
+
+const pad = (n: number) => String(n).padStart(2, '0')
+
+/** API ISO timestamp -> the local "YYYY-MM-DDTHH:mm" a datetime-local input shows. */
+export function toLocalInput(value: unknown): string {
+  if (!value) return ''
+  const d = new Date(String(value))
+  if (Number.isNaN(d.getTime())) return ''
+
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+/** The local input value -> an ISO instant for the API ('' stays empty). */
+export function fromLocalInput(value: string): string {
+  if (!value) return ''
+  const d = new Date(value)
+
+  return Number.isNaN(d.getTime()) ? '' : d.toISOString()
+}
 
 /** One labelled input with its validation error. The label is associated for screen readers and tests. */
 export function FormField({ label, name, type = 'text', value, onChange, error, required, hint, options }: FormFieldProps) {
@@ -50,6 +70,30 @@ export function FormField({ label, name, type = 'text', value, onChange, error, 
     input = <CheckGroup id={id} name={name} label={label} value={Array.isArray(value) ? (value as string[]) : []} options={options ?? []} onChange={onChange} />
   } else if (type === 'checkbox') {
     input = <input {...common} type="checkbox" className="size-4" checked={Boolean(value)} onChange={(e) => onChange(e.target.checked)} />
+  } else if (type === 'icon') {
+    // Every icon field is a dropdown of the icons the admin knows, with a preview of the chosen one.
+    const current = String(value ?? '')
+    const known = ICON_OPTIONS.some((o) => o.value === current)
+    input = (
+      <div className="flex items-center gap-2">
+        <span aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-line bg-surface-muted text-primary-700">
+          {current ? <Icon name={current} className="size-5" /> : null}
+        </span>
+        <select {...common} className={control} value={current} onChange={(e) => onChange(e.target.value)}>
+          <option value="">-</option>
+          {!known && current && <option value={current}>{current}</option>}
+          {ICON_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      </div>
+    )
+  } else if (type === 'date') {
+    input = <input {...common} type="date" className={control} value={String(value ?? '').slice(0, 10)} onChange={(e) => onChange(e.target.value)} />
+  } else if (type === 'datetime') {
+    input = <input {...common} type="datetime-local" className={control} value={toLocalInput(value)} onChange={(e) => onChange(fromLocalInput(e.target.value))} />
   } else if (type === 'number') {
     input = (
       <input

@@ -16,10 +16,12 @@ use App\Http\Controllers\Api\V1\MenuController;
 use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\PostImageController;
+use App\Http\Controllers\Api\V1\PricingController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\SectionController;
 use App\Http\Controllers\Api\V1\SectionImageController;
+use App\Http\Controllers\Api\V1\SectionPanelController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\ServiceImageController;
 use App\Http\Controllers\Api\V1\SettingController;
@@ -41,6 +43,7 @@ Route::prefix('v1')->group(function (): void {
         Route::get('public/settings', [SettingController::class, 'publicShow']);
         Route::get('public/sections', [SectionController::class, 'publicIndex']);
         Route::get('public/faqs', [FaqController::class, 'publicIndex']);
+        Route::get('public/pricing', [PricingController::class, 'publicIndex']);
         Route::get('public/services', [ServiceController::class, 'publicIndex']);
         Route::get('public/services/{service}', [ServiceController::class, 'publicShow']);
         Route::get('public/testimonials', [TestimonialController::class, 'publicIndex']);
@@ -64,6 +67,13 @@ Route::prefix('v1')->group(function (): void {
         Route::get('dashboard', DashboardController::class)->middleware('can:dashboard.view');
 
         // Content (edit-only: seeded rows, no create/delete)
+        // Single-section screens (hero, about): permissions <key>.view / <key>.update.
+        foreach (['hero', 'about'] as $key) {
+            Route::get($key, [SectionPanelController::class, 'show'])->defaults('key', $key)->middleware("can:{$key}.view");
+            Route::patch($key, [SectionPanelController::class, 'update'])->defaults('key', $key)->middleware("can:{$key}.update");
+            Route::post("{$key}/image", [SectionPanelController::class, 'storeImage'])->defaults('key', $key)->middleware("can:{$key}.update");
+            Route::delete("{$key}/image", [SectionPanelController::class, 'destroyImage'])->defaults('key', $key)->middleware("can:{$key}.update");
+        }
         Route::post('settings/logo', [SettingImageController::class, 'storeLogo']);
         Route::delete('settings/logo', [SettingImageController::class, 'destroyLogo']);
         Route::post('settings/favicon', [SettingImageController::class, 'storeFavicon']);
@@ -84,6 +94,7 @@ Route::prefix('v1')->group(function (): void {
 
         // Content lists (full CRUD)
         Route::apiResource('faqs', FaqController::class);
+        Route::apiResource('pricing', PricingController::class);
 
         Route::apiResource('services', ServiceController::class);
         Route::post('services/{service}/image', [ServiceImageController::class, 'store']);

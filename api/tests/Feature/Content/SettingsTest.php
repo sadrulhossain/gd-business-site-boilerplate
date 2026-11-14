@@ -100,3 +100,14 @@ it('uploads, replaces and removes the logo and favicon', function () {
     actingAsRole('viewer', ['settings.view']);
     $this->post('/api/v1/settings/logo', ['image' => UploadedFile::fake()->image('a.png')], $accept)->assertForbidden();
 });
+
+it('accepts an .ico favicon but not as a logo', function () {
+    Storage::fake('uploads');
+    actingAsRole('editor', ['settings.view', 'settings.update']);
+    $accept = ['Accept' => 'application/json'];
+
+    $this->post('/api/v1/settings/favicon', ['image' => UploadedFile::fake()->create('favicon.ico', 1, 'image/vnd.microsoft.icon')], $accept)->assertOk();
+    expect(Setting::current()->favicon)->toMatch('#^site/[a-z0-9]{32}/original\.ico$#');
+
+    $this->post('/api/v1/settings/logo', ['image' => UploadedFile::fake()->create('logo.ico', 1, 'image/vnd.microsoft.icon')], $accept)->assertUnprocessable();
+});

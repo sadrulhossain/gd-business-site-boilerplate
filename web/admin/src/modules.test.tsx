@@ -76,7 +76,7 @@ describe('settings config', () => {
 
   it('covers every API key and sends only those', () => {
     expect(settingsKeys(settings).sort()).toEqual(
-      ['address', 'address_2nd', 'email', 'hours', 'phone', 'site_name', 'site_name_2nd', 'social_links', 'tagline', 'tagline_2nd'].sort(),
+      ['address', 'address_2nd', 'currency', 'currency_symbol', 'email', 'hours', 'phone', 'site_name', 'site_name_2nd', 'social_links', 'tagline', 'tagline_2nd'].sort(),
     )
     const body = settingsPayload(settings, { site_name: 'S', phone: '', updated_at: 'x', hours: { mon: { open: '', close: '', closed: true } }, social_links: { x: '' } })
     expect(body).toMatchObject({ site_name: 'S', phone: null, hours: { mon: { open: null, close: null, closed: true } }, social_links: { x: null } })

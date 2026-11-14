@@ -103,9 +103,9 @@ export function MessagesPage({ config }: { config: InboxConfig }) {
             </dl>
             <div className="flex justify-end gap-2 pt-2">
               {canMark && !open.read_at && (
-                <IconButton variant="primary" icon="check" label="Mark as read" disabled={markRead.isPending} onClick={() => markRead.mutate(open.id)} />
+                <IconButton showText variant="primary" icon="check" label="Mark as read" disabled={markRead.isPending} onClick={() => markRead.mutate(open.id)} />
               )}
-              <IconButton variant="secondary" icon="x" label="Close" onClick={() => setOpen(null)} />
+              <IconButton showText variant="secondary" icon="x" label="Close" onClick={() => setOpen(null)} />
             </div>
           </div>
         )}

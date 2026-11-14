@@ -32,7 +32,7 @@ class SettingImageController extends Controller
     /**
      * Upload the favicon
      *
-     * Multipart field `image` (jpeg, png or webp), ideally square. Replaces the current favicon.
+     * Multipart field `image` (ico, jpeg, png or webp), ideally square. Replaces the current favicon.
      */
     public function storeFavicon(StoreSettingImageRequest $request, MediaService $media): SettingResource
     {
@@ -52,7 +52,7 @@ class SettingImageController extends Controller
         $setting = Setting::current();
         $previous = $setting->{$column};
 
-        $setting->update([$column => $media->store($request->file('image'), 'site')]);
+        $setting->update([$column => $media->store($request->file('image'), 'site', allowIcon: $column === 'favicon')]);
         $media->delete($previous);
 
         return new SettingResource($setting);
