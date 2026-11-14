@@ -12,6 +12,12 @@ class Section extends Model
 {
     use HasSecondLanguage;
 
+    /** The landing-page hero row, created on first use. */
+    public static function hero(): self
+    {
+        return static::query()->firstOrCreate(['key' => 'hero'], ['title' => 'Welcome', 'sort_order' => 10, 'is_visible' => true]);
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {

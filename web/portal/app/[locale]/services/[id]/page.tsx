@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Picture } from '../../../../components/Media'
-import { getSections, getService, getSettings } from '../../../../lib/api'
+import { PricingPlans } from '../../../../components/PricingPlans'
+import { getPricing, getSections, getService, getSettings } from '../../../../lib/api'
 import { getMessages, isLocale, localePath } from '../../../../lib/i18n'
 import { pageMetadata } from '../../../../lib/seo'
 
@@ -33,6 +34,8 @@ export default async function ServiceDetail({ params }: Props) {
   const { locale, id } = await params
   const service = await load(locale, id)
   const messages = getMessages(locale)
+  const [sections, settings] = await Promise.all([getSections(locale), getSettings(locale)])
+  const plans = sections.some((s) => s.key === 'pricing') ? await getPricing(locale, service.id) : []
 
   return (
     <article className="mx-auto max-w-4xl px-4 py-10 sm:py-14">
@@ -44,6 +47,14 @@ export default async function ServiceDetail({ params }: Props) {
         {service.image && <Picture image={service.image} alt={service.title} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[4/3] w-full rounded-lg object-cover" />}
         {service.description && <p className="text-lg whitespace-pre-line text-ink-muted">{service.description}</p>}
       </div>
+      {plans.length > 0 && (
+        <section aria-labelledby="service-pricing" className="mt-14">
+          <h2 id="service-pricing" className="mb-8 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+            {messages.pricing.forService}
+          </h2>
+          <PricingPlans plans={plans} settings={settings} locale={locale} messages={messages} />
+        </section>
+      )}
     </article>
   )
 }

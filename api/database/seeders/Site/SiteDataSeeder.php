@@ -17,6 +17,7 @@ class SiteDataSeeder extends Seeder
             SiteSettingsSeeder::class,
             SiteSectionsSeeder::class,
             SiteServicesSeeder::class,
+            SitePricingSeeder::class,
             SiteTestimonialsSeeder::class,
             SiteTeamSeeder::class,
             SiteFaqsSeeder::class,

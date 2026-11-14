@@ -13,7 +13,9 @@ class DatabaseSeeder extends Seeder
             // Each module seeds its own permissions + menu rows. Add new module seeders here.
             DashboardModuleSeeder::class,
             SectionsModuleSeeder::class,
+            HeroModuleSeeder::class,
             ServicesModuleSeeder::class,
+            PricingModuleSeeder::class,
             TestimonialsModuleSeeder::class,
             TeamModuleSeeder::class,
             GalleryModuleSeeder::class,

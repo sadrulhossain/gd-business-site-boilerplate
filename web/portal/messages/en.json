@@ -139,5 +139,12 @@
     "errorCaptcha": "The answer was wrong or has expired. Please try the new question.",
     "errorFields": "Please check the highlighted fields.",
     "captchaLoading": "Loading the question..."
+  },
+  "pricing": {
+    "cta": "See our pricing",
+    "featured": "Most popular",
+    "empty": "Prices will be announced soon.",
+    "forService": "Pricing for this service",
+    "viewService": "View service"
   }
 }

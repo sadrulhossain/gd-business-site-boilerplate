@@ -42,6 +42,32 @@ export const modules: CrudConfig[] = [
     ],
   },
   {
+    key: 'pricing',
+    path: '/pricing',
+    title: 'Pricing',
+    noun: 'Price',
+    endpoint: '/v1/pricing',
+    rowLabel: (r) => `${String((r.service as { title?: string } | null)?.title ?? '')} - ${String(r.name)}`,
+    columns: [
+      { key: 'service', header: 'Service', render: (r) => String((r.service as { title?: string } | null)?.title ?? '') },
+      { key: 'name', header: 'Plan' },
+      { key: 'price', header: 'Price' },
+      { key: 'is_featured', header: 'Featured', render: (r) => yesNo(r.is_featured) },
+      { key: 'is_visible', header: 'Visible', render: (r) => yesNo(r.is_visible) },
+    ],
+    fields: [
+      { name: 'service_id', label: 'Service', type: 'select', required: true, optionsFrom: { endpoint: '/v1/services', map: (s: { id: number; title: string }) => ({ value: s.id, label: s.title }) } },
+      { name: 'name', label: 'Plan name', bilingual: true, required: true },
+      { name: 'price', label: 'Price', type: 'number', required: true, hint: 'The amount only. The currency is set in Settings.' },
+      { name: 'unit', label: 'Per', bilingual: true, hint: 'For example per project or per month.' },
+      { name: 'description', label: 'Short description', type: 'textarea', bilingual: true },
+      { name: 'features', label: 'Features', type: 'textarea', bilingual: true, hint: 'One feature per line.' },
+      { name: 'is_featured', label: 'Highlight this plan', type: 'checkbox', initial: false },
+      { name: 'sort_order', label: 'Order', type: 'number', initial: 0 },
+      { name: 'is_visible', label: 'Visible', type: 'checkbox', initial: true },
+    ],
+  },
+  {
     key: 'services',
     image: true,
     path: '/services',
@@ -175,6 +201,8 @@ export const modules: CrudConfig[] = [
   {
     // Seeded and edit-only: the portal renders sections by key.
     key: 'sections',
+    // Each section can carry an image (About shows it beside the text); the hero banner has its own Hero screen.
+    image: true,
     path: '/sections',
     title: 'Sections',
     noun: 'Section',
@@ -254,7 +282,7 @@ export const modules: CrudConfig[] = [
     ],
     fields: [
       { name: 'title', label: 'Title', required: true },
-      { name: 'icon', label: 'Icon', hint: 'Icon name used by the sidebar.' },
+      { name: 'icon', label: 'Icon', type: 'icon', hint: 'Shown beside the menu entry in the sidebar.' },
     ],
   },
 ]

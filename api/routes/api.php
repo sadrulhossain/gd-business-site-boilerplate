@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\FaqController;
 use App\Http\Controllers\Api\V1\GalleryItemController;
 use App\Http\Controllers\Api\V1\GalleryItemImageController;
 use App\Http\Controllers\Api\V1\HealthController;
+use App\Http\Controllers\Api\V1\HeroController;
 use App\Http\Controllers\Api\V1\LocalesController;
 use App\Http\Controllers\Api\V1\LogoutController;
 use App\Http\Controllers\Api\V1\MeController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Api\V1\MenuController;
 use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\PostImageController;
+use App\Http\Controllers\Api\V1\PricingController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\SectionController;
@@ -41,6 +43,7 @@ Route::prefix('v1')->group(function (): void {
         Route::get('public/settings', [SettingController::class, 'publicShow']);
         Route::get('public/sections', [SectionController::class, 'publicIndex']);
         Route::get('public/faqs', [FaqController::class, 'publicIndex']);
+        Route::get('public/pricing', [PricingController::class, 'publicIndex']);
         Route::get('public/services', [ServiceController::class, 'publicIndex']);
         Route::get('public/services/{service}', [ServiceController::class, 'publicShow']);
         Route::get('public/testimonials', [TestimonialController::class, 'publicIndex']);
@@ -64,6 +67,10 @@ Route::prefix('v1')->group(function (): void {
         Route::get('dashboard', DashboardController::class)->middleware('can:dashboard.view');
 
         // Content (edit-only: seeded rows, no create/delete)
+        Route::get('hero', [HeroController::class, 'show'])->middleware('can:hero.view');
+        Route::patch('hero', [HeroController::class, 'update'])->middleware('can:hero.update');
+        Route::post('hero/image', [HeroController::class, 'storeImage'])->middleware('can:hero.update');
+        Route::delete('hero/image', [HeroController::class, 'destroyImage'])->middleware('can:hero.update');
         Route::post('settings/logo', [SettingImageController::class, 'storeLogo']);
         Route::delete('settings/logo', [SettingImageController::class, 'destroyLogo']);
         Route::post('settings/favicon', [SettingImageController::class, 'storeFavicon']);
@@ -84,6 +91,7 @@ Route::prefix('v1')->group(function (): void {
 
         // Content lists (full CRUD)
         Route::apiResource('faqs', FaqController::class);
+        Route::apiResource('pricing', PricingController::class);
 
         Route::apiResource('services', ServiceController::class);
         Route::post('services/{service}/image', [ServiceImageController::class, 'store']);

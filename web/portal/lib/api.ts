@@ -12,6 +12,7 @@ const TAGS: Record<string, string> = {
   settings: 'settings',
   sections: 'sections',
   faqs: 'faqs',
+  pricing: 'pricings',
   services: 'services',
   testimonials: 'testimonials',
   team: 'team_members',
@@ -47,6 +48,8 @@ export interface Settings {
   site_name: string
   tagline: string | null
   logo?: Media | null
+  currency?: string | null
+  currency_symbol?: string | null
   favicon?: Media | null
   address: string | null
   phone: string | null
@@ -93,6 +96,18 @@ export interface GalleryItem {
   title: string | null
   caption: string | null
   image: Media | null
+}
+
+export interface Pricing {
+  id: number
+  service_id: number
+  service?: { id: number; title: string }
+  name: string
+  price: string
+  unit: string | null
+  description: string | null
+  features: string | null
+  is_featured: boolean
 }
 
 export interface Faq {
@@ -173,6 +188,13 @@ export async function getService(locale: string, id: string): Promise<Service | 
     if (error instanceof ApiError && error.status === 404) return null
     throw error
   }
+}
+
+/** Visible prices of visible services, in service order; optionally those of one service. */
+export async function getPricing(locale: string, serviceId?: number | string): Promise<Pricing[]> {
+  const query = serviceId === undefined ? '' : `?service_id=${encodeURIComponent(String(serviceId))}`
+
+  return ((await apiFor(locale).request('GET', `/v1/public/pricing${query}`)) as Listing<Pricing>).data
 }
 
 export async function getList<T>(locale: string, resource: 'services' | 'testimonials' | 'team' | 'gallery' | 'faqs'): Promise<T[]> {

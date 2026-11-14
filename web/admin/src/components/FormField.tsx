@@ -1,7 +1,8 @@
 import { useId } from 'react'
+import { Icon, ICON_OPTIONS } from './Icon'
 import { RichText } from './RichText'
 
-export type FieldType = 'text' | 'textarea' | 'number' | 'checkbox' | 'select' | 'password' | 'checkgroup' | 'richtext' | 'date' | 'datetime'
+export type FieldType = 'text' | 'textarea' | 'number' | 'checkbox' | 'select' | 'password' | 'checkgroup' | 'richtext' | 'date' | 'datetime' | 'icon'
 
 export interface FieldOption {
   value: string | number
@@ -69,6 +70,26 @@ export function FormField({ label, name, type = 'text', value, onChange, error, 
     input = <CheckGroup id={id} name={name} label={label} value={Array.isArray(value) ? (value as string[]) : []} options={options ?? []} onChange={onChange} />
   } else if (type === 'checkbox') {
     input = <input {...common} type="checkbox" className="size-4" checked={Boolean(value)} onChange={(e) => onChange(e.target.checked)} />
+  } else if (type === 'icon') {
+    // Every icon field is a dropdown of the icons the admin knows, with a preview of the chosen one.
+    const current = String(value ?? '')
+    const known = ICON_OPTIONS.some((o) => o.value === current)
+    input = (
+      <div className="flex items-center gap-2">
+        <span aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-line bg-surface-muted text-primary-700">
+          {current ? <Icon name={current} className="size-5" /> : null}
+        </span>
+        <select {...common} className={control} value={current} onChange={(e) => onChange(e.target.value)}>
+          <option value="">-</option>
+          {!known && current && <option value={current}>{current}</option>}
+          {ICON_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      </div>
+    )
   } else if (type === 'date') {
     input = <input {...common} type="date" className={control} value={String(value ?? '').slice(0, 10)} onChange={(e) => onChange(e.target.value)} />
   } else if (type === 'datetime') {

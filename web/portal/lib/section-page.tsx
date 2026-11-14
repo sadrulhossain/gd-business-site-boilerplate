@@ -8,7 +8,7 @@ import { getMessages, isLocale } from './i18n'
 type Props = { params: Promise<{ locale: string }> }
 
 /** Section keys that have a page of their own, and where it lives. The header links here instead of to a Home anchor. */
-export const SECTION_PAGES: Record<string, string> = { about: '/about', services: '/services', gallery: '/gallery', faq: '/faq' }
+export const SECTION_PAGES: Record<string, string> = { about: '/about', services: '/services', gallery: '/gallery', faq: '/faq', pricing: '/pricing' }
 
 /**
  * A page made of Home's section views: `main` is the page (its title is the h1 and the metadata title; a hidden or

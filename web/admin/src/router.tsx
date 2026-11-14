@@ -12,7 +12,7 @@ import { NotFound } from './pages/errors'
 import { MessagesPage } from './pages/Messages'
 import { ProfilePage } from './pages/Profile'
 import { SettingsPage } from './pages/Settings'
-import { settings } from './settingsConfig'
+import { hero, settings } from './settingsConfig'
 import { Showcase } from './showcase'
 
 /** Plain CrudPage plus the gallery's bulk uploader above it. */
@@ -62,6 +62,14 @@ export const router = createBrowserRouter([
           ),
         }
       }),
+      {
+        path: hero.path.slice(1),
+        element: (
+          <RequirePermission permission={`${hero.key}.view`}>
+            <SettingsPage config={hero} />
+          </RequirePermission>
+        ),
+      },
       {
         path: settings.path.slice(1),
         element: (

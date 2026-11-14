@@ -351,6 +351,51 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/hero": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Show the hero
+         * @description Title, description (both languages) and banner of the landing-page hero.
+         */
+        get: operations["hero.show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update the hero
+         * @description Partial update of the title and description (both languages).
+         */
+        patch: operations["hero.update"];
+        trace?: never;
+    };
+    "/v1/hero/image": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload the hero banner
+         * @description Multipart field `image` (jpeg, png or webp). Replaces the current banner.
+         */
+        post: operations["hero.storeImage"];
+        /** Remove the hero banner */
+        delete: operations["hero.destroyImage"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/meta/locales": {
         parameters: {
             query?: never;
@@ -612,6 +657,69 @@ export interface paths {
         post: operations["postImage.store"];
         /** Remove the post image */
         delete: operations["postImage.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/pricing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List prices (public)
+         * @description Visible prices of visible services, ordered by service then `sort_order`. Optional `service_id` filter. No authentication.
+         */
+        get: operations["pricing.publicIndex"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/pricing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List prices
+         * @description All prices with their service, hidden ones included.
+         */
+        get: operations["pricing.index"];
+        put?: never;
+        /** Create a price for a service */
+        post: operations["pricing.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/pricing/{pricing}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Show a price */
+        get: operations["pricing.show"];
+        /**
+         * Update a price
+         * @description Partial update of the service, name, price, unit, description and features (both languages), flags and order.
+         */
+        put: operations["pricing.update"];
+        post?: never;
+        /** Delete a price */
+        delete: operations["pricing.destroy"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1256,6 +1364,30 @@ export interface components {
             /** Format: date-time */
             updated_at: string | null;
         };
+        /** PricingResource */
+        PricingResource: {
+            id: number;
+            service_id: number;
+            service?: {
+                id: number;
+                title: string;
+                title_2nd: string | null;
+            };
+            name: string;
+            name_2nd: string | null;
+            price: string;
+            unit: string | null;
+            unit_2nd: string | null;
+            description: string | null;
+            description_2nd: string | null;
+            features: string | null;
+            features_2nd: string | null;
+            is_featured: boolean;
+            sort_order: number;
+            is_visible: boolean;
+            /** Format: date-time */
+            updated_at: string | null;
+        };
         /** ReorderMenusRequest */
         ReorderMenusRequest: {
             ids: number[];
@@ -1303,6 +1435,8 @@ export interface components {
             site_name_2nd: string | null;
             tagline: string | null;
             tagline_2nd: string | null;
+            currency: string | null;
+            currency_symbol: string | null;
             logo: string;
             favicon: string;
             address: string | null;
@@ -1362,6 +1496,14 @@ export interface components {
             sort_order?: number;
             is_visible?: boolean;
         };
+        /** StoreHeroImageRequest */
+        StoreHeroImageRequest: {
+            /**
+             * Format: binary
+             * @description Maximum file size: 5120 kilobytes.
+             */
+            image: string;
+        };
         /** StorePostImageRequest */
         StorePostImageRequest: {
             /**
@@ -1389,6 +1531,22 @@ export interface components {
             status?: "draft" | "published";
             /** Format: date-time */
             published_at?: string | null;
+        };
+        /** StorePricingRequest */
+        StorePricingRequest: {
+            service_id: number;
+            name: string;
+            unit?: string | null;
+            description?: string | null;
+            features?: string | null;
+            name_2nd?: string | null;
+            unit_2nd?: string | null;
+            description_2nd?: string | null;
+            features_2nd?: string | null;
+            price: number;
+            is_featured?: boolean;
+            sort_order?: number;
+            is_visible?: boolean;
         };
         /** StoreRoleRequest */
         StoreRoleRequest: {
@@ -1528,6 +1686,13 @@ export interface components {
             sort_order?: number;
             is_visible?: boolean;
         };
+        /** UpdateHeroRequest */
+        UpdateHeroRequest: {
+            title?: string;
+            content?: string | null;
+            title_2nd?: string | null;
+            content_2nd?: string | null;
+        };
         /** UpdateMenuRequest */
         UpdateMenuRequest: {
             title?: string;
@@ -1552,6 +1717,22 @@ export interface components {
             status?: "draft" | "published";
             /** Format: date-time */
             published_at?: string | null;
+        };
+        /** UpdatePricingRequest */
+        UpdatePricingRequest: {
+            service_id?: number;
+            name?: string;
+            unit?: string | null;
+            description?: string | null;
+            features?: string | null;
+            name_2nd?: string | null;
+            unit_2nd?: string | null;
+            description_2nd?: string | null;
+            features_2nd?: string | null;
+            price?: number;
+            is_featured?: boolean;
+            sort_order?: number;
+            is_visible?: boolean;
         };
         /** UpdateProfileRequest */
         UpdateProfileRequest: {
@@ -1591,6 +1772,8 @@ export interface components {
             site_name_2nd?: string | null;
             tagline_2nd?: string | null;
             address_2nd?: string | null;
+            currency?: string | null;
+            currency_symbol?: string | null;
             phone?: string | null;
             /** Format: email */
             email?: string | null;
@@ -2459,6 +2642,112 @@ export interface operations {
             };
         };
     };
+    "hero.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "hero.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateHeroRequest"];
+            };
+        };
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "hero.storeImage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["StoreHeroImageRequest"];
+            };
+        };
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "hero.destroyImage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `SectionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SectionResource"];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
     "v1.locales": {
         parameters: {
             query?: never;
@@ -3014,6 +3303,168 @@ export interface operations {
                         data: components["schemas"]["PostResource"];
                     };
                 };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "pricing.publicIndex": {
+        parameters: {
+            query?: {
+                service_id?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `PricingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: (components["schemas"]["PricingResource"] & Record<string, never>)[];
+                    };
+                };
+            };
+        };
+    };
+    "pricing.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `PricingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: (components["schemas"]["PricingResource"] & Record<string, never>)[];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "pricing.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StorePricingRequest"];
+            };
+        };
+        responses: {
+            /** @description `PricingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["PricingResource"] & Record<string, never>;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "pricing.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The pricing ID */
+                pricing: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `PricingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["PricingResource"] & Record<string, never>;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "pricing.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The pricing ID */
+                pricing: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdatePricingRequest"];
+            };
+        };
+        responses: {
+            /** @description `PricingResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["PricingResource"] & Record<string, never>;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "pricing.destroy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The pricing ID */
+                pricing: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             401: components["responses"]["AuthenticationException"];
             403: components["responses"]["AuthorizationException"];

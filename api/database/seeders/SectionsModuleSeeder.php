@@ -11,6 +11,7 @@ class SectionsModuleSeeder extends ModuleSeeder
         'hero' => ['Welcome', true],
         'about' => ['About us', true],
         'services' => ['Our services', true],
+        'pricing' => ['Pricing', false],
         'contact' => ['Contact us', true],
         'testimonials' => ['Testimonials', false],
         'gallery' => ['Gallery', false],

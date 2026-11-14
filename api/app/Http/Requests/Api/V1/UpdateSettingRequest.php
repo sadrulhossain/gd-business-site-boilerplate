@@ -23,6 +23,8 @@ class UpdateSettingRequest extends FormRequest
                 'tagline' => ['sometimes', 'nullable', 'string', 'max:255'],
                 'address' => ['sometimes', 'nullable', 'string', 'max:500'],
             ]),
+            'currency' => ['sometimes', 'nullable', 'string', 'max:10'],
+            'currency_symbol' => ['sometimes', 'nullable', 'string', 'max:10'],
             'phone' => ['sometimes', 'nullable', 'string', 'max:40'],
             'email' => ['sometimes', 'nullable', 'email', 'max:255'],
             'hours' => ['sometimes', 'nullable', 'array:'.implode(',', Setting::DAYS)],
