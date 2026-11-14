@@ -147,7 +147,7 @@ export const modules: CrudConfig[] = [
       { name: 'slug', label: 'Slug', required: true, hint: 'Lowercase letters, numbers and dashes. Used in the post URL.' },
       { name: 'category_id', label: 'Category', type: 'select', optionsFrom: { endpoint: '/v1/categories', map: (c: { id: number; name: string }) => ({ value: c.id, label: c.name }) } },
       { name: 'status', label: 'Status', type: 'select', initial: 'draft', options: [{ value: 'draft', label: 'Draft' }, { value: 'published', label: 'Published' }] },
-      { name: 'published_at', label: 'Publish at', hint: 'Date and time, e.g. 2026-12-01 09:00. Empty publishes immediately.' },
+      { name: 'published_at', label: 'Publish at', type: 'datetime', hint: 'Pick a date and time. Empty publishes immediately.' },
       { name: 'excerpt', label: 'Excerpt', type: 'textarea', bilingual: true },
       { name: 'body', label: 'Body', type: 'richtext', bilingual: true },
       { name: 'seo_title', label: 'SEO title', bilingual: true, hint: 'Up to 70 characters. Falls back to the title.' },

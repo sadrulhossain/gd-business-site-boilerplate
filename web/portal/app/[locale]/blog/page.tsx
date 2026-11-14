@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Picture } from '../../../components/Media'
+import { DefaultMark } from '../../../components/SiteLogo'
 import { getCategories, getPosts, getSettings } from '../../../lib/api'
 import { getMessages, isLocale, localePath } from '../../../lib/i18n'
 import { pageMetadata } from '../../../lib/seo'
@@ -79,7 +80,13 @@ export default async function BlogIndex({ params, searchParams }: Props) {
         <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
             <li key={post.id} className="flex flex-col overflow-hidden rounded-lg border border-line bg-surface shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift">
-              {post.image && <Picture image={post.image} className="aspect-[3/2] w-full object-cover" />}
+              {post.image ? (
+                <Picture image={post.image} className="aspect-[3/2] w-full object-cover" />
+              ) : (
+                <div aria-hidden="true" className="flex aspect-[3/2] w-full items-center justify-center bg-gradient-to-br from-brand-100 via-brand-50 to-accent-300/40">
+                  <DefaultMark className="size-14 opacity-40 grayscale-[30%]" />
+                </div>
+              )}
               <div className="flex flex-1 flex-col gap-2 p-5">
                 <p className="text-sm text-ink-muted">
                   {post.category && <span>{post.category.name} · </span>}

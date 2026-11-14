@@ -59,6 +59,13 @@ export interface CrudConfig {
   reorder?: { endpoint: string; group?: (row: Row) => unknown }
 }
 
+/** Forms with rich text or many fields get a wider dialog. */
+function formSize(fields: CrudField[]): 'md' | 'lg' | 'xl' {
+  if (fields.some((f) => f.type === 'richtext' || f.type === 'checkgroup')) return 'xl'
+
+  return fields.length > 4 ? 'lg' : 'md'
+}
+
 export function CrudPage({ config }: { config: CrudConfig }) {
   const queryClient = useQueryClient()
   const can = useAuth((s) => s.can)
@@ -153,7 +160,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
         </nav>
       )}
 
-      <Modal open={editing !== null} title={editing === 'new' ? `New ${config.noun.toLowerCase()}` : `Edit ${config.noun.toLowerCase()}`} onClose={() => setEditing(null)}>
+      <Modal size={formSize(config.fields)} open={editing !== null} title={editing === 'new' ? `New ${config.noun.toLowerCase()}` : `Edit ${config.noun.toLowerCase()}`} onClose={() => setEditing(null)}>
         {editing !== null && (
           <CrudForm
             key={editing === 'new' ? 'new' : editing.id}

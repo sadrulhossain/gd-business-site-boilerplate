@@ -4,6 +4,7 @@ import { ApiError } from '@gd/api-client'
 import { api } from '../api'
 import { checkImage, uploadFile } from '../lib/upload'
 import { toast } from './Toast'
+import { Icon } from './Icon'
 import { IconButton } from './IconButton'
 
 export interface ImageInfo {
@@ -49,14 +50,19 @@ export function ImagePanel({ endpoint, image, onChange, label = 'Image', hint, p
       <span className="block text-sm text-ink-muted">{label}</span>
       {current && <img src={current.url} alt="" className={`${previewClass} rounded-md border border-line bg-surface-muted object-contain p-1`} />}
       <div className="flex items-center gap-3">
-        <input
-          ref={input}
-          type="file"
-          accept={allowIco ? 'image/jpeg,image/png,image/webp,image/x-icon,image/vnd.microsoft.icon,.ico' : 'image/jpeg,image/png,image/webp'}
-          aria-label={`Choose ${label.toLowerCase()}`}
-          disabled={progress !== null}
-          onChange={(e) => e.target.files?.[0] && void upload(e.target.files[0])}
-        />
+        <label className={`btn btn-secondary cursor-pointer focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary-500 ${progress !== null ? 'pointer-events-none opacity-60' : ''}`}>
+          <Icon name="upload" className="size-[18px]" />
+          <span>{current ? 'Change' : 'Choose'} {label.toLowerCase()}</span>
+          <input
+            ref={input}
+            type="file"
+            className="sr-only"
+            accept={allowIco ? 'image/jpeg,image/png,image/webp,image/x-icon,image/vnd.microsoft.icon,.ico' : 'image/jpeg,image/png,image/webp'}
+            aria-label={`Choose ${label.toLowerCase()}`}
+            disabled={progress !== null}
+            onChange={(e) => e.target.files?.[0] && void upload(e.target.files[0])}
+          />
+        </label>
         {current && progress === null && (
           <IconButton showText variant="secondary" icon="trash" label="Remove" disabled={remove.isPending} onClick={() => remove.mutate()} />
         )}
