@@ -11,13 +11,13 @@ export interface ImageInfo {
 }
 
 /** Image of a row that has one: `POST|DELETE ${endpoint}` with the multipart field `image`. Used inside CrudPage forms. */
-export function ImagePanel({ endpoint, image, onChange, label = 'Image', hint, previewClass = 'max-h-40', responseKey = 'image' }: { responseKey?: string; endpoint: string; image: ImageInfo | null | undefined; onChange: (image: ImageInfo | null) => void; label?: string; hint?: string; previewClass?: string }) {
+export function ImagePanel({ endpoint, image, onChange, label = 'Image', hint, previewClass = 'max-h-40', responseKey = 'image', allowIco = false }: { responseKey?: string; allowIco?: boolean; endpoint: string; image: ImageInfo | null | undefined; onChange: (image: ImageInfo | null) => void; label?: string; hint?: string; previewClass?: string }) {
   const input = useRef<HTMLInputElement>(null)
   const [current, setCurrent] = useState(image ?? null)
   const [progress, setProgress] = useState<number | null>(null)
 
   const upload = async (file: File) => {
-    const problem = checkImage(file)
+    const problem = checkImage(file, allowIco)
     if (problem) return toast.error(problem)
 
     setProgress(0)
@@ -52,7 +52,7 @@ export function ImagePanel({ endpoint, image, onChange, label = 'Image', hint, p
         <input
           ref={input}
           type="file"
-          accept="image/jpeg,image/png,image/webp"
+          accept={allowIco ? 'image/jpeg,image/png,image/webp,image/x-icon,image/vnd.microsoft.icon,.ico' : 'image/jpeg,image/png,image/webp'}
           aria-label={`Choose ${label.toLowerCase()}`}
           disabled={progress !== null}
           onChange={(e) => e.target.files?.[0] && void upload(e.target.files[0])}

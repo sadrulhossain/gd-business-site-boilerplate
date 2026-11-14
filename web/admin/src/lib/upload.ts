@@ -3,12 +3,14 @@ import { getValidToken, refreshTokens } from '../auth/oauth'
 import { config } from './config'
 
 export const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+/** Browsers report .ico as either of these. Only the favicon accepts it. */
+export const ICO_TYPES = ['image/x-icon', 'image/vnd.microsoft.icon']
 /** Mirrors UPLOADS_MAX_MB for a quick message; the API stays the authority. */
 export const MAX_IMAGE_MB = 5
 
 /** A message when the browser can already tell the file will be refused, else null. */
-export function checkImage(file: { type: string; size: number }): string | null {
-  if (!IMAGE_TYPES.includes(file.type)) return 'Only JPEG, PNG or WebP images'
+export function checkImage(file: { type: string; size: number }, allowIco = false): string | null {
+  if (!IMAGE_TYPES.includes(file.type) && !(allowIco && ICO_TYPES.includes(file.type))) return allowIco ? 'Only ICO, JPEG, PNG or WebP images' : 'Only JPEG, PNG or WebP images'
   if (file.size > MAX_IMAGE_MB * 1024 * 1024) return `Larger than ${MAX_IMAGE_MB} MB`
 
   return null

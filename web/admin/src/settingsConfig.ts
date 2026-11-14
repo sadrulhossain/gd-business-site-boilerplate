@@ -16,6 +16,8 @@ export interface SettingsImage {
   name: 'logo' | 'favicon'
   label: string
   hint: string
+  /** Also accept an .ico file. */
+  ico?: boolean
 }
 
 export interface SettingsTab {
@@ -65,7 +67,7 @@ export const settings: SingletonConfig = {
       label: 'General',
       images: [
         { name: 'logo', label: 'Site logo', hint: 'Shown in the portal header and footer and in this admin. JPEG, PNG or WebP; a wide transparent PNG works best. Until you upload one, the built-in logo is shown.' },
-        { name: 'favicon', label: 'Favicon', hint: 'The small icon in the browser tab. A square PNG, at least 64 x 64 px. Until you upload one, the built-in icon is shown.' },
+        { name: 'favicon', label: 'Favicon', hint: 'The small icon in the browser tab. An .ico or a square PNG (at least 64 x 64 px). Until you upload one, the built-in icon is shown.', ico: true },
       ],
       fields: [
         { name: 'site_name', label: 'Site name', bilingual: true, required: true },

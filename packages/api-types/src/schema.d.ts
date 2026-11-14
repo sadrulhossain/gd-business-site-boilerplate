@@ -944,7 +944,7 @@ export interface paths {
         put?: never;
         /**
          * Upload the favicon
-         * @description Multipart field `image` (jpeg, png or webp), ideally square. Replaces the current favicon.
+         * @description Multipart field `image` (ico, jpeg, png or webp), ideally square. Replaces the current favicon.
          */
         post: operations["settingImage.storeFavicon"];
         /** Remove the favicon */
@@ -1422,7 +1422,7 @@ export interface components {
         };
         /**
          * StoreSettingImageRequest
-         * @description Logo and favicon uploads: multipart field `image`.
+         * @description Logo and favicon uploads: multipart field `image` (the favicon may also be an .ico).
          */
         StoreSettingImageRequest: {
             /**

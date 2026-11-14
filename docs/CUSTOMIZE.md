@@ -21,7 +21,7 @@ Rules that keep the site accessible and consistent:
 - White text on a brand colour needs 4.5:1 contrast: the portal uses `bg-brand-700` or darker behind white text. After changing the brand, run the axe spec
   (`docker compose --profile e2e run --rm --no-deps -T -w /app/web/portal e2e npx playwright test a11y`) and fix any `color-contrast` it reports.
 - Tailwind only sees literal class names. Write `'bg-brand-700'`, do not build class names from pieces.
-- Logo and favicon: upload them in the admin under Access > Settings > General. They show in the portal header, footer and tab icon and in the admin sidebar and tab. Until you upload them, the built-in mark (`components/SiteLogo.tsx`, `web/portal/public/icon.svg`) is used. The site name, tagline, address, phone, email and opening hours are Settings in the admin.
+- Logo and favicon: upload them in the admin under Access > Settings > General. The favicon may be an .ico, PNG, JPEG or WebP. They show in the portal header, footer and tab icon and in the admin sidebar and tab. Until you upload them, the built-in mark (`components/SiteLogo.tsx`, `web/portal/public/icon.svg`) is used. The site name, tagline, address, phone, email and opening hours are Settings in the admin.
 - Sample content: `php artisan db:seed --class="DatabaseSeedersSiteSiteDataSeeder"` fills settings, sections, services, testimonials, team, FAQs and blog posts with demo text (or run one `Site*Seeder` alone). They are not part of `DatabaseSeeder`; re-running updates the same rows.
 - Fonts: the portal uses the system sans-serif stack for headings (no font download). To use a web font, self-host it and update `--font-display`; the CSP allows `font-src 'self' data:` only.
 

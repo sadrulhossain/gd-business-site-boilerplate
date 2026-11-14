@@ -6,7 +6,7 @@ use App\Models\Setting;
 use App\Services\MediaService;
 use Illuminate\Foundation\Http\FormRequest;
 
-/** Logo and favicon uploads: multipart field `image`. */
+/** Logo and favicon uploads: multipart field `image` (the favicon may also be an .ico). */
 class StoreSettingImageRequest extends FormRequest
 {
     public function authorize(): bool
@@ -17,6 +17,6 @@ class StoreSettingImageRequest extends FormRequest
     /** @return array<string, mixed> */
     public function rules(): array
     {
-        return ['image' => ['required', ...MediaService::imageRules()]];
+        return ['image' => ['required', ...($this->is('*/favicon') ? MediaService::faviconRules() : MediaService::imageRules())]];
     }
 }

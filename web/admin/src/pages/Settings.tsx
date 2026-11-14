@@ -103,6 +103,7 @@ function SettingsForm({ config, initial }: { config: SingletonConfig; initial: V
             endpoint={`${config.endpoint}/${img.name}`}
             label={img.label}
             responseKey={img.name}
+            allowIco={img.ico}
             hint={img.hint}
             previewClass={img.name === 'logo' ? 'max-h-24' : 'size-16'}
             image={values[img.name] as { url: string } | null | undefined}
